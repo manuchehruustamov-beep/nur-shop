@@ -49,6 +49,34 @@
     .hint { color:#91a1b8; font-size:11px; line-height:1.5; margin:10px 2px 0; }
     #message { min-height:20px; text-align:center; color:#65e6bd; font-size:13px; margin:12px 0; white-space:pre-wrap; }
     footer { text-align:center; color:#7788a2; font-size:11px; padding:22px 0 8px; }
+    /* NUR SHOP premium refresh */
+    body { padding-bottom:100px; }
+    header { padding-top:26px; }
+    .logo { box-shadow:0 0 24px #65e6bd18; }
+    .hero { position:relative; overflow:hidden; margin:0 0 22px; padding:20px; border:1px solid #3a5876; border-radius:22px; background:linear-gradient(125deg,#193956 0%,#17243d 52%,#20264a 100%); box-shadow:0 16px 36px #0005; }
+    .hero:after { content:"✦"; position:absolute; right:18px; top:0; font-size:104px; line-height:1; color:#8ce9d1; opacity:.10; transform:rotate(15deg); }
+    .hero-kicker { color:#8ce9d1; font-size:10px; font-weight:900; letter-spacing:2px; text-transform:uppercase; }
+    .hero h2 { margin:9px 0 7px; font-size:23px; line-height:1.15; max-width:280px; }
+    .hero p { margin:0; color:#bdcce0; font-size:13px; line-height:1.5; max-width:290px; }
+    .hero-cta { display:inline-block; margin-top:15px; padding:10px 15px; border-radius:12px; color:#07151a; background:linear-gradient(90deg,#65e6bd,#8ce9d1); font-size:12px; font-weight:900; text-decoration:none; }
+    .benefits { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:0 0 24px; }
+    .benefit { padding:11px 6px; border:1px solid #2a3d59; border-radius:14px; background:#111d30; text-align:center; color:#aebed3; font-size:10px; line-height:1.4; }
+    .benefit b { display:block; color:#f5f7ff; font-size:11px; margin-top:4px; }
+    .product { position:relative; overflow:hidden; transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease; box-shadow:0 8px 18px #0002; }
+    .product:active { transform:scale(.975); }
+    .product:hover { border-color:#65e6bd88; box-shadow:0 10px 25px #0004; }
+    .emoji { display:grid; place-items:center; width:48px; height:48px; border-radius:15px; background:linear-gradient(145deg,#263e5c,#172a43); border:1px solid #45617d66; }
+    .product h3 { min-height:39px; }
+    .price { letter-spacing:-.4px; }
+    .add { box-shadow:0 5px 15px #65e6bd22; transition:filter .15s,transform .15s; }
+    .add:active,.confirm:active,.hero-cta:active { transform:scale(.97); filter:brightness(.95); }
+    h2[id] { scroll-margin-top:18px; }
+    .cart { box-shadow:0 14px 30px #0003; }
+    .bottom-nav { position:fixed; z-index:20; left:50%; bottom:10px; transform:translateX(-50%); width:min(650px,calc(100% - 24px)); display:grid; grid-template-columns:repeat(4,1fr); gap:4px; padding:8px; border:1px solid #38506b; border-radius:19px; background:#0c1728ed; backdrop-filter:blur(16px); box-shadow:0 12px 35px #0009; }
+    .bottom-nav a { display:flex; flex-direction:column; align-items:center; gap:3px; padding:6px 2px; border-radius:12px; color:#aab9ce; font-size:10px; font-weight:700; text-decoration:none; }
+    .bottom-nav a span { font-size:18px; }
+    .bottom-nav a:active,.bottom-nav a:hover { color:#65e6bd; background:#65e6bd12; }
+    @media (prefers-reduced-motion: reduce) { *,*:before,*:after { transition:none !important; animation:none !important; scroll-behavior:auto !important; } }
     @media (max-width:360px) { .products { grid-template-columns:1fr; } }
   </style>
 </head>
@@ -59,17 +87,28 @@
     <h1>✨ NUR SHOP</h1>
     <p>Твой магазин цифровых товаров — быстро и удобно</p>
   </header>
+  <section class="hero">
+    <div class="hero-kicker">Добро пожаловать в NUR SHOP</div>
+    <h2>Всё нужное для твоей игры и связи</h2>
+    <p>Алмазы Free Fire, ваучеры и VPN-подписки — собери свой заказ в пару нажатий.</p>
+    <a class="hero-cta" href="#diamonds">Перейти в каталог&nbsp; →</a>
+  </section>
+  <div class="benefits">
+    <div class="benefit">⚡<b>Быстро</b>Удобный заказ</div>
+    <div class="benefit">🛍️<b>В одном месте</b>Цифровые товары</div>
+    <div class="benefit">💚<b>Просто</b>Понятный каталог</div>
+  </div>
   <section class="profile">
     👤 Добро пожаловать, <strong id="username">друг!</strong><br>
     <span style="font-size:12px;color:#91a4bd">Выбирай товары и добавляй их в корзину 🛍️</span>
   </section>
-  <h2>💎 Алмазы Free Fire</h2>
+  <h2 id="diamonds-title">💎 Алмазы Free Fire</h2>
   <p class="section-note">Пополнение алмазов по выгодным ценам</p>
   <div class="products" id="diamonds"></div>
-  <h2>🎟️ Ваучеры Free Fire</h2>
+  <h2 id="vouchers">🎟️ Ваучеры Free Fire</h2>
   <p class="section-note">Выбери подходящий ваучер</p>
   <div class="products" id="vouchers"></div>
-  <h2>🔐 VPN-подписки</h2>
+  <h2 id="vpn">🔐 VPN-подписки</h2>
   <p class="section-note">Защищённое и удобное подключение</p>
   <div class="products" id="vpn"></div>
 
@@ -91,6 +130,12 @@
   </section>
   <p id="message" role="status"></p>
   <footer>💚 Спасибо, что выбираешь NUR SHOP!</footer>
+  <nav class="bottom-nav" aria-label="Основная навигация">
+    <a href="#"><span>⌂</span>Главная</a>
+    <a href="#diamonds-title"><span>▦</span>Каталог</a>
+    <a href="#cart"><span>🛒</span>Корзина</a>
+    <a href="#customerName"><span>👤</span>Профиль</a>
+  </nav>
 </div>
 
 <script>
