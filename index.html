@@ -155,6 +155,14 @@
     @media (max-width:370px) { .bottom-nav a { font-size:9px; }.bottom-nav a span { font-size:16px; } .game-card { padding:12px; }.game-board { gap:6px; } }
     @media (prefers-reduced-motion: reduce) { *,*:before,*:after { transition:none !important; animation:none !important; scroll-behavior:auto !important; } }
     @media (max-width:360px) { .products { grid-template-columns:1fr; } }
+  
+    /* NUR SHOP homepage image banner */
+    .home-banner { position:relative; overflow:hidden; margin:0 0 22px; border:1.5px solid #16739a; border-radius:23px 20px 25px 18px; background:#050d14; box-shadow:inset 0 0 0 1px #00c8ff12,0 16px 36px #0007; }
+    .home-banner-art { display:block; width:100%; height:auto; aspect-ratio:1200/560; }
+    .home-banner-cta { display:flex; align-items:center; justify-content:center; gap:10px; margin:0 14px 14px; padding:13px 16px; border-radius:12px; color:#06131b; background:linear-gradient(90deg,#00a9ed,#45e5ff); font-size:12px; font-weight:900; letter-spacing:1px; text-decoration:none; box-shadow:0 6px 18px #00c8ff2b; }
+    .home-banner-cta:active { transform:scale(.98); }
+    @media (max-width:480px) { .home-banner { border-radius:18px; }.home-banner-cta { margin:0 10px 10px; padding:11px; font-size:11px; } }
+
   </style>
 </head>
 <body>
@@ -164,16 +172,40 @@
     <h1>✨ NUR SHOP</h1>
     <p>Твой магазин цифровых товаров — быстро и удобно</p>
   </header>
-  <section class="hero premium-hero">
-    <div class="hero-topline"><span class="hero-kicker">OFFICIAL DIGITAL STORE</span><span class="live-dot">● ONLINE</span></div>
-    <div class="hero-copy">
-      <div class="hero-kicker">ДОБРО ПОЖАЛОВАТЬ</div>
-      <h2>ТВОЙ МИР.<br><em>ТВОИ ПРАВИЛА.</em></h2>
-      <p>Алмазы Free Fire, ваучеры и VPN-подписки — всё необходимое в одном месте.</p>
-      <a class="hero-cta" href="#categories">ОТКРЫТЬ КАТАЛОГ&nbsp; ↗</a>
-    </div>
-    <div class="hero-orbit" aria-hidden="true"><span>✦</span><b>N</b><i>✧</i></div>
-    <div class="hero-bottom"><span>PREMIUM EXPERIENCE</span><span>№ 01&nbsp; / &nbsp;NUR SHOP</span></div>
+  <section class="home-banner" aria-label="Баннер NUR SHOP">
+    <svg class="home-banner-art" viewBox="0 0 1200 560" role="img" aria-labelledby="nurBannerTitle nurBannerDesc" xmlns="http://www.w3.org/2000/svg">
+      <title id="nurBannerTitle">NUR SHOP — Твой мир, твои возможности</title>
+      <desc id="nurBannerDesc">Премиальный чёрно-синий неоновый баннер с направлениями Free Fire, TikTok и NUR VPN.</desc>
+      <defs>
+        <linearGradient id="nurBg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#071a2b"/><stop offset=".52" stop-color="#080b12"/><stop offset="1" stop-color="#160a12"/></linearGradient>
+        <linearGradient id="nurText" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#8af1ff"/><stop offset=".48" stop-color="#08b9ff"/><stop offset="1" stop-color="#527dff"/></linearGradient>
+        <radialGradient id="nurGlow"><stop stop-color="#00c8ff" stop-opacity=".34"/><stop offset="1" stop-color="#00c8ff" stop-opacity="0"/></radialGradient>
+        <filter id="nurShadow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="10" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+      <rect width="1200" height="560" rx="38" fill="url(#nurBg)"/>
+      <ellipse cx="920" cy="260" rx="370" ry="310" fill="url(#nurGlow)"/>
+      <path d="M-30 420 Q250 300 500 420 T1240 390" fill="none" stroke="#00c8ff" stroke-opacity=".18" stroke-width="3"/>
+      <path d="M-30 455 Q250 335 500 455 T1240 425" fill="none" stroke="#ff4969" stroke-opacity=".13" stroke-width="2"/>
+      <circle cx="950" cy="255" r="190" fill="none" stroke="#16cfff" stroke-opacity=".22" stroke-width="2"/>
+      <circle cx="950" cy="255" r="155" fill="none" stroke="#16cfff" stroke-opacity=".18" stroke-width="2" stroke-dasharray="8 14"/>
+      <circle cx="950" cy="255" r="115" fill="#071a2b" stroke="#27dfff" stroke-opacity=".5" stroke-width="3"/>
+      <text x="950" y="292" text-anchor="middle" font-family="Arial,sans-serif" font-size="132" font-weight="900" fill="url(#nurText)" filter="url(#nurShadow)">N</text>
+      <g fill="#9bf3ff"><circle cx="805" cy="105" r="5"/><circle cx="1100" cy="130" r="4"/><circle cx="1085" cy="390" r="6"/><circle cx="760" cy="360" r="4"/></g>
+      <text x="78" y="105" fill="#5ce6ff" font-family="Arial,sans-serif" font-size="24" font-weight="700" letter-spacing="9">OFFICIAL DIGITAL STORE</text>
+      <text x="72" y="245" fill="url(#nurText)" font-family="Arial,sans-serif" font-size="112" font-weight="900" letter-spacing="-4" filter="url(#nurShadow)">NUR SHOP</text>
+      <text x="82" y="302" fill="#f4f8ff" font-family="Arial,sans-serif" font-size="34" font-weight="800" letter-spacing="2">ТВОЙ МИР — ТВОИ ВОЗМОЖНОСТИ</text>
+      <g font-family="Arial,sans-serif" font-size="23" font-weight="800">
+        <rect x="80" y="375" width="225" height="76" rx="18" fill="#071d2b" stroke="#168fc0" stroke-width="2"/>
+        <text x="192" y="423" text-anchor="middle" fill="#eafaff">🎮 FREE FIRE</text>
+        <rect x="325" y="375" width="205" height="76" rx="18" fill="#071d2b" stroke="#168fc0" stroke-width="2"/>
+        <text x="427" y="423" text-anchor="middle" fill="#eafaff">📱 TIKTOK</text>
+        <rect x="550" y="375" width="205" height="76" rx="18" fill="#071d2b" stroke="#168fc0" stroke-width="2"/>
+        <text x="652" y="423" text-anchor="middle" fill="#eafaff">🌐 NUR VPN</text>
+      </g>
+      <text x="82" y="510" fill="#8fb7c8" font-family="Arial,sans-serif" font-size="19" font-weight="700" letter-spacing="5">PREMIUM • FAST • CONVENIENT</text>
+      <path d="M40 30 Q25 30 25 48 V510 Q25 530 45 530 H1155 Q1175 530 1175 510 V50 Q1175 30 1155 30Z" fill="none" stroke="#21cfff" stroke-opacity=".52" stroke-width="2"/>
+    </svg>
+    <a class="home-banner-cta" href="#categories">ОТКРЫТЬ КАТАЛОГ <span aria-hidden="true">↗</span></a>
   </section>
   <section class="daily-bonus" id="dailyBonus">
     <div class="bonus-icon">🎁</div>
