@@ -179,7 +179,7 @@ async function spinWheel(){
  }
 }
 renderWheelPrizes();
-function showPage(p){if(p==='admin'&&!adminUnlocked){openAdminAuth();return;}document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(p+'Page').classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===p));if(p==='balance'||p==='history')loadWallet();window.scrollTo({top:0,behavior:'smooth'});}
+function showPage(p){if(p==='admin'&&!adminUnlocked){openAdminAuth();return;}document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(p+'Page').classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===p));if(p==='balance'||p==='history'||p==='wheel')loadWallet();window.scrollTo({top:0,behavior:'smooth'});}
 function openCategory(name){
  showPage('category');
  document.getElementById('categoryTitle').textContent=name;
