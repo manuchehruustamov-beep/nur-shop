@@ -17,6 +17,15 @@
 .nav{position:fixed;z-index:30;bottom:0;left:50%;transform:translateX(-50%);width:min(760px,100%);padding:12px 10px calc(12px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(4,1fr);background:#0c1422f5;border:1px solid #202d43;border-bottom:0;border-radius:22px 22px 0 0;box-shadow:0 -8px 25px #0008;backdrop-filter:blur(15px)}.nav button{border:0;background:transparent;color:#94a5bd;display:flex;flex-direction:column;align-items:center;gap:5px;font-size:12px;font-weight:700}.nav svg{width:28px;height:28px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.nav button.active{color:#00e6b0}
 .topup-main{margin:16px 0 4px;padding:15px;font-size:14px;letter-spacing:.5px;box-shadow:0 0 18px #087fff55}.topup-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0}.topup-option{padding:14px;border:1px solid #294666;border-radius:12px;background:#101c2e;color:#eaf5ff;font-size:16px;font-weight:900}.topup-option.selected{border:2px solid #168bff;background:#102b49;box-shadow:0 0 14px #168bff55;color:#fff}
 .transaction-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid #25354c}.transaction-row:last-child{border-bottom:0}.transaction-main{min-width:0}.transaction-title{font-size:13px;font-weight:850}.transaction-meta{font-size:10px;color:var(--muted);margin-top:5px}.transaction-amount{font-size:15px;font-weight:950;white-space:nowrap}.transaction-amount.in{color:#00e6b0}.transaction-amount.out{color:#ff7185}.history-caption{font-size:11px;color:var(--muted);line-height:1.5;margin:-5px 0 12px}
+.promo-card{border-color:#1766a0;box-shadow:0 0 18px #087fff22}
+.promo-input-row{display:flex;gap:8px;margin-top:13px}
+.promo-input-row input{min-width:0;flex:1;padding:13px 12px;border:1px solid #315579;border-radius:11px;background:#080f1c;color:#fff;font-size:14px;font-weight:850;letter-spacing:1px;outline:none}
+.promo-input-row input:focus{border-color:#168bff;box-shadow:0 0 0 2px #168bff33}
+.promo-input-row button{border:0;border-radius:11px;padding:0 14px;background:linear-gradient(100deg,#087fff,#00d9c2);color:#06111b;font-size:11px;font-weight:950}
+.promo-notice{font-size:11px;line-height:1.5;color:#9db1ca;margin-top:11px}
+.promo-prizes{display:grid;gap:8px;margin-top:14px}
+.promo-prizes span{padding:10px 12px;border:1px solid #263d5b;border-radius:10px;background:#0b1626;color:#dceaff;font-size:12px;font-weight:750}
+
 @media(max-width:390px){.profile-bar{padding:20px 16px;gap:10px}.avatar{width:72px;height:72px}.user-name{font-size:18px}.user-tag{font-size:13px}.balance-pill{padding:12px 13px;gap:7px;font-size:12px}.page{padding:23px 18px}.hero{height:190px}.hero h1{font-size:24px}.hero-copy{width:72%}.tiles{gap:20px 10px}.tile-label{font-size:12px}.tile-label.long{font-size:10px}.section-title{font-size:20px}}
 </style>
 </head>
@@ -46,7 +55,14 @@
 </section>
 <section class="page" id="balancePage"><h2 class="section-title">Мой баланс</h2><div class="info-card"><span>Доступный баланс</span><strong id="balanceAmount">0 ₽</strong></div><button class="action topup-main" onclick="openTopup()">＋ ПОПОЛНИТЬ БАЛАНС</button><p class="muted">Баланс отображается в российских рублях. Зачисление возможно только после подтверждения оплаты.</p><div class="panel"><h2>Пополнение баланса</h2><p class="muted">Выбери сумму, чтобы подготовить платёж.</p><div class="topup-options"><button class="topup-option selected" onclick="selectTopup(100,this)">100 ₽</button><button class="topup-option" onclick="selectTopup(250,this)">250 ₽</button><button class="topup-option" onclick="selectTopup(500,this)">500 ₽</button><button class="topup-option" onclick="selectTopup(1000,this)">1 000 ₽</button></div><button class="action" onclick="startTopup()">Продолжить</button><p class="muted" id="topupNotice">Платёжный шлюз ещё не подключён. Баланс не будет изменён без подтверждённой оплаты.</p></div></section>
 <section class="page" id="historyPage"><h2 class="section-title">История операций</h2><div class="panel"><h2>Пополнения и списания</h2><p class="history-caption">Все суммы указаны в российских рублях (₽).</p><div id="balanceHistory"><div class="empty">Операций пока нет</div></div></div><div class="panel"><h2>История заказов</h2><div class="empty">Пока заказов нет</div></div></section>
-<section class="page" id="profilePage"><h2 class="section-title">Мой профиль</h2><div class="profile-card"><div class="avatar" id="profileAvatar">N</div><div><b id="profileName">Пользователь</b><small id="profileTag">@nurshop</small></div></div><div class="info-card"><span>Мой баланс</span><strong>0 ₽</strong></div><div class="info-card"><b>Приглашай друзей 🎁</b><p class="muted">За нового приглашённого друга предусмотрен бонус +7 дней VPN после проверки регистрации. Автоматическое начисление пока не подключено.</p><div class="ref-link" id="refLink">Запусти приложение через Telegram, чтобы получить ссылку</div><div class="ref-actions"><button onclick="copyRef()">Скопировать ссылку</button><button onclick="shareRef()">Пригласить друга</button></div></div></section>
+<section class="page" id="profilePage"><h2 class="section-title">Мой профиль</h2><div class="profile-card"><div class="avatar" id="profileAvatar">N</div><div><b id="profileName">Пользователь</b><small id="profileTag">@nurshop</small></div></div><div class="info-card"><span>Мой баланс</span><strong>0 ₽</strong></div><div class="info-card promo-card">
+<b>🎟️ Активировать промокод</b>
+<p class="muted">Введи промокод, чтобы получить подарок от NUR SHOP.</p>
+<div class="promo-input-row"><input id="promoCodeInput" type="text" maxlength="40" autocomplete="off" autocapitalize="characters" placeholder="ВВЕДИ ПРОМОКОД"><button onclick="activatePromoCode()">Активировать</button></div>
+<div id="promoCodeNotice" class="promo-notice" aria-live="polite">Промокоды скоро появятся. Следи за обновлениями!</div>
+<div class="promo-prizes"><span>🎁 Ваучер на 7 дней</span><span>🏆 Ваучер на 30 дней</span><span>🔐 VPN на 1 месяц</span></div>
+</div>
+<div class="info-card"><b>Приглашай друзей 🎁</b><p class="muted">За нового приглашённого друга предусмотрен бонус +7 дней VPN после проверки регистрации. Автоматическое начисление пока не подключено.</p><div class="ref-link" id="refLink">Запусти приложение через Telegram, чтобы получить ссылку</div><div class="ref-actions"><button onclick="copyRef()">Скопировать ссылку</button><button onclick="shareRef()">Пригласить друга</button></div></div></section>
 </main>
 <nav class="nav">
 <button class="active" data-page="home" onclick="showPage('home')"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg>Главная</button>
@@ -72,6 +88,14 @@ function getBalanceHistory(){try{return JSON.parse(localStorage.getItem(balanceH
 function renderBalanceHistory(){const box=document.getElementById('balanceHistory');if(!box)return;const items=getBalanceHistory().sort((a,b)=>b.createdAt-a.createdAt);if(!items.length){box.innerHTML='<div class="empty">Пополнений и списаний пока нет</div>';return;}box.innerHTML=items.map(x=>{const incoming=x.type==='topup';const sign=incoming?'+':'−';const date=new Date(x.createdAt).toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});return '<div class="transaction-row"><div class="transaction-main"><div class="transaction-title">'+(incoming?'Пополнение баланса':'Списание баланса')+'</div><div class="transaction-meta">'+(x.description||'Операция')+' · '+date+'</div></div><div class="transaction-amount '+(incoming?'in':'out')+'">'+sign+Number(x.amount).toLocaleString('ru-RU')+' ₽</div></div>'}).join('');}
 function recordBalanceTransaction(type,amount,description){const value=Number(amount);if(!['topup','debit'].includes(type)||!Number.isFinite(value)||value<=0)return false;const items=getBalanceHistory();items.push({type,amount:value,description:String(description||'Операция').slice(0,100),createdAt:Date.now()});try{localStorage.setItem(balanceHistoryKey(),JSON.stringify(items.slice(-100)));renderBalanceHistory();return true}catch(e){return false;}}
 
+
+function activatePromoCode(){
+ const input=document.getElementById('promoCodeInput');
+ const notice=document.getElementById('promoCodeNotice');
+ const code=(input?.value||'').trim().toUpperCase();
+ if(!code){notice.textContent='Сначала введи промокод.';return;}
+ notice.textContent='Промокоды ещё не загружены. Как только ты пришлёшь список кодов и призов, подключим проверку и активацию.';
+}
 function copyRef(){if(!referral){alert('Открой Mini App через Telegram');return;}navigator.clipboard.writeText(referral).then(()=>alert('Ссылка скопирована')).catch(()=>alert(referral));}
 function shareRef(){if(!referral){alert('Открой Mini App через Telegram');return;}const url='https://t.me/share/url?url='+encodeURIComponent(referral)+'&text='+encodeURIComponent('Приглашаю тебя в NUR SHOP!');if(tg?.openTelegramLink)tg.openTelegramLink(url);else window.open(url,'_blank');}
 renderCart();renderBalanceHistory();
