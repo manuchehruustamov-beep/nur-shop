@@ -131,6 +131,28 @@
     .category-tile { border-radius:20px 17px 21px 16px; }
     .profile,.cart { border-radius:19px 16px 21px 18px; }
     .product:hover { border-color:#35dfff; box-shadow:inset 0 0 0 1px #00c8ff22,0 10px 25px #0005; }
+    .bottom-nav { grid-template-columns:repeat(5,1fr); }
+    .game-category .category-icon { background:radial-gradient(circle at 50% 35%,#064b69,#07131d); }
+    #gamesPanel { padding-bottom:20px; }
+    .game-heading { margin:4px 0 15px; }
+    .game-kicker { color:#45e5ff; font-size:9px; letter-spacing:2.5px; }
+    .game-heading h2 { margin:7px 0 9px; font-size:23px; }
+    .game-card { padding:17px; border:2px solid #16739a; border-radius:22px 18px 24px 17px; background:radial-gradient(ellipse at 50% 0%,#0a293a,#07131d 58%,#04090e); box-shadow:inset 0 0 25px #00c8ff0c,0 14px 32px #0007; }
+    .game-status { min-height:28px; margin:0 0 15px; color:#8af1ff; text-align:center; font-size:15px; font-weight:900; }
+    .game-board { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:9px; max-width:390px; margin:0 auto; }
+    .game-cell { aspect-ratio:1; min-width:0; padding:0; border:2px solid #16739a; border-radius:17px 13px 19px 14px; background:linear-gradient(145deg,#0b1e2a,#050c13); color:#fff; font-size:clamp(40px,13vw,64px); font-weight:900; box-shadow:inset 0 0 18px #00c8ff0c,0 5px 13px #0005; }
+    .game-cell:nth-child(even) { border-radius:13px 19px 14px 17px; }
+    .game-cell:disabled { opacity:1; cursor:default; }
+    .game-cell.x { color:#45e5ff; text-shadow:0 0 18px #00c8ff99; }
+    .game-cell.o { color:#ff7893; text-shadow:0 0 18px #ff426899; }
+    .game-cell.winner { background:#0b3444; border-color:#65edff; box-shadow:0 0 20px #00c8ff55,inset 0 0 18px #00c8ff22; }
+    .game-score { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:17px 0; }
+    .game-score div { display:flex; flex-direction:column; align-items:center; gap:3px; padding:10px 4px; border:1px solid #16465d; border-radius:13px; background:#07131d; }
+    .score-symbol { font-size:16px; font-weight:900; }.x-symbol { color:#45e5ff; }.o-symbol { color:#ff7893; }.draw-symbol { color:#b8d7e0; }
+    .game-score strong { font-size:20px; color:#fff; }.game-score small { color:#a9c1cb; font-size:9px; }
+    .game-restart { width:100%; color:#04131a; background:linear-gradient(100deg,#008cff,#45e5ff); box-shadow:0 6px 18px #00c8ff24; }
+    .game-footnote { margin:12px 4px; color:#8faab5; font-size:10px; line-height:1.5; text-align:center; }
+    @media (max-width:370px) { .bottom-nav a { font-size:9px; }.bottom-nav a span { font-size:16px; } .game-card { padding:12px; }.game-board { gap:6px; } }
     @media (prefers-reduced-motion: reduce) { *,*:before,*:after { transition:none !important; animation:none !important; scroll-behavior:auto !important; } }
     @media (max-width:360px) { .products { grid-template-columns:1fr; } }
   </style>
@@ -177,6 +199,9 @@
       <button class="category-tile" type="button" onclick="openCategory('vpn')">
         <span class="category-icon">🛡️</span><strong>VPN</strong><small>Подписки по срокам</small>
       </button>
+      <button class="category-tile game-category" type="button" onclick="openGames()">
+        <span class="category-icon">🎮</span><strong>Игры</strong><small>Крестики-нолики</small>
+      </button>
     </div>
   </section>
   <section class="category-panel" id="freefirePanel">
@@ -193,6 +218,36 @@
     <h2>🔐 VPN-подписки</h2>
     <p class="section-note">Выбери срок подписки и посмотри цену</p>
     <div class="products" id="vpnProducts"></div>
+  </section>
+
+  <section class="category-panel" id="gamesPanel">
+    <button class="back-catalog" type="button" onclick="showCategories()">← Все разделы</button>
+    <div class="game-heading">
+      <span class="game-kicker">NUR ARENA</span>
+      <h2>❎ Крестики-нолики</h2>
+      <p class="section-note">Сыграйте вдвоём на одном устройстве. Кто первым соберёт три символа в ряд — победил!</p>
+    </div>
+    <div class="game-card">
+      <div class="game-status" id="gameStatus" role="status">Ход игрока X</div>
+      <div class="game-board" id="gameBoard" aria-label="Игровое поле крестики-нолики">
+        <button class="game-cell" type="button" onclick="makeMove(0)" aria-label="Клетка 1"></button>
+        <button class="game-cell" type="button" onclick="makeMove(1)" aria-label="Клетка 2"></button>
+        <button class="game-cell" type="button" onclick="makeMove(2)" aria-label="Клетка 3"></button>
+        <button class="game-cell" type="button" onclick="makeMove(3)" aria-label="Клетка 4"></button>
+        <button class="game-cell" type="button" onclick="makeMove(4)" aria-label="Клетка 5"></button>
+        <button class="game-cell" type="button" onclick="makeMove(5)" aria-label="Клетка 6"></button>
+        <button class="game-cell" type="button" onclick="makeMove(6)" aria-label="Клетка 7"></button>
+        <button class="game-cell" type="button" onclick="makeMove(7)" aria-label="Клетка 8"></button>
+        <button class="game-cell" type="button" onclick="makeMove(8)" aria-label="Клетка 9"></button>
+      </div>
+      <div class="game-score">
+        <div><span class="score-symbol x-symbol">X</span><strong id="scoreX">0</strong><small>Победы X</small></div>
+        <div><span class="score-symbol o-symbol">O</span><strong id="scoreO">0</strong><small>Победы O</small></div>
+        <div><span class="score-symbol draw-symbol">＝</span><strong id="scoreDraw">0</strong><small>Ничьи</small></div>
+      </div>
+      <button class="game-restart" type="button" onclick="resetGame()">↻ Новая игра</button>
+    </div>
+    <p class="game-footnote">Локальная игра на одном устройстве. Онлайн-комнаты и голосовая связь подключаются отдельно через сервер.</p>
   </section>
 
   <section class="cart" id="cart">
@@ -217,6 +272,7 @@
     <a href="#"><span>⌂</span>Главная</a>
     <a href="#categories" onclick="showCategories()"><span>▦</span>Каталог</a>
     <a href="#cart"><span>🛒</span>Корзина</a>
+    <a href="#gamesPanel" onclick="openGames()"><span>🎮</span>Игры</a>
     <a href="#customerName"><span>👤</span>Профиль</a>
   </nav>
 </div>
@@ -286,6 +342,64 @@
     document.getElementById('vpnPanel').classList.toggle('active', category === 'vpn');
     document.getElementById(category === 'freefire' ? 'freefirePanel' : 'vpnPanel').scrollIntoView({behavior:'smooth',block:'start'});
   }
+  let gameCells = Array(9).fill('');
+  let currentPlayer = 'X';
+  let gameFinished = false;
+  const gameScores = {X:0,O:0,draw:0};
+  const winLines = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+
+  function openGames() {
+    document.getElementById('categories').style.display = 'none';
+    document.getElementById('freefirePanel').classList.remove('active');
+    document.getElementById('vpnPanel').classList.remove('active');
+    document.getElementById('gamesPanel').classList.add('active');
+    document.getElementById('gamesPanel').scrollIntoView({behavior:'smooth',block:'start'});
+    renderGame();
+  }
+  function makeMove(index) {
+    if (gameFinished || gameCells[index]) return;
+    gameCells[index] = currentPlayer;
+    const winningLine = winLines.find(line => line.every(i => gameCells[i] === currentPlayer));
+    if (winningLine) {
+      gameFinished = true;
+      gameScores[currentPlayer]++;
+      document.getElementById('gameStatus').textContent = '🏆 Победил игрок ' + currentPlayer + '!';
+      renderGame(winningLine);
+      return;
+    }
+    if (gameCells.every(Boolean)) {
+      gameFinished = true;
+      gameScores.draw++;
+      document.getElementById('gameStatus').textContent = '🤝 Ничья! Отличная игра.';
+      renderGame();
+      return;
+    }
+    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+    document.getElementById('gameStatus').textContent = 'Ход игрока ' + currentPlayer;
+    renderGame();
+  }
+  function renderGame(winningLine = []) {
+    const cells = document.querySelectorAll('.game-cell');
+    cells.forEach((cell,index) => {
+      cell.textContent = gameCells[index];
+      cell.disabled = gameFinished || Boolean(gameCells[index]);
+      cell.classList.toggle('x',gameCells[index] === 'X');
+      cell.classList.toggle('o',gameCells[index] === 'O');
+      cell.classList.toggle('winner',winningLine.includes(index));
+    });
+    document.getElementById('scoreX').textContent = gameScores.X;
+    document.getElementById('scoreO').textContent = gameScores.O;
+    document.getElementById('scoreDraw').textContent = gameScores.draw;
+    if (!gameFinished) document.getElementById('gameStatus').textContent = 'Ход игрока ' + currentPlayer;
+  }
+  function resetGame() {
+    gameCells = Array(9).fill('');
+    currentPlayer = 'X';
+    gameFinished = false;
+    document.getElementById('gameStatus').textContent = 'Ход игрока X';
+    renderGame();
+  }
+
   function saveCart() { try { localStorage.setItem('nurShopCart', JSON.stringify(cart)); } catch(e) {} }
   function addToCart(id) {
     cart[id] = (cart[id] || 0) + 1; saveCart(); renderCart();
