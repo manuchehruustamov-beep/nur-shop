@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NUR SHOP</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #0b1020;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+    header { text-align: center; padding: 20px 0; }
+    header h1 { color: #65e6bd; font-size: 30px; margin: 0; }
+    header p { color: #9ba8bd; }
+    .profile, .product {
+      background: #171f34;
+      border: 1px solid #293653;
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 14px;
+    }
+    h2 { font-size: 19px; }
+    .products {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    button {
+      width: 100%;
+      padding: 13px;
+      border: 0;
+      border-radius: 11px;
+      background: #65e6bd;
+      color: #07131a;
+      font-weight: bold;
+      font-size: 15px;
+    }
+    .product button { margin-top: 10px; }
+    .emoji { font-size: 30px; }
+    #message { color: #65e6bd; text-align: center; }
+    nav {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 7px;
+      margin-top: 22px;
+    }
+    nav button {
+      background: #202c45;
+      color: white;
+      font-size: 12px;
+      padding: 12px 4px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>NUR SHOP</h1>
+    <p>Твой магазин цифровых товаров</p>
+  </header>
+
+  <section class="profile">
+    <h2>👤 Мой профиль</h2>
+    <p id="username">Пользователь Telegram</p>
+    <p>Добро пожаловать в NUR SHOP!</p>
+  </section>
+
+  <h2>🛍 Каталог товаров</h2>
+  <div class="products">
+    <div class="product">
+      <div class="emoji">💎</div>
+      <h3>Free Fire</h3>
+      <p>Алмазы и пополнение</p>
+      <button onclick="choose('Free Fire')">Открыть</button>
+    </div>
+    <div class="product">
+      <div class="emoji">🔐</div>
+      <h3>VPN</h3>
+      <p>Подписки VPN</p>
+      <button onclick="choose('VPN')">Открыть</button>
+    </div>
+    <div class="product">
+      <div class="emoji">⭐</div>
+      <h3>Telegram Stars</h3>
+      <p>Звёзды Telegram</p>
+      <button onclick="choose('Telegram Stars')">Открыть</button>
+    </div>
+    <div class="product">
+      <div class="emoji">🎁</div>
+      <h3>Другие товары</h3>
+      <p>Цифровые продукты</p>
+      <button onclick="choose('Другие товары')">Открыть</button>
+    </div>
+  </div>
+
+  <p id="message"></p>
+
+  <nav>
+    <button onclick="show('Главная')">Главная</button>
+    <button onclick="show('Профиль')">Профиль</button>
+    <button onclick="show('Заказы')">Заказы</button>
+    <button onclick="show('Поддержка')">Поддержка</button>
+  </nav>
+
+  <script>
+    const tg = window.Telegram?.WebApp;
+    if (tg) {
+      tg.ready();
+      tg.expand();
+      const user = tg.initDataUnsafe?.user;
+      if (user) {
+        document.getElementById('username').textContent =
+          user.first_name || 'Пользователь Telegram';
+      }
+    }
+
+    function choose(name) {
+      document.getElementById('message').textContent =
+        name + ': каталог скоро будет доступен.';
+    }
+
+    function show(name) {
+      document.getElementById('message').textContent =
+        'Раздел «' + name + '» пока находится в разработке.';
+    }
+  </script>
+</body>
+</html>
