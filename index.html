@@ -369,10 +369,12 @@
   function showCategories() {
     document.getElementById('freefirePanel').classList.remove('active');
     document.getElementById('vpnPanel').classList.remove('active');
+    document.getElementById('gamesPanel').classList.remove('active');
     document.getElementById('categories').style.display = 'block';
     document.getElementById('categories').scrollIntoView({behavior:'smooth',block:'start'});
   }
   function openCategory(category) {
+    document.getElementById('gamesPanel').classList.remove('active');
     document.getElementById('categories').style.display = 'none';
     document.getElementById('freefirePanel').classList.toggle('active', category === 'freefire');
     document.getElementById('vpnPanel').classList.toggle('active', category === 'vpn');
