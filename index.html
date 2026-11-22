@@ -41,6 +41,15 @@
     .profile-label{color:#85a9bc;font-size:10px;letter-spacing:1px}
     .profile strong{display:block;margin-top:3px;font-size:15px}
     .profile-meta{margin-top:12px;padding-top:11px;border-top:1px solid #16384c;color:#9fb5c5;font-size:11px;line-height:1.6}
+    .referral-box{margin-top:14px;padding:13px;border:1px solid #17668a;border-radius:15px;background:linear-gradient(145deg,#092235,#07111a)}
+    .referral-title{color:#8deeff;font-size:13px;font-weight:900;line-height:1.4}
+    .referral-box p{margin:7px 0 10px;color:#b2c6d4;font-size:11px;line-height:1.5}
+    .referral-link{overflow-wrap:anywhere;padding:10px;border:1px dashed #247fa5;border-radius:10px;background:#04101a;color:#d9f8ff;font-size:10px;line-height:1.5}
+    .referral-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}
+    .referral-button{padding:10px 8px;border:0;border-radius:10px;background:linear-gradient(90deg,#078cff,#42e6ff);color:#04131d;font-size:10px;font-weight:900}
+    .referral-button.secondary{border:1px solid #18769e;background:#0a2535;color:#b9f5ff}
+    .referral-button:disabled{opacity:.45}
+    .referral-note{margin-top:9px;color:#8daabb;font-size:9px;line-height:1.5}
     .products{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
     .product{min-width:0;padding:15px;display:flex;flex-direction:column}
     .product-art{display:grid;place-items:center;height:91px;border:1px solid #145a7c;border-radius:14px;background:radial-gradient(circle at 50% 35%,#0d3b56,#07111a 72%);font-size:36px}
@@ -131,6 +140,16 @@
         <div><span class="profile-label">ЛИЧНЫЙ КАБИНЕТ</span><strong id="username">Добро пожаловать!</strong></div>
       </div>
       <div class="profile-meta">Твой профиль NUR SHOP<br><span id="profileTelegram">Telegram: данные появятся при запуске через Telegram</span></div>
+      <div class="referral-box">
+        <div class="referral-title">🎁 Приглашай друзей — получай +7 дней VPN</div>
+        <p>Поделись личной ссылкой. Когда новый пользователь перейдёт по ней и зарегистрируется, тебе будет положено ещё 7 дней бесплатного VPN.</p>
+        <div class="referral-link" id="referralLink">Открой Mini App через Telegram, чтобы получить свою ссылку</div>
+        <div class="referral-actions">
+          <button class="referral-button" id="copyReferral" type="button" onclick="copyReferralLink()" disabled>Скопировать ссылку</button>
+          <button class="referral-button secondary" id="shareReferral" type="button" onclick="shareReferralLink()" disabled>Пригласить друга</button>
+        </div>
+        <div class="referral-note" id="referralStatus">Реферальная ссылка появится после запуска приложения в Telegram. Автоматическая проверка приглашений и начисление дней будут подключены на сервере.</div>
+      </div>
     </section>
 
     <section id="vpn">
@@ -174,12 +193,40 @@
     tg.expand();
     const user = tg.initDataUnsafe?.user;
     if (user?.first_name) document.getElementById('username').textContent = user.first_name;
+    if (user?.id) setupReferral(user.id);
     if (user?.username) {
       document.getElementById('customerUsername').value = '@' + user.username;
       document.getElementById('profileTelegram').textContent = 'Telegram: @' + user.username;
     } else if (user?.id) {
       document.getElementById('profileTelegram').textContent = 'Telegram ID: ' + user.id;
     }
+  }
+
+  let personalReferralUrl = '';
+  function setupReferral(telegramUserId) {
+    const code = 'ref_' + String(telegramUserId);
+    personalReferralUrl = 'https://t.me/nurssshop_bot?start=' + encodeURIComponent(code);
+    document.getElementById('referralLink').textContent = personalReferralUrl;
+    document.getElementById('copyReferral').disabled = false;
+    document.getElementById('shareReferral').disabled = false;
+    document.getElementById('referralStatus').textContent = 'Твоя персональная ссылка готова. Для фактического учёта приглашённых и выдачи +7 дней потребуется серверная проверка перехода и регистрации.';
+  }
+
+  async function copyReferralLink() {
+    if (!personalReferralUrl) return;
+    try {
+      await navigator.clipboard.writeText(personalReferralUrl);
+      document.getElementById('referralStatus').textContent = 'Ссылка скопирована. Отправь её другу!';
+    } catch(e) {
+      document.getElementById('referralStatus').textContent = 'Не удалось скопировать автоматически. Нажми и удерживай ссылку, чтобы скопировать её.';
+    }
+  }
+
+  function shareReferralLink() {
+    if (!personalReferralUrl) return;
+    const shareUrl = 'https://t.me/share/url?url=' + encodeURIComponent(personalReferralUrl) + '&text=' + encodeURIComponent('Заходи в NUR SHOP по моей ссылке!');
+    if (tg?.openTelegramLink) tg.openTelegramLink(shareUrl);
+    else window.open(shareUrl, '_blank', 'noopener');
   }
 
   const products = [
