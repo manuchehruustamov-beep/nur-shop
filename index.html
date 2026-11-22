@@ -65,7 +65,12 @@
     .product { position:relative; overflow:hidden; transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease; box-shadow:0 8px 18px #0002; }
     .product:active { transform:scale(.975); }
     .product:hover { border-color:#65e6bd88; box-shadow:0 10px 25px #0004; }
-    .emoji { display:grid; place-items:center; width:48px; height:48px; border-radius:15px; background:linear-gradient(145deg,#263e5c,#172a43); border:1px solid #45617d66; }
+    .emoji { display:grid; place-items:center; width:100%; height:112px; border-radius:15px; overflow:hidden; background:radial-gradient(circle at 50% 35%,#34577a 0,#1c3552 48%,#14243a 100%); border:1px solid #45617d66; }
+    .product-art { width:100%; height:100%; display:block; }
+    .art-glow { filter:drop-shadow(0 8px 12px #0008); }
+    .product:nth-child(4n+1) .emoji { background:radial-gradient(circle at 50% 40%,#285d70,#14263d 72%); }
+    .product:nth-child(4n+2) .emoji { background:radial-gradient(circle at 50% 40%,#51426f,#20213e 72%); }
+    .product:nth-child(4n+3) .emoji { background:radial-gradient(circle at 50% 40%,#66502d,#25253d 72%); }
     .product h3 { min-height:39px; }
     .price { letter-spacing:-.4px; }
     .add { box-shadow:0 5px 15px #65e6bd22; transition:filter .15s,transform .15s; }
@@ -105,7 +110,7 @@
   <h2 id="diamonds-title">💎 Алмазы Free Fire</h2>
   <p class="section-note">Пополнение алмазов по выгодным ценам</p>
   <div class="products" id="diamonds"></div>
-  <h2 id="vouchers">🎟️ Ваучеры Free Fire</h2>
+  <h2 id="vouchers-title">🎟️ Ваучеры Free Fire</h2>
   <p class="section-note">Выбери подходящий ваучер</p>
   <div class="products" id="vouchers"></div>
   <h2 id="vpn">🔐 VPN-подписки</h2>
@@ -164,11 +169,26 @@
   let cart = {};
   try { cart = JSON.parse(localStorage.getItem('nurShopCart') || '{}') || {}; } catch(e) { cart = {}; }
 
+  function productArtwork(category) {
+    if (category === 'diamonds') return `<svg class="product-art" viewBox="0 0 180 112" role="img" aria-label="Иллюстрация алмаза">
+      <defs><linearGradient id="gemA" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d8ffff"/><stop offset=".42" stop-color="#55e5df"/><stop offset="1" stop-color="#2476d8"/></linearGradient><linearGradient id="gemB" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8fffea"/><stop offset="1" stop-color="#3977e8"/></linearGradient></defs>
+      <g class="art-glow"><path d="M54 30 72 17h36l18 13 14 25-42 43-58-43z" fill="url(#gemA)" stroke="#d7ffff" stroke-width="2"/><path d="m54 30 44 68-58-43z" fill="#b8ffff" opacity=".55"/><path d="m72 17 26 81 10-81z" fill="#fff" opacity=".28"/><path d="m108 17 18 13 14 25-42 43z" fill="url(#gemB)" opacity=".85"/><path d="M72 17h36l18 13H54z" fill="#e9ffff" opacity=".65"/></g>
+      <path d="m28 24 3 8 8 3-8 3-3 8-3-8-8-3 8-3zM145 23l2 6 6 2-6 2-2 6-2-6-6-2 6-2zM143 78l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#c8fff6"/></svg>`;
+    if (category === 'vouchers') return `<svg class="product-art" viewBox="0 0 180 112" role="img" aria-label="Иллюстрация ваучера">
+      <defs><linearGradient id="ticketA" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#c7a6ff"/><stop offset="1" stop-color="#7356dc"/></linearGradient></defs>
+      <g class="art-glow" transform="rotate(-8 90 56)"><path d="M42 24h96v18a10 10 0 0 0 0 20v18H42V62a10 10 0 0 0 0-20z" fill="url(#ticketA)" stroke="#e8dfff" stroke-width="2"/><path d="M108 27v62" stroke="#f4eaff" stroke-width="2" stroke-dasharray="4 5" opacity=".8"/><path d="m72 43 4 9 10 1-8 7 2 10-8-5-9 5 2-10-7-7 10-1z" fill="#fff2bd"/><text x="119" y="54" text-anchor="middle" font-size="9" font-weight="900" fill="#fff">NUR</text><text x="119" y="66" text-anchor="middle" font-size="7" font-weight="700" fill="#f2eaff">PASS</text></g>
+      <path d="m31 25 3 7 7 3-7 3-3 7-3-7-7-3 7-3zM148 75l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#e7d8ff"/></svg>`;
+    return `<svg class="product-art" viewBox="0 0 180 112" role="img" aria-label="Иллюстрация VPN-защиты">
+      <defs><linearGradient id="shieldA" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8affd5"/><stop offset="1" stop-color="#238eaa"/></linearGradient></defs>
+      <g class="art-glow"><path d="M90 13 132 29v25c0 25-17 40-42 49-25-9-42-24-42-49V29z" fill="url(#shieldA)" stroke="#d7fff1" stroke-width="2"/><path d="M90 23 121 35v19c0 19-12 31-31 39-19-8-31-20-31-39V35z" fill="#123d51" opacity=".5"/><path d="M76 56a14 14 0 1 1 28 0v4H76z" fill="none" stroke="#effff9" stroke-width="4"/><rect x="72" y="58" width="36" height="25" rx="6" fill="#effff9"/><circle cx="90" cy="69" r="3" fill="#278b91"/><path d="M90 72v5" stroke="#278b91" stroke-width="2"/></g>
+      <path d="m34 32 3 8 8 3-8 3-3 8-3-8-8-3 8-3zM146 27l2 6 6 2-6 2-2 6-2-6-6-2 6-2zM145 81l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#a8ffe5"/></svg>`;
+  }
+
   function renderProducts() {
     ['diamonds','vouchers','vpn'].forEach(category => {
       document.getElementById(category).innerHTML = products.filter(p => p.category === category).map(p => `
         <article class="product">
-          <div class="emoji">${p.emoji}</div><h3>${p.name}</h3>
+          <div class="emoji">${productArtwork(p.category)}</div><h3>${p.name}</h3>
           <p>${p.free ? 'Бесплатный пробный доступ' : 'Отличный выбор для тебя'}</p>
           <div class="price">${p.free ? 'БЕСПЛАТНО' : p.price.toLocaleString('ru-RU') + ' ₽'}</div>
           <button class="add" onclick="addToCart('${p.id}')">${p.free ? '🎁 Получить' : '＋ В корзину'}</button>
