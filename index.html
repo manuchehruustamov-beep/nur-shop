@@ -66,10 +66,10 @@
 <div class="wheel-kicker">✦ NUR SHOP / LUCKY WHEEL ✦</div>
 <p class="wheel-subtitle" id="wheelSpinInfo">Крути колесо и получай настоящие призы на баланс NUR SHOP!</p>
 <div class="wheel-strip-stage"><div class="wheel-strip-marker"><span>▼</span></div><div class="wheel-strip-viewport" id="wheelStripViewport"><div class="wheel-strip-track" id="wheelStripTrack"></div></div><div class="wheel-strip-caption"><span>← ЛЕНТА ПРИЗОВ →</span><span>ОСТАНОВКА ПО ЦЕНТРУ</span></div></div>
-<button class="action wheel-spin" id="wheelSpinButton" onclick="spinWheel()">✦ КРУТИТЬ РУЛЕТКУ</button>
-<div class="wheel-result" id="wheelResult" aria-live="polite">Твоя удача уже рядом!<small>Нажми кнопку, чтобы запустить вращение.</small></div>
+<button class="action wheel-spin" id="wheelSpinButton" style="display:none" onclick="spinWheel()">✦ КРУТИТЬ РУЛЕТКУ</button>
+<div class="wheel-result" id="wheelResult" aria-live="polite">Проверяем права администратора…<small>Бесплатная прокрутка доступна только администраторам.</small></div>
 </div>
-<div class="panel"><h2>Призы рулетки</h2><div class="wheel-prize-list" id="wheelPrizeList"></div><p class="muted" style="margin:13px 0 0">Одна бесплатная попытка в день. Если выпадет «Ещё попытка», она добавится автоматически. Денежные призы сразу зачисляются на твой баланс.</p></div>
+<div class="panel"><h2>Призы рулетки</h2><div class="wheel-prize-list" id="wheelPrizeList"></div><p class="muted" style="margin:13px 0 0">Бесплатная прокрутка доступна только администраторам. Если выпадет «Ещё попытка», она добавится автоматически. Денежные призы сразу зачисляются на баланс.</p></div>
 </section>
 <section class="page" id="balancePage"><h2 class="section-title">Мой баланс</h2><div class="info-card"><span>Доступный баланс</span><strong id="balanceAmount">0 ₽</strong></div><button class="action topup-main" onclick="openTopup()">＋ ПОПОЛНИТЬ БАЛАНС</button><p class="muted">Баланс отображается в российских рублях. Зачисление возможно только после подтверждения оплаты.</p><div class="panel"><h2>Пополнение баланса</h2><p class="muted">Выбери сумму, чтобы подготовить платёж.</p><div class="topup-options"><button class="topup-option selected" onclick="selectTopup(100,this)">100 ₽</button><button class="topup-option" onclick="selectTopup(250,this)">250 ₽</button><button class="topup-option" onclick="selectTopup(500,this)">500 ₽</button><button class="topup-option" onclick="selectTopup(1000,this)">1 000 ₽</button></div><button class="action" onclick="startTopup()">Продолжить</button><p class="muted" id="topupNotice">Платёжный шлюз ещё не подключён. Баланс не будет изменён без подтверждённой оплаты.</p></div></section>
 <section class="page" id="historyPage"><h2 class="section-title">История операций</h2><div class="panel"><h2>Пополнения и списания</h2><p class="history-caption">Все суммы указаны в российских рублях (₽).</p><div id="balanceHistory"><div class="empty">Операций пока нет</div></div></div><div class="panel"><h2>Выигрыши рулетки</h2><div id="wheelHistory" class="empty">Выигрышей пока нет</div></div><div class="panel"><h2>История заказов</h2><div class="empty">Пока заказов нет</div></div></section>
@@ -162,7 +162,7 @@ async async function spinWheel(){
   if(!response.prize)throw new Error('Сервер не вернул результат рулетки.');
   const winner=Number(response.prize.prize_index);
   if(!Number.isInteger(winner)||winner<0||winner>=wheelPrizes.length)throw new Error('Получен некорректный результат.');
-  updateWalletUI(response.wallet);
+  updateWalletUI(response.wallet,response.is_admin===true);
   btn.textContent='ЛЕНТА ВРАЩАЕТСЯ…';
   result.innerHTML='Лента набирает скорость!<small>Ожидай остановки на выигрышной карточке.</small>';
   await animateWheelStrip(winner);
@@ -231,16 +231,21 @@ async function walletApi(action){
  if(!response.ok)throw new Error(data.error||'Сервер временно недоступен.');
  return data;
 }
-function updateWalletUI(snapshot){
+function updateWalletUI(snapshot,isAdmin=false){
  if(!snapshot)return;walletSnapshot=snapshot;
+ const spinButton=document.getElementById('wheelSpinButton');
+ const wheelResult=document.getElementById('wheelResult');
+ if(spinButton)spinButton.style.display=isAdmin?'':'none';
+ if(wheelResult&&!isAdmin)wheelResult.innerHTML='🔒 Бесплатная прокрутка доступна только администраторам.';
+
  const value=formatRuble(snapshot.balance||0);
  ['balanceAmount','headerBalance','profileBalanceAmount'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=value;});
  const info=document.getElementById('wheelSpinInfo');
- if(info)info.textContent='Баланс: '+value+' · Дополнительных попыток: '+(snapshot.bonus_spins||0)+' · 1 бесплатная попытка в день';
+ if(info)info.textContent='Баланс: '+value+' · Дополнительных попыток: '+(snapshot.bonus_spins||0)+(isAdmin?' · Администратор: бесплатные прокрутки без лимита':' · Рулетка доступна администраторам');
  renderBalanceHistory();
 }
 async function loadWallet(){
- try{const data=await walletApi('balance');updateWalletUI(data.wallet);}
+ try{const data=await walletApi('balance');updateWalletUI(data.wallet,data.is_admin===true);}
  catch(error){
   const info=document.getElementById('wheelSpinInfo');
   if(info)info.textContent=error.message||'Не удалось загрузить баланс.';
