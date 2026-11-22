@@ -418,9 +418,6 @@
     <label class="field" id="diamondIdWrap" style="display:none">🎮 ID игрока Free Fire
       <input id="diamondPlayerId" name="diamondPlayerId" type="text" inputmode="numeric" maxlength="20" placeholder="Введи свой игровой ID" autocomplete="off">
     </label>
-    <label class="field" id="diamondIdConfirmWrap" style="display:none">🔁 Повтори ID игрока Free Fire
-      <input id="diamondPlayerIdConfirm" name="diamondPlayerIdConfirm" type="text" inputmode="numeric" maxlength="20" placeholder="Повтори игровой ID" autocomplete="off">
-    </label>
     <h3 class="form-title">📝 Оформление заказа</h3>
     <form id="orderForm" onsubmit="submitOrder(event)">
       <label class="field">👤 Твоё имя
@@ -529,9 +526,6 @@
     const diamondIdWrap = document.getElementById('diamondIdWrap');
     diamondIdWrap.style.display = hasDiamonds ? 'block' : 'none';
     document.getElementById('diamondPlayerId').required = hasDiamonds;
-    const diamondIdConfirmWrap = document.getElementById('diamondIdConfirmWrap');
-    diamondIdConfirmWrap.style.display = hasDiamonds ? 'block' : 'none';
-    document.getElementById('diamondPlayerIdConfirm').required = hasDiamonds;
     document.getElementById('cartItems').innerHTML = entries.length ? entries.map(p => `
       <div class="cart-line">
         <div><div class="cart-name">${p.emoji} ${p.name}</div><div class="cart-sub">${p.free ? 'Бесплатно' : (p.price * cart[p.id]).toLocaleString('ru-RU') + ' ₽'}</div></div>
@@ -553,15 +547,9 @@
     if (!name || !username) { message.textContent = 'Заполни имя и Telegram username.'; return; }
     const hasDiamonds = entries.some(p => p.category === 'diamonds');
     const diamondPlayerId = document.getElementById('diamondPlayerId').value.trim();
-    const diamondPlayerIdConfirm = document.getElementById('diamondPlayerIdConfirm').value.trim();
     if (hasDiamonds && !/^\d{5,20}$/.test(diamondPlayerId)) {
       message.textContent = 'Введи корректный ID игрока Free Fire (от 5 до 20 цифр).';
       document.getElementById('diamondPlayerId').focus();
-      return;
-    }
-    if (hasDiamonds && diamondPlayerId !== diamondPlayerIdConfirm) {
-      message.textContent = 'ID не совпадают. Проверь оба поля.';
-      document.getElementById('diamondPlayerIdConfirm').focus();
       return;
     }
     if (!/^[a-zA-Z0-9_]{5,32}$/.test(username)) {
