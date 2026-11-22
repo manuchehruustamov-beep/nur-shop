@@ -8,17 +8,13 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     * { box-sizing: border-box; }
-    body {
-      margin: 0; padding: 18px 14px 36px; color: #f5f7ff;
-      background: radial-gradient(circle at 50% -10%, #203c59 0, #0b1426 42%, #080d19 100%);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-    }
-    .wrap { max-width: 680px; margin: 0 auto; }
-    header { text-align: center; padding: 22px 8px 18px; }
-    .logo { display:inline-block; padding: 7px 13px; border:1px solid #3ce3bb66; border-radius:999px; color:#65e6bd; background:#65e6bd12; font-size:12px; font-weight:800; letter-spacing:2px; }
+    body { margin:0; padding:18px 14px 36px; color:#f5f7ff; background:radial-gradient(circle at 50% -10%,#203c59 0,#0b1426 42%,#080d19 100%); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif; }
+    .wrap { max-width:680px; margin:0 auto; }
+    header { text-align:center; padding:22px 8px 18px; }
+    .logo { display:inline-block; padding:7px 13px; border:1px solid #3ce3bb66; border-radius:999px; color:#65e6bd; background:#65e6bd12; font-size:12px; font-weight:800; letter-spacing:2px; }
     header h1 { margin:12px 0 6px; font-size:34px; letter-spacing:1px; background:linear-gradient(90deg,#65e6bd,#72baff); -webkit-background-clip:text; color:transparent; }
     header p { margin:0; color:#aab7cc; font-size:14px; }
-    .profile, .cart, .product { background:linear-gradient(145deg,#18263c,#111b2e); border:1px solid #2a3d59; border-radius:18px; }
+    .profile,.cart,.product { background:linear-gradient(145deg,#18263c,#111b2e); border:1px solid #2a3d59; border-radius:18px; }
     .profile { padding:15px 17px; margin-bottom:25px; color:#c7d3e7; }
     .profile strong { color:#fff; }
     h2 { font-size:19px; margin:25px 2px 13px; }
@@ -31,7 +27,6 @@
     .price { margin-top:12px; color:#65e6bd; font-size:19px; font-weight:850; }
     button { border:0; border-radius:12px; padding:12px; font-weight:800; font-size:13px; cursor:pointer; }
     .add { margin-top:11px; width:100%; color:#07151a; background:linear-gradient(90deg,#65e6bd,#8ce9d1); }
-    .add:active, .small:active { transform:scale(.98); }
     .cart { padding:16px; margin-top:26px; }
     .cart-head { display:flex; justify-content:space-between; align-items:center; gap:10px; }
     .cart-head h2 { margin:0; }
@@ -46,9 +41,13 @@
     .qty { min-width:14px; text-align:center; font-weight:800; font-size:13px; }
     .total { display:flex; justify-content:space-between; padding:16px 0; font-size:16px; font-weight:800; }
     .total strong { color:#65e6bd; font-size:21px; }
-    .checkout { width:100%; background:linear-gradient(90deg,#65e6bd,#8ce9d1); color:#07151a; }
+    .form-title { margin:18px 0 12px; font-size:16px; }
+    .field { display:block; margin:12px 0; color:#c7d3e7; font-size:12px; font-weight:700; }
+    .field input { display:block; width:100%; margin-top:7px; padding:13px 14px; border-radius:11px; border:1px solid #344966; background:#0d1729; color:#fff; font-size:15px; outline:none; }
+    .field input:focus { border-color:#65e6bd; }
+    .confirm { width:100%; margin-top:7px; background:linear-gradient(90deg,#65e6bd,#8ce9d1); color:#07151a; }
     .hint { color:#91a1b8; font-size:11px; line-height:1.5; margin:10px 2px 0; }
-    #message { min-height:20px; text-align:center; color:#65e6bd; font-size:13px; margin:12px 0; }
+    #message { min-height:20px; text-align:center; color:#65e6bd; font-size:13px; margin:12px 0; white-space:pre-wrap; }
     footer { text-align:center; color:#7788a2; font-size:11px; padding:22px 0 8px; }
     @media (max-width:360px) { .products { grid-template-columns:1fr; } }
   </style>
@@ -60,35 +59,36 @@
     <h1>✨ NUR SHOP</h1>
     <p>Твой магазин цифровых товаров — быстро и удобно</p>
   </header>
-
   <section class="profile">
     👤 Добро пожаловать, <strong id="username">друг!</strong><br>
     <span style="font-size:12px;color:#91a4bd">Выбирай товары и добавляй их в корзину 🛍️</span>
   </section>
-
   <h2>💎 Алмазы Free Fire</h2>
   <p class="section-note">Пополнение алмазов по выгодным ценам</p>
   <div class="products" id="diamonds"></div>
-
   <h2>🎟️ Ваучеры Free Fire</h2>
   <p class="section-note">Выбери подходящий ваучер</p>
   <div class="products" id="vouchers"></div>
-
   <h2>🔐 VPN-подписки</h2>
   <p class="section-note">Защищённое и удобное подключение</p>
   <div class="products" id="vpn"></div>
 
   <section class="cart" id="cart">
-    <div class="cart-head">
-      <h2>🛒 Моя корзина</h2>
-      <span class="count" id="cartCount">0 товаров</span>
-    </div>
+    <div class="cart-head"><h2>🛒 Моя корзина</h2><span class="count" id="cartCount">0 товаров</span></div>
     <div id="cartItems"><div class="empty">Корзина пока пуста 🥺<br>Добавь товары из каталога!</div></div>
     <div class="total"><span>Итого к оплате:</span><strong id="total">0 ₽</strong></div>
-    <button class="checkout" onclick="copyOrder()">📋 Скопировать заказ</button>
-    <p class="hint">После копирования отправь текст заказа продавцу в Telegram для подтверждения и оплаты. Оплата не списывается автоматически.</p>
+    <h3 class="form-title">📝 Оформление заказа</h3>
+    <form id="orderForm" onsubmit="submitOrder(event)">
+      <label class="field">👤 Твоё имя
+        <input id="customerName" name="name" type="text" maxlength="60" placeholder="Например, Алексей" autocomplete="name" required>
+      </label>
+      <label class="field">📲 Telegram username
+        <input id="customerUsername" name="username" type="text" maxlength="40" placeholder="@username" autocomplete="off" required>
+      </label>
+      <button class="confirm" type="submit">✅ Подтвердить заказ</button>
+    </form>
+    <p class="hint">После подтверждения появится готовый текст заказа. Отправь его продавцу в Telegram. Это подтверждение заявки, а не автоматическая оплата.</p>
   </section>
-
   <p id="message" role="status"></p>
   <footer>💚 Спасибо, что выбираешь NUR SHOP!</footer>
 </div>
@@ -99,20 +99,21 @@
     tg.ready(); tg.expand();
     const user = tg.initDataUnsafe?.user;
     if (user?.first_name) document.getElementById('username').textContent = user.first_name;
+    if (user?.username) document.getElementById('customerUsername').value = '@' + user.username;
   }
 
   const products = [
-    {id:'d110', category:'diamonds', emoji:'💎', name:'110 алмазов', price:77},
-    {id:'d341', category:'diamonds', emoji:'💎', name:'341 алмаз', price:237},
-    {id:'d572', category:'diamonds', emoji:'💎', name:'572 алмаза', price:386},
-    {id:'d1166', category:'diamonds', emoji:'💎', name:'1 166 алмазов', price:774},
-    {id:'v7lite', category:'vouchers', emoji:'🎟️', name:'Ваучер Lite на 7 дней', price:37},
-    {id:'v7', category:'vouchers', emoji:'🎟️', name:'Ваучер на 7 дней', price:155},
-    {id:'v30', category:'vouchers', emoji:'🎟️', name:'Ваучер на 30 дней', price:557},
-    {id:'vpn7', category:'vpn', emoji:'🎁', name:'VPN на 7 дней', price:0, free:true},
-    {id:'vpn30', category:'vpn', emoji:'🔐', name:'VPN на 30 дней', price:199},
-    {id:'vpn90', category:'vpn', emoji:'🚀', name:'VPN на 3 месяца', price:444},
-    {id:'vpn365', category:'vpn', emoji:'👑', name:'VPN на 1 год', price:1400}
+    {id:'d110',category:'diamonds',emoji:'💎',name:'110 алмазов',price:77},
+    {id:'d341',category:'diamonds',emoji:'💎',name:'341 алмаз',price:237},
+    {id:'d572',category:'diamonds',emoji:'💎',name:'572 алмаза',price:386},
+    {id:'d1166',category:'diamonds',emoji:'💎',name:'1 166 алмазов',price:774},
+    {id:'v7lite',category:'vouchers',emoji:'🎟️',name:'Ваучер Lite на 7 дней',price:37},
+    {id:'v7',category:'vouchers',emoji:'🎟️',name:'Ваучер на 7 дней',price:155},
+    {id:'v30',category:'vouchers',emoji:'🎟️',name:'Ваучер на 30 дней',price:557},
+    {id:'vpn7',category:'vpn',emoji:'🎁',name:'VPN на 7 дней',price:0,free:true},
+    {id:'vpn30',category:'vpn',emoji:'🔐',name:'VPN на 30 дней',price:199},
+    {id:'vpn90',category:'vpn',emoji:'🚀',name:'VPN на 3 месяца',price:444},
+    {id:'vpn365',category:'vpn',emoji:'👑',name:'VPN на 1 год',price:1400}
   ];
 
   let cart = {};
@@ -120,35 +121,26 @@
 
   function renderProducts() {
     ['diamonds','vouchers','vpn'].forEach(category => {
-      const target = document.getElementById(category);
-      target.innerHTML = products.filter(p => p.category === category).map(p => `
+      document.getElementById(category).innerHTML = products.filter(p => p.category === category).map(p => `
         <article class="product">
-          <div class="emoji">${p.emoji}</div>
-          <h3>${p.name}</h3>
+          <div class="emoji">${p.emoji}</div><h3>${p.name}</h3>
           <p>${p.free ? 'Бесплатный пробный доступ' : 'Отличный выбор для тебя'}</p>
           <div class="price">${p.free ? 'БЕСПЛАТНО' : p.price.toLocaleString('ru-RU') + ' ₽'}</div>
           <button class="add" onclick="addToCart('${p.id}')">${p.free ? '🎁 Получить' : '＋ В корзину'}</button>
         </article>`).join('');
     });
   }
-
-  function saveCart() {
-    try { localStorage.setItem('nurShopCart', JSON.stringify(cart)); } catch(e) {}
-  }
-
+  function saveCart() { try { localStorage.setItem('nurShopCart', JSON.stringify(cart)); } catch(e) {} }
   function addToCart(id) {
-    cart[id] = (cart[id] || 0) + 1;
-    saveCart(); renderCart();
+    cart[id] = (cart[id] || 0) + 1; saveCart(); renderCart();
     const p = products.find(x => x.id === id);
     document.getElementById('message').textContent = '✅ ' + p.name + ' добавлен в корзину!';
   }
-
   function changeQty(id, delta) {
     cart[id] = (cart[id] || 0) + delta;
     if (cart[id] <= 0) delete cart[id];
     saveCart(); renderCart();
   }
-
   function renderCart() {
     const entries = products.filter(p => cart[p.id] > 0);
     const qty = entries.reduce((sum,p) => sum + cart[p.id], 0);
@@ -159,27 +151,35 @@
       <div class="cart-line">
         <div><div class="cart-name">${p.emoji} ${p.name}</div><div class="cart-sub">${p.free ? 'Бесплатно' : (p.price * cart[p.id]).toLocaleString('ru-RU') + ' ₽'}</div></div>
         <div class="controls">
-          <button class="small" aria-label="Уменьшить количество" onclick="changeQty('${p.id}',-1)">−</button>
+          <button type="button" class="small" aria-label="Уменьшить количество" onclick="changeQty('${p.id}',-1)">−</button>
           <span class="qty">${cart[p.id]}</span>
-          <button class="small" aria-label="Увеличить количество" onclick="changeQty('${p.id}',1)">＋</button>
+          <button type="button" class="small" aria-label="Увеличить количество" onclick="changeQty('${p.id}',1)">＋</button>
         </div>
       </div>`).join('') : '<div class="empty">Корзина пока пуста 🥺<br>Добавь товары из каталога!</div>';
   }
 
-  async function copyOrder() {
+  async function submitOrder(event) {
+    event.preventDefault();
     const entries = products.filter(p => cart[p.id] > 0);
-    if (!entries.length) {
-      document.getElementById('message').textContent = '🛒 Сначала добавь товары в корзину.';
+    const message = document.getElementById('message');
+    if (!entries.length) { message.textContent = '🛒 Сначала добавь товары в корзину.'; return; }
+    const name = document.getElementById('customerName').value.trim();
+    const username = document.getElementById('customerUsername').value.trim().replace(/^@+/, '');
+    if (!name || !username) { message.textContent = 'Заполни имя и Telegram username.'; return; }
+    if (!/^[a-zA-Z0-9_]{5,32}$/.test(username)) {
+      message.textContent = 'Проверь username: введи имя пользователя Telegram без пробелов (5–32 символа).';
       return;
     }
     const total = entries.reduce((sum,p) => sum + p.price * cart[p.id], 0);
-    const lines = entries.map(p => p.name + ' × ' + cart[p.id] + ' — ' + (p.price * cart[p.id]).toLocaleString('ru-RU') + ' ₽');
-    const order = '🛍️ Заказ NUR SHOP\n' + lines.join('\n') + '\n\nИтого: ' + total.toLocaleString('ru-RU') + ' ₽';
+    const lines = entries.map(p => '• ' + p.name + ' × ' + cart[p.id] + ' — ' + (p.price * cart[p.id]).toLocaleString('ru-RU') + ' ₽');
+    const orderText = '🛍️ ЗАКАЗ NUR SHOP\n👤 Имя: ' + name + '\n📲 Telegram: @' + username + '\n\n' + lines.join('\n') + '\n\n💰 Итого: ' + total.toLocaleString('ru-RU') + ' ₽\n\n✅ Заказ подтверждён покупателем.';
+    const ok = window.confirm('Подтвердить заказ на сумму ' + total.toLocaleString('ru-RU') + ' ₽?');
+    if (!ok) return;
     try {
-      await navigator.clipboard.writeText(order);
-      document.getElementById('message').textContent = '✅ Заказ скопирован! Отправь его продавцу в Telegram.';
+      await navigator.clipboard.writeText(orderText);
+      message.textContent = '🎉 Заказ подтверждён! Текст заказа скопирован. Отправь его продавцу в Telegram:\n\n' + orderText;
     } catch(e) {
-      document.getElementById('message').textContent = order;
+      message.textContent = '🎉 Заказ подтверждён! Скопируй и отправь продавцу:\n\n' + orderText;
     }
   }
 
