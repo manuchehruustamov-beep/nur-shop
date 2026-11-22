@@ -415,6 +415,9 @@
     <div class="cart-head"><h2>🛒 Моя корзина</h2><span class="count" id="cartCount">0 товаров</span></div>
     <div id="cartItems"><div class="empty">Корзина пока пуста 🥺<br>Добавь товары из каталога!</div></div>
     <div class="total"><span>Итого к оплате:</span><strong id="total">0 ₽</strong></div>
+    <label class="field" id="diamondIdWrap" style="display:none">🎮 ID игрока Free Fire
+      <input id="diamondPlayerId" name="diamondPlayerId" type="text" inputmode="numeric" maxlength="20" placeholder="Введи свой игровой ID" autocomplete="off">
+    </label>
     <h3 class="form-title">📝 Оформление заказа</h3>
     <form id="orderForm" onsubmit="submitOrder(event)">
       <label class="field">👤 Твоё имя
@@ -519,6 +522,10 @@
     const total = entries.reduce((sum,p) => sum + p.price * cart[p.id], 0);
     document.getElementById('cartCount').textContent = qty + (qty === 1 ? ' товар' : qty >= 2 && qty <= 4 ? ' товара' : ' товаров');
     document.getElementById('total').textContent = total.toLocaleString('ru-RU') + ' ₽';
+    const hasDiamonds = entries.some(p => p.category === 'diamonds');
+    const diamondIdWrap = document.getElementById('diamondIdWrap');
+    diamondIdWrap.style.display = hasDiamonds ? 'block' : 'none';
+    document.getElementById('diamondPlayerId').required = hasDiamonds;
     document.getElementById('cartItems').innerHTML = entries.length ? entries.map(p => `
       <div class="cart-line">
         <div><div class="cart-name">${p.emoji} ${p.name}</div><div class="cart-sub">${p.free ? 'Бесплатно' : (p.price * cart[p.id]).toLocaleString('ru-RU') + ' ₽'}</div></div>
@@ -538,13 +545,21 @@
     const name = document.getElementById('customerName').value.trim();
     const username = document.getElementById('customerUsername').value.trim().replace(/^@+/, '');
     if (!name || !username) { message.textContent = 'Заполни имя и Telegram username.'; return; }
+    const hasDiamonds = entries.some(p => p.category === 'diamonds');
+    const diamondPlayerId = document.getElementById('diamondPlayerId').value.trim();
+    if (hasDiamonds && !/^\\d{5,20}$/.test(diamondPlayerId)) {
+      message.textContent = 'Введи корректный ID игрока Free Fire (от 5 до 20 цифр).';
+      document.getElementById('diamondPlayerId').focus();
+      return;
+    }
     if (!/^[a-zA-Z0-9_]{5,32}$/.test(username)) {
       message.textContent = 'Проверь username: введи имя пользователя Telegram без пробелов (5–32 символа).';
       return;
     }
     const total = entries.reduce((sum,p) => sum + p.price * cart[p.id], 0);
     const lines = entries.map(p => '• ' + p.name + ' × ' + cart[p.id] + ' — ' + (p.price * cart[p.id]).toLocaleString('ru-RU') + ' ₽');
-    const orderText = '🛍️ ЗАКАЗ NUR SHOP\n👤 Имя: ' + name + '\n📲 Telegram: @' + username + '\n\n' + lines.join('\n') + '\n\n💰 Итого: ' + total.toLocaleString('ru-RU') + ' ₽\n\n✅ Заказ подтверждён покупателем.';
+    const playerIdLine = hasDiamonds ? '\\n🎮 ID игрока Free Fire: ' + diamondPlayerId : '';
+    const orderText = '🛍️ ЗАКАЗ NUR SHOP\n👤 Имя: ' + name + '\n📲 Telegram: @' + username + playerIdLine + '\n\n' + lines.join('\n') + '\n\n💰 Итого: ' + total.toLocaleString('ru-RU') + ' ₽\n\n✅ Заказ подтверждён покупателем.';
     const ok = window.confirm('Подтвердить заказ на сумму ' + total.toLocaleString('ru-RU') + ' ₽?');
     if (!ok) return;
     try {
