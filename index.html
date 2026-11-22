@@ -6,7 +6,162 @@
   <meta name="theme-color" content="#05090f">
   <title>NUR SHOP — цифровой магазин</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script src="https://unpkg.com/peerjs@1.5.5/dist/peerjs.min.js"></script>
+  <style>
+    * { box-sizing: border-box; font-weight: 700; }
+    body, button, input { font-weight: 700; }
+    h1, h2, h3, strong, b, .price, .logo, .hero-kicker, .benefit, .cart-name, .total, .count, .bottom-nav a { font-weight: 900; }
+    p, .section-note, .hint, footer, .field, .profile, .empty { font-weight: 700; }
+    body { margin:0; padding:18px 14px 36px; color:#f5f7ff; background:radial-gradient(ellipse at 50% -15%,#061521 0%,#0b0b0c 38%,#02060b 78%,#000 100%); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif; }
+    .wrap { max-width:680px; margin:0 auto; }
+    header { text-align:center; padding:22px 8px 18px; }
+    .logo { display:inline-block; padding:7px 13px; border:1px solid #00c8ff66; border-radius:999px; color:#00c8ff; background:#00c8ff12; font-size:12px; font-weight:800; letter-spacing:2px; }
+    header h1 { margin:12px 0 6px; font-size:34px; letter-spacing:1px; background:linear-gradient(90deg,#008cff,#005b91); -webkit-background-clip:text; color:transparent; }
+    header p { margin:0; color:#c8bfc0; font-size:14px; }
+    .profile,.cart,.product { background:linear-gradient(145deg,#101820,#050d14); border:1px solid #123d56; border-radius:18px; }
+    .profile { padding:15px 17px; margin-bottom:25px; color:#ded3d4; }
+    .profile strong { color:#fff; }
+    h2 { font-size:19px; margin:25px 2px 13px; }
+    .section-note { color:#b9aeb0; font-size:12px; margin:-6px 2px 13px; }
+    .products { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:11px; }
+    .product { padding:14px; min-width:0; display:flex; flex-direction:column; }
+    .emoji { font-size:27px; }
+    .product h3 { margin:9px 0 5px; font-size:15px; line-height:1.3; }
+    .product p { margin:0; color:#c8bfc0; font-size:12px; min-height:30px; }
+    .price { margin-top:12px; color:#00c8ff; font-size:19px; font-weight:850; }
+    button { border:0; border-radius:12px; padding:12px; font-weight:800; font-size:13px; cursor:pointer; }
+    .add { margin-top:11px; width:100%; color:#07151a; background:linear-gradient(90deg,#008cff,#45e5ff); }
+    .cart { padding:16px; margin-top:26px; }
+    .cart-head { display:flex; justify-content:space-between; align-items:center; gap:10px; }
+    .cart-head h2 { margin:0; }
+    .count { color:#07151a; background:#00c8ff; border-radius:999px; padding:5px 10px; font-size:12px; font-weight:900; }
+    #cartItems { margin-top:13px; }
+    .empty { color:#b9aeb0; font-size:13px; text-align:center; padding:18px 4px; }
+    .cart-line { display:grid; grid-template-columns:1fr auto; gap:10px; padding:12px 0; border-bottom:1px solid #123d56; }
+    .cart-name { font-size:13px; font-weight:700; }
+    .cart-sub { color:#00c8ff; font-size:12px; margin-top:4px; }
+    .controls { display:flex; align-items:center; gap:8px; }
+    .small { width:29px; height:29px; padding:0; color:#fff; background:#123d56; font-size:17px; }
+    .qty { min-width:14px; text-align:center; font-weight:800; font-size:13px; }
+    .total { display:flex; justify-content:space-between; padding:16px 0; font-size:16px; font-weight:800; }
+    .total strong { color:#00c8ff; font-size:21px; }
+    .form-title { margin:18px 0 12px; font-size:16px; }
+    .field { display:block; margin:12px 0; color:#ded3d4; font-size:12px; font-weight:700; }
+    .field input { display:block; width:100%; margin-top:7px; padding:13px 14px; border-radius:11px; border:1px solid #104d70; background:#07131d; color:#fff; font-size:15px; outline:none; }
+    .field input:focus { border-color:#00c8ff; }
+    .confirm { width:100%; margin-top:7px; background:linear-gradient(90deg,#00c8ff,#45e5ff); color:#07151a; }
+    .hint { color:#b9aeb0; font-size:11px; line-height:1.5; margin:10px 2px 0; }
+    #message { min-height:20px; text-align:center; color:#00c8ff; font-size:13px; margin:12px 0; white-space:pre-wrap; }
+    footer { text-align:center; color:#918184; font-size:11px; padding:22px 0 8px; }
+    /* NUR SHOP premium refresh */
+    body { padding-bottom:100px; }
+    header { padding-top:26px; }
+    .logo { box-shadow:0 0 24px #00c8ff18; }
+    .hero { position:relative; overflow:hidden; margin:0 0 22px; padding:20px; border:1px solid #104d70; border-radius:22px; background:linear-gradient(125deg,#061521 0%,#101010 52%,#061521 100%); box-shadow:0 16px 36px #0005; }
+    .hero:after { content:"✦"; position:absolute; right:18px; top:0; font-size:104px; line-height:1; color:#45e5ff; opacity:.10; transform:rotate(15deg); }
+    .hero-kicker { color:#45e5ff; font-size:10px; font-weight:900; letter-spacing:2px; text-transform:uppercase; }
+    .hero h2 { margin:9px 0 7px; font-size:23px; line-height:1.15; max-width:280px; }
+    .hero p { margin:0; color:#d5c7c9; font-size:13px; line-height:1.5; max-width:290px; }
+    .hero-cta { display:inline-block; margin-top:15px; padding:10px 15px; border-radius:12px; color:#07151a; background:linear-gradient(90deg,#00c8ff,#45e5ff); font-size:12px; font-weight:900; text-decoration:none; }
+    .benefits { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:0 0 24px; }
+    .benefit { padding:11px 6px; border:1px solid #123d56; border-radius:14px; background:#0a1720; text-align:center; color:#c8bfc0; font-size:10px; line-height:1.4; }
+    .benefit b { display:block; color:#f5f7ff; font-size:11px; margin-top:4px; }
+    .product { position:relative; overflow:hidden; transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease; box-shadow:0 8px 18px #0002; }
+    .product:active { transform:scale(.975); }
+    .product:hover { border-color:#00c8ff88; box-shadow:0 10px 25px #0004; }
+    .emoji { display:grid; place-items:center; width:100%; height:112px; border-radius:15px; overflow:hidden; background:radial-gradient(circle at 50% 35%,#541824 0,#2a1117 48%,#07131d 100%); border:1px solid #126a9166; }
+    .product-art { width:100%; height:100%; display:block; }
+    .art-glow { filter:drop-shadow(0 8px 12px #0008); }
+    .product:nth-child(4n+1) .emoji { background:radial-gradient(circle at 50% 40%,#571b28,#07131d 72%); }
+    .product:nth-child(4n+2) .emoji { background:radial-gradient(circle at 50% 40%,#4b1721,#07131d 72%); }
+    .product:nth-child(4n+3) .emoji { background:radial-gradient(circle at 50% 40%,#55151f,#170b0e 72%); }
+    .product h3 { min-height:39px; }
+    .price { letter-spacing:-.4px; }
+    .add { box-shadow:0 5px 15px #00c8ff22; transition:filter .15s,transform .15s; }
+    .add:active,.confirm:active,.hero-cta:active { transform:scale(.97); filter:brightness(.95); }
+    h2[id] { scroll-margin-top:18px; }
+    .cart { box-shadow:0 14px 30px #0003; }
+    .bottom-nav { position:fixed; z-index:20; left:50%; bottom:10px; transform:translateX(-50%); width:min(650px,calc(100% - 24px)); display:grid; grid-template-columns:repeat(4,1fr); gap:4px; padding:8px; border:1px solid #104d70; border-radius:19px; background:#050d14f2; backdrop-filter:blur(16px); box-shadow:0 12px 35px #0009; }
+    .bottom-nav a { display:flex; flex-direction:column; align-items:center; gap:3px; padding:6px 2px; border-radius:12px; color:#c8bfc0; font-size:10px; font-weight:700; text-decoration:none; }
+    .bottom-nav a span { font-size:18px; }
+    .bottom-nav a:active,.bottom-nav a:hover { color:#00c8ff; background:#00c8ff12; }
+    .premium-hero { min-height:280px; padding:19px 20px 15px; border-color:#125a83; background:radial-gradient(ellipse at 78% 45%,#511321 0%,#061521 30%,#050d14 72%); box-shadow:inset 0 1px #ff879433,0 18px 45px #0008; }
+    .hero-topline,.hero-bottom { position:relative; z-index:2; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+    .hero-topline .hero-kicker { font-size:9px; letter-spacing:2px; }
+    .live-dot { color:#62eaff; font-size:9px; letter-spacing:1px; }
+    .live-dot:first-letter { color:#00c8ff; }
+    .hero-copy { position:relative; z-index:2; max-width:310px; padding:28px 0 22px; }
+    .hero-copy .hero-kicker { font-size:9px; letter-spacing:2.5px; }
+    .hero-copy h2 { margin:10px 0; font-size:30px; line-height:1.02; letter-spacing:-.8px; }
+    .hero-copy h2 em { color:#19cfff; font-style:normal; }
+    .hero-copy p { max-width:260px; font-size:12px; }
+    .premium-hero .hero-cta { font-size:10px; letter-spacing:.8px; box-shadow:0 7px 22px #00c8ff33; }
+    .hero-orbit { position:absolute; right:-18px; top:68px; width:170px; height:170px; display:grid; place-items:center; border:1px solid #19cfff33; border-radius:50%; background:radial-gradient(circle,#00c8ff20 0,#a30c2520 43%,transparent 70%); box-shadow:0 0 55px #00c8ff1a,inset 0 0 35px #00c8ff16; }
+    .hero-orbit:before,.hero-orbit:after { content:""; position:absolute; inset:14px; border:1px solid #45e5ff22; border-radius:50%; transform:rotate(-25deg) scaleX(.72); }
+    .hero-orbit:after { transform:rotate(55deg) scaleX(.72); }
+    .hero-orbit b { color:#19cfff; font-size:82px; font-weight:900; text-shadow:0 0 28px #00c8ff66; }
+    .hero-orbit span,.hero-orbit i { position:absolute; color:#8af1ff; font-size:20px; font-style:normal; }
+    .hero-orbit span { top:19px; right:42px; }.hero-orbit i { bottom:22px; left:28px; }
+    .hero-bottom { padding-top:11px; border-top:1px solid #45e5ff22; color:#b58a91; font-size:8px; letter-spacing:1.1px; }
+    .daily-bonus { position:relative; display:flex; align-items:center; gap:13px; overflow:hidden; margin:0 0 19px; padding:14px; border:1px solid #125a83; border-radius:17px; background:linear-gradient(105deg,#071a2b,#07131d 65%,#061521); box-shadow:0 10px 25px #0005; }
+    .bonus-icon { display:grid; place-items:center; flex:0 0 52px; height:52px; border:1px solid #126a91; border-radius:15px; background:radial-gradient(circle at 50% 35%,#85263a,#071a2b); font-size:27px; box-shadow:0 0 22px #00c8ff22; }
+    .bonus-copy { position:relative; z-index:1; }.bonus-label { display:block; margin-bottom:3px; color:#62eaff; font-size:8px; letter-spacing:2px; }.bonus-copy strong { display:block; color:#fff; font-size:15px; }.bonus-copy p { margin:4px 0 0; color:#cdb9bd; font-size:10px; line-height:1.4; }
+    .bonus-spark { position:absolute; right:12px; top:3px; color:#ff7485; opacity:.18; font-size:60px; }
+    .premium-benefits .benefit { padding:12px 5px; border-color:#123d56; background:linear-gradient(145deg,#0b1720,#040a10); }
+    .premium-benefits .benefit span { color:#19cfff; font-size:17px; }.premium-benefits .benefit b { margin:5px 0 2px; color:#fff; font-size:9px; letter-spacing:.7px; }.premium-benefits .benefit small { color:#bdaeb0; font-size:9px; }
+    @media (max-width:390px) { .hero-orbit { right:-62px; opacity:.65; }.hero-copy { max-width:270px; }.hero-copy h2 { font-size:27px; } }
+    .category-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin:18px 0 24px; }
+    .category-tile { min-height:158px; padding:18px 12px; border:1px solid #125a83; border-radius:19px; color:#fff; background:linear-gradient(145deg,#261116,#100b0d); text-align:center; box-shadow:0 10px 24px #0004; }
+    .category-tile:active { transform:scale(.97); }
+    .banner-tt-category { display:block; color:inherit; text-decoration:none; cursor:pointer; }
+    .banner-tt-category .category-icon { background:radial-gradient(circle at 50% 35%,#064b69,#07131d); }
+    .category-icon { display:grid; place-items:center; width:66px; height:66px; margin:0 auto 12px; border-radius:19px; border:1px solid #126a91; background:radial-gradient(circle at 50% 35%,#6a1b2b,#210d12); font-size:35px; box-shadow:0 0 25px #00c8ff20; }
+    .category-tile strong { display:block; font-size:16px; }
+    .category-tile small { display:block; margin-top:5px; color:#c8bfc0; font-size:11px; }
+    .category-panel { display:none; }
+    .category-panel.active { display:block; }
+    .back-catalog { margin:2px 0 12px; padding:10px 14px; color:#fff; border:1px solid #125a83; background:#211014; }
+    /* Soft hand-drawn neon outlines */
+    .profile,.cart,.product,.hero,.daily-bonus,.category-tile,.benefit,.bottom-nav {
+      border-width:1.5px;
+      border-color:#16739a;
+      box-shadow:inset 0 0 0 1px #00c8ff12,0 10px 24px #0004;
+    }
+    .product { border-radius:18px 21px 16px 20px; }
+    .product:nth-child(even) { border-radius:21px 16px 20px 17px; }
+    .hero { border-radius:23px 20px 25px 18px; }
+    .daily-bonus { border-radius:17px 20px 16px 19px; }
+    .category-tile { border-radius:20px 17px 21px 16px; }
+    .profile,.cart { border-radius:19px 16px 21px 18px; }
+    .product:hover { border-color:#35dfff; box-shadow:inset 0 0 0 1px #00c8ff22,0 10px 25px #0005; }
+    .bottom-nav { grid-template-columns:repeat(4,1fr); }
+    .game-category .category-icon { background:radial-gradient(circle at 50% 35%,#064b69,#07131d); }
+    #gamesPanel { padding-bottom:20px; }
+    .game-heading { margin:4px 0 15px; }
+    .game-kicker { color:#45e5ff; font-size:9px; letter-spacing:2.5px; }
+    .game-heading h2 { margin:7px 0 9px; font-size:23px; }
+    .game-card { padding:17px; border:2px solid #16739a; border-radius:22px 18px 24px 17px; background:radial-gradient(ellipse at 50% 0%,#0a293a,#07131d 58%,#04090e); box-shadow:inset 0 0 25px #00c8ff0c,0 14px 32px #0007; }
+    .game-status { min-height:28px; margin:0 0 15px; color:#8af1ff; text-align:center; font-size:15px; font-weight:900; }
+    .game-board { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:9px; max-width:390px; margin:0 auto; }
+    .game-cell { aspect-ratio:1; min-width:0; padding:0; border:2px solid #16739a; border-radius:17px 13px 19px 14px; background:linear-gradient(145deg,#0b1e2a,#050c13); color:#fff; font-size:clamp(40px,13vw,64px); font-weight:900; box-shadow:inset 0 0 18px #00c8ff0c,0 5px 13px #0005; }
+    .game-cell:nth-child(even) { border-radius:13px 19px 14px 17px; }
+    .game-cell:disabled { opacity:1; cursor:default; }
+    .game-cell.x { color:#45e5ff; text-shadow:0 0 18px #00c8ff99; }
+    .game-cell.o { color:#ff7893; text-shadow:0 0 18px #ff426899; }
+    .game-cell.winner { background:#0b3444; border-color:#65edff; box-shadow:0 0 20px #00c8ff55,inset 0 0 18px #00c8ff22; }
+    .game-score { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:17px 0; }
+    .game-score div { display:flex; flex-direction:column; align-items:center; gap:3px; padding:10px 4px; border:1px solid #16465d; border-radius:13px; background:#07131d; }
+    .score-symbol { font-size:16px; font-weight:900; }.x-symbol { color:#45e5ff; }.o-symbol { color:#ff7893; }.draw-symbol { color:#b8d7e0; }
+    .game-score strong { font-size:20px; color:#fff; }.game-score small { color:#a9c1cb; font-size:9px; }
+    .game-restart { width:100%; color:#04131a; background:linear-gradient(100deg,#008cff,#45e5ff); box-shadow:0 6px 18px #00c8ff24; }
+    .game-footnote { margin:12px 4px; color:#8faab5; font-size:10px; line-height:1.5; text-align:center; }
+
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#05090f">
+  <title>NUR SHOP — цифровой магазин</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     * { box-sizing: border-box; font-weight: 700; }
     body, button, input { font-weight: 700; }
@@ -246,7 +401,6 @@
       <a class="category-tile banner-tt-category" href="https://t.me/+no2Tl-ysru84YzRi" target="_blank" rel="noopener noreferrer" aria-label="Открыть видеоинструкцию BANER TT в Telegram">
         <span class="category-icon">🎬</span><strong>BANER TT</strong><small>Как установить баннер в TikTok</small>
       </a>
-      <button class="category-tile game-category" type="button" onclick="openGames()"><span class="category-icon">❎</span><strong>NUR TIC-TAC-TOE</strong><small>Онлайн-игра с друзьями</small></button>
     </div>
   </section>
   <section class="category-panel" id="freefirePanel">
@@ -263,30 +417,6 @@
     <h2>🔐 VPN-подписки</h2>
     <p class="section-note">Выбери срок подписки и посмотри цену</p>
     <div class="products" id="vpnProducts"></div>
-  </section>
-
-  <section class="category-panel" id="gamesPanel">
-  <button class="back-catalog" type="button" onclick="showCategories()">← Все категории</button>
-  <div class="ttt-heading"><span class="game-kicker">NUR ARENA • ONLINE</span><h2>❎ NUR TIC-TAC-TOE</h2><p>Создай комнату, отправь код другу и играйте вместе онлайн.</p></div>
-  <div class="ttt-lobby" id="tttLobby">
-  <div class="ttt-online-status"><span class="ttt-status-dot" id="tttDot"></span><span id="tttConnectionLabel">ГОТОВ К ИГРЕ</span></div>
-  <button class="ttt-primary" id="tttCreate" type="button" onclick="tttCreateRoom()">＋ Создать комнату</button>
-  <div class="ttt-or">ИЛИ ПРИСОЕДИНИСЬ К ДРУГУ</div>
-  <label class="ttt-label" for="tttRoomCode">Код игровой комнаты</label>
-  <input class="ttt-code-input" id="tttRoomCode" type="text" maxlength="6" placeholder="ABC123" autocomplete="off">
-  <button class="ttt-secondary" id="tttJoin" type="button" onclick="tttJoinRoom()">Войти в комнату</button>
-  <div class="ttt-room-share" id="tttRoomShare" hidden><span>КОД ДЛЯ ДРУГА</span><strong id="tttRoomCodeShown"></strong><button type="button" class="ttt-copy" onclick="tttCopyCode()">⧉ Скопировать код</button><button type="button" class="ttt-copy" onclick="tttLeave()">Отменить комнату</button></div>
-  <div class="ttt-info" id="tttInfo" role="status">Открой NUR SHOP на двух устройствах и подключись к интернету.</div>
-  </div>
-  <div class="ttt-match" id="tttMatch" hidden>
-  <div class="ttt-match-head"><span id="tttRoomName">КОМНАТА</span><span id="tttTurnLabel">ОЖИДАНИЕ</span></div>
-  <div class="ttt-players"><div class="ttt-player" id="tttPlayerX"><b>X</b><span>Создатель</span></div><div class="ttt-player" id="tttPlayerO"><b>O</b><span>Друг</span></div></div>
-  <div class="ttt-board" id="tttBoard" aria-label="Игровое поле крестики-нолики"></div>
-  <div class="ttt-voice" id="tttVoice"><div><b>🎙️ ГОЛОСОВОЙ ЧАТ</b><span id="tttVoiceStatus">Микрофон выключен</span></div><button class="ttt-secondary" id="tttMicButton" type="button" onclick="tttToggleMic()">🎤 Включить микрофон</button><audio id="tttRemoteAudio" autoplay playsinline></audio><small>Разреши доступ к микрофону, чтобы разговаривать с соперником.</small></div>
-  <button class="ttt-secondary" type="button" onclick="tttReset()">↻ Новая партия</button>
-  <button class="ttt-copy ttt-leave" type="button" onclick="tttLeave()">Выйти из комнаты</button>
-  </div>
-  <p class="ttt-footnote">Ходы передаются между устройствами через WebRTC. Supabase не используется.</p>
   </section>
 
   <section class="cart" id="cart">
@@ -382,36 +512,6 @@
     document.getElementById('vpnPanel').classList.toggle('active', category === 'vpn');
     document.getElementById(category === 'freefire' ? 'freefirePanel' : 'vpnPanel').scrollIntoView({behavior:'smooth',block:'start'});
   }
-  let tttPeer=null,tttConn=null,tttHost=false,tttCode="",tttSymbol="X";
-  let tttLocalStream=null,tttVoiceCalls=[],tttVoiceEnabled=false;
-  let tttState={board:Array(9).fill(""),turn:"X",winner:null,draw:false,winLine:[]};
-  const tttWins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-  function openGames(){document.getElementById("categories").style.display="none";document.getElementById("freefirePanel").classList.remove("active");document.getElementById("vpnPanel").classList.remove("active");document.getElementById("gamesPanel").classList.add("active");document.getElementById("gamesPanel").scrollIntoView({behavior:"smooth",block:"start"});}
-  function tttInfo(t){document.getElementById("tttInfo").textContent=t;}
-  function tttBusy(v){["tttCreate","tttJoin"].forEach(id=>document.getElementById(id).disabled=v);}
-  function tttMakeCode(){const chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let c="";for(let i=0;i<6;i++)c+=chars[Math.floor(Math.random()*chars.length)];return c;}
-  function tttCreateRoom(){if(typeof Peer==="undefined"){tttInfo("Модуль онлайн-игры не загрузился. Проверь интернет и обнови страницу.");return;}tttClosePeer();tttHost=true;tttSymbol="X";tttCode=tttMakeCode();tttBusy(true);tttInfo("Создаём комнату…");document.getElementById("tttRoomCodeShown").textContent=tttCode;document.getElementById("tttRoomShare").hidden=false;tttPeer=new Peer("nurttt-"+tttCode.toLowerCase(),{host:"0.peerjs.com",port:443,path:"/",secure:true});tttSetupVoice();tttPeer.on("open",()=>{tttBusy(false);document.getElementById("tttDot").classList.add("ready");document.getElementById("tttConnectionLabel").textContent="КОМНАТА СОЗДАНА";tttInfo("Отправь другу код "+tttCode+". Ждём подключения…");});tttPeer.on("connection",c=>{if(tttConn&&tttConn.open){c.close();return;}tttConn=c;tttWireHost();});tttPeer.on("error",e=>{tttBusy(false);tttInfo("Ошибка: "+(e.type==="unavailable-id"?"код занят, создай новую комнату":e.type==="network"?"нет связи с сервером":e.message||e.type));});}
-  function tttJoinRoom(){if(typeof Peer==="undefined"){tttInfo("Модуль онлайн-игры не загрузился. Проверь интернет.");return;}const code=document.getElementById("tttRoomCode").value.trim().toUpperCase();if(!/^[A-HJ-NP-Z2-9]{6}$/.test(code)){tttInfo("Введи код комнаты из 6 символов.");return;}tttClosePeer();tttHost=false;tttCode=code;tttSymbol="O";tttBusy(true);tttInfo("Подключаемся к комнате "+code+"…");tttPeer=new Peer(undefined,{host:"0.peerjs.com",port:443,path:"/",secure:true});tttSetupVoice();tttPeer.on("open",()=>{tttConn=tttPeer.connect("nurttt-"+code.toLowerCase(),{reliable:true});tttConn.on("open",()=>{tttBusy(false);document.getElementById("tttDot").classList.add("ready");document.getElementById("tttConnectionLabel").textContent="ПОДКЛЮЧЕНО";tttShowMatch();tttInfo("Ты подключился к комнате! Игра началась.");});tttConn.on("data",tttGuestData);tttConn.on("close",tttDisconnected);tttConn.on("error",()=>{tttBusy(false);tttInfo("Не удалось подключиться. Проверь код.");});});tttPeer.on("error",e=>{tttBusy(false);tttInfo("Ошибка подключения: "+(e.type==="peer-unavailable"?"комната не найдена":e.message||e.type));});}
-  function tttSetupVoice(){if(!tttPeer)return;tttPeer.on("call",call=>{tttVoiceCalls.push(call);call.answer(tttLocalStream||undefined);tttBindVoiceCall(call);});}
-  function tttBindVoiceCall(call){call.on("stream",stream=>{const audio=document.getElementById("tttRemoteAudio");audio.srcObject=stream;audio.play().catch(()=>tttVoiceStatus("Нажми на страницу, чтобы включить звук"));});call.on("close",()=>{tttVoiceCalls=tttVoiceCalls.filter(item=>item!==call);const audio=document.getElementById("tttRemoteAudio");audio.srcObject=null;});call.on("error",()=>tttVoiceStatus("Ошибка голосовой связи"));}
-  async function tttToggleMic(){if(tttVoiceEnabled){tttVoiceEnabled=false;if(tttLocalStream)tttLocalStream.getTracks().forEach(track=>track.stop());tttLocalStream=null;tttVoiceCalls.slice().forEach(call=>call.close());tttVoiceCalls=[];tttVoiceStatus("Микрофон выключен");tttMicButtonState(false);return;}if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){tttVoiceStatus("Браузер не поддерживает микрофон");return;}try{tttLocalStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},video:false});tttVoiceEnabled=true;tttMicButtonState(true);tttVoiceStatus("Микрофон включён");if(tttPeer&&tttConn&&tttConn.open&&tttConn.peer){const call=tttPeer.call(tttConn.peer,tttLocalStream);if(call){tttVoiceCalls.push(call);tttBindVoiceCall(call);}}}catch(e){tttVoiceEnabled=false;tttVoiceStatus(e&&e.name==="NotAllowedError"?"Нет доступа к микрофону — разреши его в браузере":"Не удалось включить микрофон");tttMicButtonState(false);}}
-  function tttVoiceStatus(message){const el=document.getElementById("tttVoiceStatus");if(el)el.textContent=message;}
-  function tttMicButtonState(on){const b=document.getElementById("tttMicButton");if(!b)return;b.textContent=on?"🔇 Выключить микрофон":"🎤 Включить микрофон";b.classList.toggle("muted",on);}
-  function tttWireHost(){tttConn.on("open",()=>{tttBusy(false);document.getElementById("tttRoomShare").hidden=true;tttShowMatch();tttSendState();tttInfo("Друг подключился! Ты играешь за X.");});tttConn.on("data",d=>{if(d&&d.type==="move")tttApplyMove(d.index,"O");});tttConn.on("close",tttDisconnected);}
-  function tttGuestData(d){if(d&&d.type==="state"){tttState=d.state;tttShowMatch();tttRender();}}
-  function tttSendState(){if(tttConn&&tttConn.open)tttConn.send({type:"state",state:tttState});}
-  function tttShowMatch(){document.getElementById("tttLobby").hidden=true;document.getElementById("tttMatch").hidden=false;document.getElementById("tttRoomName").textContent="КОМНАТА "+tttCode;tttRender();}
-  function tttRender(){const board=document.getElementById("tttBoard");board.innerHTML="";tttState.board.forEach((v,i)=>{const b=document.createElement("button");b.type="button";b.className="ttt-cell"+(v==="O"?" o":"")+(tttState.winLine.includes(i)?" win":"");b.textContent=v;b.disabled=!!v||!!tttState.winner||tttState.draw||tttState.turn!==tttSymbol;b.setAttribute("aria-label","Клетка "+(i+1));b.addEventListener("click",()=>tttMove(i));board.appendChild(b);});const done=!!tttState.winner||tttState.draw;document.getElementById("tttTurnLabel").textContent=tttState.winner?"ПОБЕДА "+tttState.winner:tttState.draw?"НИЧЬЯ":"ХОД "+tttState.turn;document.getElementById("tttPlayerX").classList.toggle("active",!done&&tttState.turn==="X");document.getElementById("tttPlayerO").classList.toggle("active",!done&&tttState.turn==="O");}
-  function tttMove(i){if(tttState.board[i]||tttState.winner||tttState.draw||tttState.turn!==tttSymbol)return;if(tttHost)tttApplyMove(i,"X");else if(tttConn&&tttConn.open)tttConn.send({type:"move",index:i});}
-  function tttApplyMove(i,symbol){if(!Number.isInteger(i)||i<0||i>8||tttState.board[i]||tttState.winner||tttState.draw||tttState.turn!==symbol)return;tttState.board[i]=symbol;const line=tttWins.find(row=>row.every(n=>tttState.board[n]===symbol));if(line){tttState.winner=symbol;tttState.winLine=line;}else if(tttState.board.every(Boolean)){tttState.draw=true;}else{tttState.turn=symbol==="X"?"O":"X";}tttRender();tttSendState();}
-  function tttReset(){if(!tttHost){tttInfo("Новую партию может начать создатель комнаты.");return;}tttState={board:Array(9).fill(""),turn:"X",winner:null,draw:false,winLine:[]};tttRender();tttSendState();}
-  function tttDisconnected(){tttInfo("Связь с другом потеряна. Создай новую комнату.");tttClosePeer();tttBusy(false);}
-  function tttClosePeer(){try{tttVoiceCalls.slice().forEach(call=>call.close());if(tttLocalStream)tttLocalStream.getTracks().forEach(track=>track.stop());if(tttConn)tttConn.close();if(tttPeer)tttPeer.destroy();}catch(e){}tttVoiceCalls=[];tttLocalStream=null;tttVoiceEnabled=false;tttMicButtonState(false);tttVoiceStatus("Микрофон выключен");document.getElementById("tttRemoteAudio").srcObject=null;tttConn=null;tttPeer=null;document.getElementById("tttMatch").hidden=true;document.getElementById("tttLobby").hidden=false;document.getElementById("tttRoomShare").hidden=true;document.getElementById("tttDot").classList.remove("ready");document.getElementById("tttConnectionLabel").textContent="ГОТОВ К ИГРЕ";}
-  function tttLeave(){tttClosePeer();tttBusy(false);tttInfo("Ты вышел из комнаты.");}
-  async function tttCopyCode(){if(!tttCode)return;try{await navigator.clipboard.writeText(tttCode);tttInfo("Код "+tttCode+" скопирован. Отправь его другу.");}catch(e){tttInfo("Код комнаты: "+tttCode+". Скопируй его вручную.");}}
-  window.addEventListener("beforeunload",tttClosePeer);
-
-
   function saveCart() { try { localStorage.setItem('nurShopCart', JSON.stringify(cart)); } catch(e) {} }
   function addToCart(id) {
     cart[id] = (cart[id] || 0) + 1; saveCart(); renderCart();
