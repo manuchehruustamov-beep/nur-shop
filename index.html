@@ -218,7 +218,7 @@ function escapeWalletText(value){return String(value??'').replace(/[&<>"']/g,ch=
 async function walletApi(action){
  if(!tg?.initData)throw new Error('Открой NUR SHOP через Telegram, чтобы подключить личный баланс.');
  const response=await fetch('https://dfonsybvktrgwryovmua.supabase.co/functions/v1/nur-shop-wallet',{
-  method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,initData:tg.initData})
+  method:'POST',headers:{'Content-Type':'application/json','apikey':'sb_publishable_YbSIIwYKnMGqUBbhB62v2A_-756p1MO'},body:JSON.stringify({action,initData:tg.initData})
  });
  const data=await response.json().catch(()=>({}));
  if(!response.ok)throw new Error(data.error||'Сервер временно недоступен.');
