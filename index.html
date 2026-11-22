@@ -152,7 +152,7 @@ async function animateWheelStrip(winnerIndex){
  track.style.transform='translateX(-'+distance+'px)';
  await new Promise(resolve=>setTimeout(resolve,6400));
 }
-async async function spinWheel(){
+async function spinWheel(){
  if(wheelBusy)return;
  const btn=document.getElementById('wheelSpinButton'),result=document.getElementById('wheelResult');
  wheelBusy=true;btn.disabled=true;btn.textContent='ПРОВЕРЯЕМ ПОПЫТКУ…';
