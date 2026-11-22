@@ -36,7 +36,7 @@
 <header class="profile-bar">
 <div class="avatar" id="avatar"><span id="avatarLetter">N</span></div>
 <div class="user-info"><div class="user-name" id="userName">Пользователь</div><div class="user-tag" id="userTag">@nurshop</div></div>
-<div class="balance-pill"><svg viewBox="0 0 24 24"><path d="M3 6.5A2.5 2.5 0 0 1 5.5 4H20v16H5.5A2.5 2.5 0 0 1 3 17.5z"/><path d="M3 7h17M16 13h4"/><circle cx="16" cy="13" r=".8" fill="#00dca8"/></svg><b>0</b> ₽</div>
+<div class="balance-pill"><svg viewBox="0 0 24 24"><path d="M3 6.5A2.5 2.5 0 0 1 5.5 4H20v16H5.5A2.5 2.5 0 0 1 3 17.5z"/><path d="M3 7h17M16 13h4"/><circle cx="16" cy="13" r=".8" fill="#00dca8"/></svg><b id="headerBalance">0</b> ₽</div>
 </header>
 <main>
 <section class="page active" id="homePage">
@@ -64,16 +64,16 @@
 <h2 class="section-title">Рулетка удачи</h2>
 <div class="wheel-card">
 <div class="wheel-kicker">✦ NUR SHOP / LUCKY WHEEL ✦</div>
-<p class="wheel-subtitle">Крути колесо и узнай, какой приз тебе выпадет!</p>
+<p class="wheel-subtitle" id="wheelSpinInfo">Крути колесо и получай настоящие призы на баланс NUR SHOP!</p>
 <div class="wheel-stage"><div class="wheel-pointer"></div><canvas id="wheelCanvas" width="680" height="680" aria-label="Рулетка из 12 секторов"></canvas><div class="wheel-center">NUR<br>SHOP</div></div>
 <button class="action wheel-spin" id="wheelSpinButton" onclick="spinWheel()">✦ КРУТИТЬ РУЛЕТКУ</button>
 <div class="wheel-result" id="wheelResult" aria-live="polite">Твоя удача уже рядом!<small>Нажми кнопку, чтобы запустить вращение.</small></div>
 </div>
-<div class="panel"><h2>Призы рулетки</h2><div class="wheel-prize-list" id="wheelPrizeList"></div><p class="muted" style="margin:13px 0 0">Демонстрационный режим: результат пока не зачисляется на баланс и не выдаёт товары. Для настоящих призов подключим серверную проверку через Supabase.</p></div>
+<div class="panel"><h2>Призы рулетки</h2><div class="wheel-prize-list" id="wheelPrizeList"></div><p class="muted" style="margin:13px 0 0">Одна бесплатная попытка в день. Если выпадет «Ещё попытка», она добавится автоматически. Денежные призы сразу зачисляются на твой баланс.</p></div>
 </section>
 <section class="page" id="balancePage"><h2 class="section-title">Мой баланс</h2><div class="info-card"><span>Доступный баланс</span><strong id="balanceAmount">0 ₽</strong></div><button class="action topup-main" onclick="openTopup()">＋ ПОПОЛНИТЬ БАЛАНС</button><p class="muted">Баланс отображается в российских рублях. Зачисление возможно только после подтверждения оплаты.</p><div class="panel"><h2>Пополнение баланса</h2><p class="muted">Выбери сумму, чтобы подготовить платёж.</p><div class="topup-options"><button class="topup-option selected" onclick="selectTopup(100,this)">100 ₽</button><button class="topup-option" onclick="selectTopup(250,this)">250 ₽</button><button class="topup-option" onclick="selectTopup(500,this)">500 ₽</button><button class="topup-option" onclick="selectTopup(1000,this)">1 000 ₽</button></div><button class="action" onclick="startTopup()">Продолжить</button><p class="muted" id="topupNotice">Платёжный шлюз ещё не подключён. Баланс не будет изменён без подтверждённой оплаты.</p></div></section>
-<section class="page" id="historyPage"><h2 class="section-title">История операций</h2><div class="panel"><h2>Пополнения и списания</h2><p class="history-caption">Все суммы указаны в российских рублях (₽).</p><div id="balanceHistory"><div class="empty">Операций пока нет</div></div></div><div class="panel"><h2>История заказов</h2><div class="empty">Пока заказов нет</div></div></section>
-<section class="page" id="profilePage"><h2 class="section-title">Мой профиль</h2><div class="profile-card"><div class="avatar" id="profileAvatar">N</div><div><b id="profileName">Пользователь</b><small id="profileTag">@nurshop</small></div></div><div class="info-card"><span>Мой баланс</span><strong>0 ₽</strong></div><div class="info-card promo-card">
+<section class="page" id="historyPage"><h2 class="section-title">История операций</h2><div class="panel"><h2>Пополнения и списания</h2><p class="history-caption">Все суммы указаны в российских рублях (₽).</p><div id="balanceHistory"><div class="empty">Операций пока нет</div></div></div><div class="panel"><h2>Выигрыши рулетки</h2><div id="wheelHistory" class="empty">Выигрышей пока нет</div></div><div class="panel"><h2>История заказов</h2><div class="empty">Пока заказов нет</div></div></section>
+<section class="page" id="profilePage"><h2 class="section-title">Мой профиль</h2><div class="profile-card"><div class="avatar" id="profileAvatar">N</div><div><b id="profileName">Пользователь</b><small id="profileTag">@nurshop</small></div></div><div class="info-card"><span>Мой баланс</span><strong id="profileBalanceAmount">0 ₽</strong></div><div class="info-card promo-card">
 <b>🎟️ Активировать промокод</b>
 <p class="muted">Введи промокод, чтобы получить подарок от NUR SHOP.</p>
 <div class="promo-input-row"><input id="promoCodeInput" type="text" maxlength="40" autocomplete="off" autocapitalize="characters" placeholder="ВВЕДИ ПРОМОКОД"><button onclick="activatePromoCode()">Активировать</button></div>
@@ -137,20 +137,42 @@ function drawWheel(){
  ctx.restore();
 }
 function renderWheelPrizes(){const el=document.getElementById('wheelPrizeList');if(el)el.innerHTML=wheelPrizes.map((p,i)=>'<span>'+(i+1)+'. '+p.label+'</span>').join('');drawWheel();}
-function spinWheel(){
+async function spinWheel(){
  if(wheelBusy)return;
  const btn=document.getElementById('wheelSpinButton'),result=document.getElementById('wheelResult');
- const winner=Math.floor(Math.random()*wheelPrizes.length),step=Math.PI*2/wheelPrizes.length;
- const current=((wheelRotation%(Math.PI*2))+Math.PI*2)%(Math.PI*2);
- const desired=((Math.PI*2-((winner+.5)*step))%(Math.PI*2)+Math.PI*2)%(Math.PI*2);
- const delta=(desired-current+Math.PI*2)%(Math.PI*2);
- const start=wheelRotation,target=wheelRotation+Math.PI*2*7+delta,duration=5200,started=performance.now();
- wheelBusy=true;btn.disabled=true;btn.textContent='РУЛЕТКА ВРАЩАЕТСЯ…';result.innerHTML='Колесо набирает скорость!<small>Удача уже выбирает сектор…</small>';
- function frame(now){const t=Math.min(1,(now-started)/duration),ease=1-Math.pow(1-t,5);wheelRotation=start+(target-start)*ease;drawWheel();if(t<1){requestAnimationFrame(frame);return;}wheelRotation=target;drawWheel();wheelBusy=false;btn.disabled=false;btn.textContent='✦ КРУТИТЬ ЕЩЁ РАЗ';result.innerHTML='🎉 Выпало: '+wheelPrizes[winner].label+'<small>Это демонстрационный результат. Реальное начисление приза пока не подключено.</small>';}
- requestAnimationFrame(frame);
+ wheelBusy=true;btn.disabled=true;btn.textContent='ПРОВЕРЯЕМ ПОПЫТКУ…';
+ result.innerHTML='Подключаемся к серверу NUR SHOP…<small>Результат выбирается на сервере.</small>';
+ try{
+  const response=await walletApi('spin');
+  if(!response.prize)throw new Error('Сервер не вернул результат рулетки.');
+  const winner=Number(response.prize.prize_index);
+  if(!Number.isInteger(winner)||winner<0||winner>=wheelPrizes.length)throw new Error('Получен некорректный результат.');
+  updateWalletUI(response.wallet);
+  const step=Math.PI*2/wheelPrizes.length;
+  const current=((wheelRotation%(Math.PI*2))+Math.PI*2)%(Math.PI*2);
+  const desired=((Math.PI*2-((winner+.5)*step))%(Math.PI*2)+Math.PI*2)%(Math.PI*2);
+  const delta=(desired-current+Math.PI*2)%(Math.PI*2);
+  const start=wheelRotation,target=wheelRotation+Math.PI*2*7+delta,duration=5200,started=performance.now();
+  btn.textContent='РУЛЕТКА ВРАЩАЕТСЯ…';
+  result.innerHTML='Колесо набирает скорость!<small>Сервер уже зафиксировал твой приз.</small>';
+  function frame(now){
+   const t=Math.min(1,(now-started)/duration),ease=1-Math.pow(1-t,5);
+   wheelRotation=start+(target-start)*ease;drawWheel();
+   if(t<1){requestAnimationFrame(frame);return;}
+   wheelRotation=target;drawWheel();wheelBusy=false;btn.disabled=false;btn.textContent='✦ КРУТИТЬ ЕЩЁ РАЗ';
+   const label=response.prize.prize_label;
+   const note=response.prize.prize_type==='cash'?'Приз зачислен на твой баланс!':response.prize.prize_type==='bonus_spin'?'Дополнительная попытка добавлена!':response.prize.prize_type==='non_cash'?'Выигрыш сохранён в истории. Для выдачи этого приза потребуется подтверждение магазина.':'Попробуй удачу завтра!';
+   result.innerHTML='🎉 Выпало: '+escapeWalletText(label)+'<small>'+note+'</small>';
+   renderBalanceHistory();
+  }
+  requestAnimationFrame(frame);
+ }catch(error){
+  wheelBusy=false;btn.disabled=false;btn.textContent='✦ КРУТИТЬ РУЛЕТКУ';
+  result.innerHTML='⚠️ '+escapeWalletText(error.message||'Не удалось выполнить вращение.')+'<small>Баланс не изменён. Попробуй обновить приложение.</small>';
+ }
 }
 renderWheelPrizes();
-function showPage(p){if(p==='admin'&&!adminUnlocked){openAdminAuth();return;}document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(p+'Page').classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===p));window.scrollTo({top:0,behavior:'smooth'});}
+function showPage(p){if(p==='admin'&&!adminUnlocked){openAdminAuth();return;}document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(p+'Page').classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===p));if(p==='balance'||p==='history')loadWallet();window.scrollTo({top:0,behavior:'smooth'});}
 function openCategory(name){
  showPage('category');
  document.getElementById('categoryTitle').textContent=name;
@@ -189,11 +211,57 @@ function renderCart(){const rows=plans.filter(p=>cart[p.id]);const el=document.g
 function checkout(){const rows=plans.filter(p=>cart[p.id]);if(!rows.length){alert('Сначала добавь товар в корзину');return;}const msg='Заказ NUR SHOP\n'+rows.map(p=>p.name+' × '+cart[p.id]).join('\n')+'\nИтого: '+rows.reduce((s,p)=>s+p.price*cart[p.id],0)+' ₽';if(navigator.clipboard?.writeText)navigator.clipboard.writeText(msg).then(()=>alert('Заказ скопирован. Отправь его продавцу в Telegram.')).catch(()=>alert(msg));else alert(msg);}
 let selectedTopup=100;function openTopup(){showPage('balance');document.querySelector('.topup-main')?.scrollIntoView({behavior:'smooth',block:'center'});}function selectTopup(amount,button){selectedTopup=amount;document.querySelectorAll('.topup-option').forEach(x=>x.classList.remove('selected'));button.classList.add('selected');document.getElementById('topupNotice').textContent='Выбрана сумма '+amount.toLocaleString('ru-RU')+' ₽. Платёжный шлюз ещё не подключён.';}function startTopup(){document.getElementById('topupNotice').textContent='Сумма '+selectedTopup.toLocaleString('ru-RU')+' ₽ выбрана. Для реального списания и безопасного зачисления необходимо подключить серверное создание и подтверждение платежа. Баланс пока не изменён.';}
 
-// История операций хранится локально на устройстве до подключения серверного журнала.
-function balanceHistoryKey(){const uid=tg?.initDataUnsafe?.user?.id||'guest';return 'nurshop_balance_history_'+uid;}
-function getBalanceHistory(){try{return JSON.parse(localStorage.getItem(balanceHistoryKey())||'[]')}catch(e){return []}}
-function renderBalanceHistory(){const box=document.getElementById('balanceHistory');if(!box)return;const items=getBalanceHistory().sort((a,b)=>b.createdAt-a.createdAt);if(!items.length){box.innerHTML='<div class="empty">Пополнений и списаний пока нет</div>';return;}box.innerHTML=items.map(x=>{const incoming=x.type==='topup';const sign=incoming?'+':'−';const date=new Date(x.createdAt).toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});return '<div class="transaction-row"><div class="transaction-main"><div class="transaction-title">'+(incoming?'Пополнение баланса':'Списание баланса')+'</div><div class="transaction-meta">'+(x.description||'Операция')+' · '+date+'</div></div><div class="transaction-amount '+(incoming?'in':'out')+'">'+sign+Number(x.amount).toLocaleString('ru-RU')+' ₽</div></div>'}).join('');}
-function recordBalanceTransaction(type,amount,description){const value=Number(amount);if(!['topup','debit'].includes(type)||!Number.isFinite(value)||value<=0)return false;const items=getBalanceHistory();items.push({type,amount:value,description:String(description||'Операция').slice(0,100),createdAt:Date.now()});try{localStorage.setItem(balanceHistoryKey(),JSON.stringify(items.slice(-100)));renderBalanceHistory();return true}catch(e){return false;}}
+// Баланс и журнал операций загружаются из защищённой серверной функции Supabase.
+let walletSnapshot=null;
+function formatRuble(value){return Number(value||0).toLocaleString('ru-RU',{minimumFractionDigits:0,maximumFractionDigits:2})+' ₽';}
+function escapeWalletText(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
+async function walletApi(action){
+ if(!tg?.initData)throw new Error('Открой NUR SHOP через Telegram, чтобы подключить личный баланс.');
+ const response=await fetch('https://dfonsybvktrgwryovmua.supabase.co/functions/v1/nur-shop-wallet',{
+  method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,initData:tg.initData})
+ });
+ const data=await response.json().catch(()=>({}));
+ if(!response.ok)throw new Error(data.error||'Сервер временно недоступен.');
+ return data;
+}
+function updateWalletUI(snapshot){
+ if(!snapshot)return;walletSnapshot=snapshot;
+ const value=formatRuble(snapshot.balance||0);
+ ['balanceAmount','headerBalance','profileBalanceAmount'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=value;});
+ const info=document.getElementById('wheelSpinInfo');
+ if(info)info.textContent='Баланс: '+value+' · Дополнительных попыток: '+(snapshot.bonus_spins||0)+' · 1 бесплатная попытка в день';
+ renderBalanceHistory();
+}
+async function loadWallet(){
+ try{const data=await walletApi('balance');updateWalletUI(data.wallet);}
+ catch(error){
+  const info=document.getElementById('wheelSpinInfo');
+  if(info)info.textContent=error.message||'Не удалось загрузить баланс.';
+  const box=document.getElementById('balanceHistory');
+  if(box)box.innerHTML='<div class="empty">'+escapeWalletText(error.message)+'</div>';
+ }
+}
+function renderBalanceHistory(){
+ const box=document.getElementById('balanceHistory'),wheelBox=document.getElementById('wheelHistory');
+ if(!walletSnapshot){if(box)box.innerHTML='<div class="empty">Загружаем историю…</div>';return;}
+ const tx=(walletSnapshot.transactions||[]).map(x=>({time:new Date(x.created_at).getTime(),data:x}));
+ const spins=(walletSnapshot.spins||[]).map(x=>({time:new Date(x.created_at).getTime(),data:x}));
+ if(box){
+  const items=tx.sort((a,b)=>b.time-a.time);
+  box.innerHTML=items.length?items.map(({data:x})=>{
+   const incoming=x.direction==='credit',sign=incoming?'+':'−';
+   const date=new Date(x.created_at).toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+   return '<div class="history-row"><b>'+escapeWalletText(x.description||x.transaction_type)+'</b><small>'+date+'</small><strong style="color:'+(incoming?'#00e6b0':'#ff8293')+'">'+sign+formatRuble(x.amount)+'</strong></div>';
+  }).join(''):'<div class="empty">Пополнений и списаний пока нет</div>';
+ }
+ if(wheelBox){
+  wheelBox.innerHTML=spins.length?spins.sort((a,b)=>b.time-a.time).map(({data:x})=>{
+   const date=new Date(x.created_at).toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+   const reward=x.prize_type==='cash'?' · +'+formatRuble(x.reward_amount):'';
+   return '<div class="history-row"><b>🎡 '+escapeWalletText(x.prize_label)+escapeWalletText(reward)+'</b><small>'+date+'</small></div>';
+  }).join(''):'<div class="empty">Выигрышей пока нет</div>';
+ }
+}
 
 
 function activatePromoCode(){
@@ -205,6 +273,6 @@ function activatePromoCode(){
 }
 function copyRef(){if(!referral){alert('Открой Mini App через Telegram');return;}navigator.clipboard.writeText(referral).then(()=>alert('Ссылка скопирована')).catch(()=>alert(referral));}
 function shareRef(){if(!referral){alert('Открой Mini App через Telegram');return;}const url='https://t.me/share/url?url='+encodeURIComponent(referral)+'&text='+encodeURIComponent('Приглашаю тебя в NUR SHOP!');if(tg?.openTelegramLink)tg.openTelegramLink(url);else window.open(url,'_blank');}
-renderCart();renderBalanceHistory();
+renderCart();loadWallet();
 </script>
 </body></html>
