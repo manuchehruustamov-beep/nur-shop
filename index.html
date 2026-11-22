@@ -84,6 +84,15 @@
     .bottom-nav a { display:flex; flex-direction:column; align-items:center; gap:3px; padding:6px 2px; border-radius:12px; color:#c8bfc0; font-size:10px; font-weight:700; text-decoration:none; }
     .bottom-nav a span { font-size:18px; }
     .bottom-nav a:active,.bottom-nav a:hover { color:#ff354b; background:#ff354b12; }
+    .category-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin:18px 0 24px; }
+    .category-tile { min-height:158px; padding:18px 12px; border:1px solid #672631; border-radius:19px; color:#fff; background:linear-gradient(145deg,#261116,#100b0d); text-align:center; box-shadow:0 10px 24px #0004; }
+    .category-tile:active { transform:scale(.97); }
+    .category-icon { display:grid; place-items:center; width:66px; height:66px; margin:0 auto 12px; border-radius:19px; border:1px solid #a83a49; background:radial-gradient(circle at 50% 35%,#6a1b2b,#210d12); font-size:35px; box-shadow:0 0 25px #ff354b20; }
+    .category-tile strong { display:block; font-size:16px; }
+    .category-tile small { display:block; margin-top:5px; color:#c8bfc0; font-size:11px; }
+    .category-panel { display:none; }
+    .category-panel.active { display:block; }
+    .back-catalog { margin:2px 0 12px; padding:10px 14px; color:#fff; border:1px solid #672631; background:#211014; }
     @media (prefers-reduced-motion: reduce) { *,*:before,*:after { transition:none !important; animation:none !important; scroll-behavior:auto !important; } }
     @media (max-width:360px) { .products { grid-template-columns:1fr; } }
   </style>
@@ -99,7 +108,7 @@
     <div class="hero-kicker">Добро пожаловать в NUR SHOP</div>
     <h2>Всё нужное для твоей игры и связи</h2>
     <p>Алмазы Free Fire, ваучеры и VPN-подписки — собери свой заказ в пару нажатий.</p>
-    <a class="hero-cta" href="#diamonds">Перейти в каталог&nbsp; →</a>
+    <a class="hero-cta" href="#categories">Перейти в каталог&nbsp; →</a>
   </section>
   <div class="benefits">
     <div class="benefit">⚡<b>Быстро</b>Удобный заказ</div>
@@ -110,15 +119,33 @@
     👤 Добро пожаловать, <strong id="username">друг!</strong><br>
     <span style="font-size:12px;color:#bdaeb0">Выбирай товары и добавляй их в корзину 🛍️</span>
   </section>
-  <h2 id="diamonds-title">💎 Алмазы Free Fire</h2>
-  <p class="section-note">Пополнение алмазов по выгодным ценам</p>
-  <div class="products" id="diamonds"></div>
-  <h2 id="vouchers-title">🎟️ Ваучеры Free Fire</h2>
-  <p class="section-note">Выбери подходящий ваучер</p>
-  <div class="products" id="vouchers"></div>
-  <h2 id="vpn">🔐 VPN-подписки</h2>
-  <p class="section-note">Защищённое и удобное подключение</p>
-  <div class="products" id="vpn"></div>
+  <section id="categories">
+    <h2>Выбери категорию</h2>
+    <p class="section-note">Нажми на нужную иконку, чтобы увидеть товары и цены</p>
+    <div class="category-grid">
+      <button class="category-tile" type="button" onclick="openCategory('freefire')">
+        <span class="category-icon">🎮</span><strong>Free Fire</strong><small>Алмазы и ваучеры</small>
+      </button>
+      <button class="category-tile" type="button" onclick="openCategory('vpn')">
+        <span class="category-icon">🛡️</span><strong>VPN</strong><small>Подписки по срокам</small>
+      </button>
+    </div>
+  </section>
+  <section class="category-panel" id="freefirePanel">
+    <button class="back-catalog" type="button" onclick="showCategories()">← Все категории</button>
+    <h2>💎 Алмазы Free Fire</h2>
+    <p class="section-note">Выбери количество алмазов и посмотри цену</p>
+    <div class="products" id="diamonds"></div>
+    <h2>🎟️ Ваучеры Free Fire</h2>
+    <p class="section-note">Выбери подходящий ваучер</p>
+    <div class="products" id="vouchers"></div>
+  </section>
+  <section class="category-panel" id="vpnPanel">
+    <button class="back-catalog" type="button" onclick="showCategories()">← Все категории</button>
+    <h2>🔐 VPN-подписки</h2>
+    <p class="section-note">Выбери срок подписки и посмотри цену</p>
+    <div class="products" id="vpnProducts"></div>
+  </section>
 
   <section class="cart" id="cart">
     <div class="cart-head"><h2>🛒 Моя корзина</h2><span class="count" id="cartCount">0 товаров</span></div>
@@ -140,7 +167,7 @@
   <footer>💚 Спасибо, что выбираешь NUR SHOP!</footer>
   <nav class="bottom-nav" aria-label="Основная навигация">
     <a href="#"><span>⌂</span>Главная</a>
-    <a href="#diamonds-title"><span>▦</span>Каталог</a>
+    <a href="#categories" onclick="showCategories()"><span>▦</span>Каталог</a>
     <a href="#cart"><span>🛒</span>Корзина</a>
     <a href="#customerName"><span>👤</span>Профиль</a>
   </nav>
@@ -189,7 +216,8 @@
 
   function renderProducts() {
     ['diamonds','vouchers','vpn'].forEach(category => {
-      document.getElementById(category).innerHTML = products.filter(p => p.category === category).map(p => `
+      const target = category === 'vpn' ? 'vpnProducts' : category;
+      document.getElementById(target).innerHTML = products.filter(p => p.category === category).map(p => `
         <article class="product">
           <div class="emoji">${productArtwork(p.category)}</div><h3>${p.name}</h3>
           <p>${p.free ? 'Бесплатный пробный доступ' : 'Отличный выбор для тебя'}</p>
@@ -197,6 +225,18 @@
           <button class="add" onclick="addToCart('${p.id}')">${p.free ? '🎁 Получить' : '＋ В корзину'}</button>
         </article>`).join('');
     });
+  }
+  function showCategories() {
+    document.getElementById('freefirePanel').classList.remove('active');
+    document.getElementById('vpnPanel').classList.remove('active');
+    document.getElementById('categories').style.display = 'block';
+    document.getElementById('categories').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  function openCategory(category) {
+    document.getElementById('categories').style.display = 'none';
+    document.getElementById('freefirePanel').classList.toggle('active', category === 'freefire');
+    document.getElementById('vpnPanel').classList.toggle('active', category === 'vpn');
+    document.getElementById(category === 'freefire' ? 'freefirePanel' : 'vpnPanel').scrollIntoView({behavior:'smooth',block:'start'});
   }
   function saveCart() { try { localStorage.setItem('nurShopCart', JSON.stringify(cart)); } catch(e) {} }
   function addToCart(id) {
