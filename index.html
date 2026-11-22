@@ -84,6 +84,31 @@
     .bottom-nav a { display:flex; flex-direction:column; align-items:center; gap:3px; padding:6px 2px; border-radius:12px; color:#c8bfc0; font-size:10px; font-weight:700; text-decoration:none; }
     .bottom-nav a span { font-size:18px; }
     .bottom-nav a:active,.bottom-nav a:hover { color:#ff354b; background:#ff354b12; }
+    .premium-hero { min-height:280px; padding:19px 20px 15px; border-color:#7b2634; background:radial-gradient(ellipse at 78% 45%,#511321 0%,#260b12 30%,#10090b 72%); box-shadow:inset 0 1px #ff879433,0 18px 45px #0008; }
+    .hero-topline,.hero-bottom { position:relative; z-index:2; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+    .hero-topline .hero-kicker { font-size:9px; letter-spacing:2px; }
+    .live-dot { color:#ff8b98; font-size:9px; letter-spacing:1px; }
+    .live-dot:first-letter { color:#ff354b; }
+    .hero-copy { position:relative; z-index:2; max-width:310px; padding:28px 0 22px; }
+    .hero-copy .hero-kicker { font-size:9px; letter-spacing:2.5px; }
+    .hero-copy h2 { margin:10px 0; font-size:30px; line-height:1.02; letter-spacing:-.8px; }
+    .hero-copy h2 em { color:#ff5267; font-style:normal; }
+    .hero-copy p { max-width:260px; font-size:12px; }
+    .premium-hero .hero-cta { font-size:10px; letter-spacing:.8px; box-shadow:0 7px 22px #ff354b33; }
+    .hero-orbit { position:absolute; right:-18px; top:68px; width:170px; height:170px; display:grid; place-items:center; border:1px solid #ff526733; border-radius:50%; background:radial-gradient(circle,#ff354b20 0,#a30c2520 43%,transparent 70%); box-shadow:0 0 55px #ff354b1a,inset 0 0 35px #ff354b16; }
+    .hero-orbit:before,.hero-orbit:after { content:""; position:absolute; inset:14px; border:1px solid #ff687822; border-radius:50%; transform:rotate(-25deg) scaleX(.72); }
+    .hero-orbit:after { transform:rotate(55deg) scaleX(.72); }
+    .hero-orbit b { color:#ff5368; font-size:82px; font-weight:900; text-shadow:0 0 28px #ff354b66; }
+    .hero-orbit span,.hero-orbit i { position:absolute; color:#ff9aa6; font-size:20px; font-style:normal; }
+    .hero-orbit span { top:19px; right:42px; }.hero-orbit i { bottom:22px; left:28px; }
+    .hero-bottom { padding-top:11px; border-top:1px solid #ff687822; color:#b58a91; font-size:8px; letter-spacing:1.1px; }
+    .daily-bonus { position:relative; display:flex; align-items:center; gap:13px; overflow:hidden; margin:0 0 19px; padding:14px; border:1px solid #77303a; border-radius:17px; background:linear-gradient(105deg,#321018,#170c0f 65%,#2a0d14); box-shadow:0 10px 25px #0005; }
+    .bonus-icon { display:grid; place-items:center; flex:0 0 52px; height:52px; border:1px solid #a84452; border-radius:15px; background:radial-gradient(circle at 50% 35%,#85263a,#310f19); font-size:27px; box-shadow:0 0 22px #ff354b22; }
+    .bonus-copy { position:relative; z-index:1; }.bonus-label { display:block; margin-bottom:3px; color:#ff7d8c; font-size:8px; letter-spacing:2px; }.bonus-copy strong { display:block; color:#fff; font-size:15px; }.bonus-copy p { margin:4px 0 0; color:#cdb9bd; font-size:10px; line-height:1.4; }
+    .bonus-spark { position:absolute; right:12px; top:3px; color:#ff7485; opacity:.18; font-size:60px; }
+    .premium-benefits .benefit { padding:12px 5px; border-color:#49202a; background:linear-gradient(145deg,#1b1013,#0d0a0b); }
+    .premium-benefits .benefit span { color:#ff5368; font-size:17px; }.premium-benefits .benefit b { margin:5px 0 2px; color:#fff; font-size:9px; letter-spacing:.7px; }.premium-benefits .benefit small { color:#bdaeb0; font-size:9px; }
+    @media (max-width:390px) { .hero-orbit { right:-62px; opacity:.65; }.hero-copy { max-width:270px; }.hero-copy h2 { font-size:27px; } }
     .category-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin:18px 0 24px; }
     .category-tile { min-height:158px; padding:18px 12px; border:1px solid #672631; border-radius:19px; color:#fff; background:linear-gradient(145deg,#261116,#100b0d); text-align:center; box-shadow:0 10px 24px #0004; }
     .category-tile:active { transform:scale(.97); }
@@ -104,16 +129,26 @@
     <h1>✨ NUR SHOP</h1>
     <p>Твой магазин цифровых товаров — быстро и удобно</p>
   </header>
-  <section class="hero">
-    <div class="hero-kicker">Добро пожаловать в NUR SHOP</div>
-    <h2>Всё нужное для твоей игры и связи</h2>
-    <p>Алмазы Free Fire, ваучеры и VPN-подписки — собери свой заказ в пару нажатий.</p>
-    <a class="hero-cta" href="#categories">Перейти в каталог&nbsp; →</a>
+  <section class="hero premium-hero">
+    <div class="hero-topline"><span class="hero-kicker">OFFICIAL DIGITAL STORE</span><span class="live-dot">● ONLINE</span></div>
+    <div class="hero-copy">
+      <div class="hero-kicker">ДОБРО ПОЖАЛОВАТЬ</div>
+      <h2>ТВОЙ МИР.<br><em>ТВОИ ПРАВИЛА.</em></h2>
+      <p>Алмазы Free Fire, ваучеры и VPN-подписки — всё необходимое в одном месте.</p>
+      <a class="hero-cta" href="#categories">ОТКРЫТЬ КАТАЛОГ&nbsp; ↗</a>
+    </div>
+    <div class="hero-orbit" aria-hidden="true"><span>✦</span><b>N</b><i>✧</i></div>
+    <div class="hero-bottom"><span>PREMIUM EXPERIENCE</span><span>№ 01&nbsp; / &nbsp;NUR SHOP</span></div>
   </section>
-  <div class="benefits">
-    <div class="benefit">⚡<b>Быстро</b>Удобный заказ</div>
-    <div class="benefit">🛍️<b>В одном месте</b>Цифровые товары</div>
-    <div class="benefit">💚<b>Просто</b>Понятный каталог</div>
+  <section class="daily-bonus" id="dailyBonus">
+    <div class="bonus-icon">🎁</div>
+    <div class="bonus-copy"><span class="bonus-label">DAILY BONUS</span><strong>Бонус дня</strong><p>Заглядывай каждый день — впереди новые сюрпризы!</p></div>
+    <span class="bonus-spark">✦</span>
+  </section>
+  <div class="benefits premium-benefits">
+    <div class="benefit"><span>⚡</span><b>БЫСТРО</b><small>Удобный заказ</small></div>
+    <div class="benefit"><span>◆</span><b>ВЫБОР</b><small>Нужное в одном месте</small></div>
+    <div class="benefit"><span>♛</span><b>PREMIUM</b><small>Стиль и комфорт</small></div>
   </div>
   <section class="profile">
     👤 Добро пожаловать, <strong id="username">друг!</strong><br>
