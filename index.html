@@ -35,7 +35,14 @@
     .section-title{margin:25px 2px 8px;font-size:20px}
     .section-note{margin:0 2px 14px;color:#9fb5c5;font-size:12px;line-height:1.5}
     .profile,.cart,.product{border:1.5px solid var(--line);border-radius:18px 15px 20px 16px;background:linear-gradient(145deg,#0c1c28,#050b12);box-shadow:inset 0 0 0 1px #00c8ff0d,0 10px 24px #0004}
-    .profile{padding:16px;margin:0 0 22px}
+    .profile{display:none;padding:16px;margin:0 0 22px}
+    body.profile-mode .profile{display:block}
+    body.profile-mode .home-grid,body.profile-mode #vpn,body.profile-mode #cart,body.profile-mode #message{display:none}
+    .profile-page-title{margin:0 0 15px;font-size:22px}
+    .balance-card{margin-top:15px;padding:15px;border:1px solid #17668a;border-radius:15px;background:linear-gradient(145deg,#092235,#07111a)}
+    .balance-label{color:#9fb5c5;font-size:11px}
+    .balance-value{margin-top:5px;color:var(--cyan);font-size:25px;font-weight:900}
+    .profile-back{width:100%;margin-top:14px;padding:12px;border:1px solid #18769e;border-radius:11px;background:#0a2535;color:#b9f5ff;font-size:12px;font-weight:800}
     .profile-top{display:flex;align-items:center;gap:12px}
     .avatar{display:grid;place-items:center;width:45px;height:45px;border:1px solid #16739a;border-radius:15px;background:#071d2b;font-size:23px}
     .profile-label{color:#85a9bc;font-size:10px;letter-spacing:1px}
@@ -135,21 +142,28 @@
     </div>
 
     <section class="profile" id="profile">
+      <h2 class="profile-page-title">👤 Мой профиль</h2>
       <div class="profile-top">
         <div class="avatar">👤</div>
         <div><span class="profile-label">ЛИЧНЫЙ КАБИНЕТ</span><strong id="username">Добро пожаловать!</strong></div>
       </div>
       <div class="profile-meta">Твой профиль NUR SHOP<br><span id="profileTelegram">Telegram: данные появятся при запуске через Telegram</span></div>
+      <div class="balance-card">
+        <div class="balance-label">МОЙ БАЛАНС</div>
+        <div class="balance-value" id="userBalance">0 ₽</div>
+        <div class="referral-note">Отображение реального баланса подключим вместе с системой платежей.</div>
+      </div>
       <div class="referral-box">
-        <div class="referral-title">🎁 Приглашай друзей — получай +7 дней VPN</div>
-        <p>Поделись личной ссылкой. Когда новый пользователь перейдёт по ней и зарегистрируется, тебе будет положено ещё 7 дней бесплатного VPN.</p>
+        <div class="referral-title">🎁 Реферальная ссылка</div>
+        <p>Приглашай друзей в NUR SHOP. За каждого нового пользователя, который выполнит условия регистрации, предусмотрен бонус +7 дней бесплатного VPN.</p>
         <div class="referral-link" id="referralLink">Открой Mini App через Telegram, чтобы получить свою ссылку</div>
         <div class="referral-actions">
           <button class="referral-button" id="copyReferral" type="button" onclick="copyReferralLink()" disabled>Скопировать ссылку</button>
           <button class="referral-button secondary" id="shareReferral" type="button" onclick="shareReferralLink()" disabled>Пригласить друга</button>
         </div>
-        <div class="referral-note" id="referralStatus">Реферальная ссылка появится после запуска приложения в Telegram. Автоматическая проверка приглашений и начисление дней будут подключены на сервере.</div>
+        <div class="referral-note" id="referralStatus">Персональная ссылка появится при запуске через Telegram. Проверка приглашений и начисление бонусных дней требуют серверного подключения.</div>
       </div>
+      <button class="profile-back" type="button" onclick="showShopPage('home')">← Вернуться на главную</button>
     </section>
 
     <section id="vpn">
@@ -179,10 +193,10 @@
 
   <footer>💙 Спасибо, что выбираешь NUR SHOP!</footer>
   <nav class="bottom-nav" aria-label="Основная навигация">
-    <a href="#home"><span>⌂</span>Главная</a>
-    <a href="#vpn"><span>▦</span>Каталог</a>
-    <a href="#cart"><span>🛒</span>Корзина</a>
-    <a href="#profile"><span>👤</span>Профиль</a>
+    <a href="#home" onclick="showShopPage('home')"><span>⌂</span>Главная</a>
+    <a href="#vpn" onclick="showShopPage('vpn')"><span>▦</span>Каталог</a>
+    <a href="#cart" onclick="showShopPage('cart')"><span>🛒</span>Корзина</a>
+    <a href="#profile" onclick="showShopPage('profile')"><span>👤</span>Профиль</a>
   </nav>
 </div>
 
@@ -202,10 +216,20 @@
     }
   }
 
+  function showShopPage(page) {
+    document.body.classList.toggle('profile-mode', page === 'profile');
+    if (page === 'profile') {
+      document.getElementById('profile').scrollIntoView({behavior:'smooth',block:'start'});
+      return;
+    }
+    const target = page === 'vpn' ? 'vpn' : page === 'cart' ? 'cart' : 'home';
+    document.getElementById(target).scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
   let personalReferralUrl = '';
   function setupReferral(telegramUserId) {
     const code = 'ref_' + String(telegramUserId);
-    personalReferralUrl = 'https://t.me/nurssshop_bot?start=' + encodeURIComponent(code);
+    personalReferralUrl = 'https://t.me/nurssshop_bot?startapp=' + encodeURIComponent(code);
     document.getElementById('referralLink').textContent = personalReferralUrl;
     document.getElementById('copyReferral').disabled = false;
     document.getElementById('shareReferral').disabled = false;
@@ -232,7 +256,7 @@
   const products = [
     {id:'vpn7',name:'VPN на 7 дней',price:0,description:'Бесплатный пробный доступ',icon:'🎁',free:true},
     {id:'vpn30',name:'VPN на 30 дней',price:199,description:'Подписка на один месяц',icon:'🔐'},
-    {id:'vpn90',name:'VPN на 3 месяца',price:444,description:'Подписка на 90 дней',icon:'🚀'},
+    {id:'vpn90',name:'VPN на 3 месяца',price:555,description:'Подписка на 90 дней',icon:'🚀'},
     {id:'vpn365',name:'VPN на 1 год',price:1400,description:'Доступ на целый год',icon:'👑'}
   ];
 
