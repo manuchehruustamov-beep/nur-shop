@@ -71,7 +71,7 @@
 </div>
 <div class="panel"><h2>Призы рулетки</h2><div class="wheel-prize-list" id="wheelPrizeList"></div><p class="muted" style="margin:13px 0 0">Бесплатная прокрутка доступна только администраторам. Если выпадет «Ещё попытка», она добавится автоматически. Денежные призы сразу зачисляются на баланс.</p></div>
 </section>
-<section class="page" id="balancePage"><h2 class="section-title">Мой баланс</h2><div class="info-card"><span>Доступный баланс</span><strong id="balanceAmount">0 ₽</strong></div><button class="action topup-main" onclick="openTopup()">＋ ПОПОЛНИТЬ БАЛАНС</button><p class="muted">Баланс отображается в российских рублях. Зачисление возможно только после подтверждения оплаты.</p><div class="panel"><h2>Пополнение баланса</h2><p class="muted">Выбери сумму, чтобы подготовить платёж.</p><div class="topup-options"><button class="topup-option selected" onclick="selectTopup(100,this)">100 ₽</button><button class="topup-option" onclick="selectTopup(250,this)">250 ₽</button><button class="topup-option" onclick="selectTopup(500,this)">500 ₽</button><button class="topup-option" onclick="selectTopup(1000,this)">1 000 ₽</button></div><button class="action" onclick="startTopup()">Продолжить</button><p class="muted" id="topupNotice">Платёжный шлюз ещё не подключён. Баланс не будет изменён без подтверждённой оплаты.</p></div></section>
+<section class="page" id="balancePage"><h2 class="section-title">Мой баланс</h2><div class="info-card"><span>Доступный баланс</span><strong id="balanceAmount">0 ₽</strong></div><button class="action topup-main" onclick="openTopup()">＋ ПОПОЛНИТЬ БАЛАНС</button><p class="muted">Баланс отображается в российских рублях. Зачисление возможно только после подтверждения оплаты.</p><div class="panel"><h2>Пополнение баланса</h2><p class="muted">Оплата прямо в Telegram через Stars. 1 ⭐ = 2 ₽. Введи количество звёзд (от 10 до 10 000).</p><div class="promo-input-row"><input id="topupStarsAmount" type="number" min="10" max="10000" step="1" value="50" inputmode="numeric" oninput="updateTopupPreview()" placeholder="Количество ⭐"></div><div class="info-card" style="margin-top:12px"><span>Будет зачислено на баланс</span><strong id="topupRublePreview">100 ₽</strong></div><button class="action" id="topupPayButton" onclick="startTopup()">Оплатить ⭐ в Telegram</button><p class="muted" id="topupNotice">Счёт откроется в Telegram. Рубли будут зачислены только после подтверждения платежа сервером.</p></div></section>
 <section class="page" id="historyPage"><h2 class="section-title">История операций</h2><div class="panel"><h2>Пополнения и списания</h2><p class="history-caption">Все суммы указаны в российских рублях (₽).</p><div id="balanceHistory"><div class="empty">Операций пока нет</div></div></div><div class="panel"><h2>Выигрыши рулетки</h2><div id="wheelHistory" class="empty">Выигрышей пока нет</div></div><div class="panel"><h2>История заказов</h2><div class="empty">Пока заказов нет</div></div></section>
 <section class="page" id="profilePage"><h2 class="section-title">Мой профиль</h2><div class="profile-card"><div class="avatar" id="profileAvatar">N</div><div><b id="profileName">Пользователь</b><small id="profileTag">@nurshop</small></div></div><div class="info-card"><span>Мой баланс</span><strong id="profileBalanceAmount">0 ₽</strong></div><div class="info-card promo-card">
 <b>🎟️ Активировать промокод</b>
@@ -216,16 +216,58 @@ renderVpnPlans();
 function addPlan(id){cart[id]=(cart[id]||0)+1;renderCart();document.getElementById('cartItems').scrollIntoView({behavior:'smooth',block:'center'});}
 function renderCart(){const rows=plans.filter(p=>cart[p.id]);const el=document.getElementById('cartItems');el.className=rows.length?'':'empty';el.innerHTML=rows.length?rows.map(p=>'<div class="cart-line"><span>'+p.name+' × '+cart[p.id]+'</span><b>'+(p.price*cart[p.id]).toLocaleString('ru-RU')+' ₽</b></div>').join(''):'Корзина пока пуста';document.getElementById('cartTotal').textContent=rows.reduce((s,p)=>s+p.price*cart[p.id],0).toLocaleString('ru-RU')+' ₽';}
 function checkout(){const rows=plans.filter(p=>cart[p.id]);if(!rows.length){alert('Сначала добавь товар в корзину');return;}const msg='Заказ NUR SHOP\n'+rows.map(p=>p.name+' × '+cart[p.id]).join('\n')+'\nИтого: '+rows.reduce((s,p)=>s+p.price*cart[p.id],0)+' ₽';if(navigator.clipboard?.writeText)navigator.clipboard.writeText(msg).then(()=>alert('Заказ скопирован. Отправь его продавцу в Telegram.')).catch(()=>alert(msg));else alert(msg);}
-let selectedTopup=100;function openTopup(){showPage('balance');document.querySelector('.topup-main')?.scrollIntoView({behavior:'smooth',block:'center'});}function selectTopup(amount,button){selectedTopup=amount;document.querySelectorAll('.topup-option').forEach(x=>x.classList.remove('selected'));button.classList.add('selected');document.getElementById('topupNotice').textContent='Выбрана сумма '+amount.toLocaleString('ru-RU')+' ₽. Платёжный шлюз ещё не подключён.';}function startTopup(){document.getElementById('topupNotice').textContent='Сумма '+selectedTopup.toLocaleString('ru-RU')+' ₽ выбрана. Для реального списания и безопасного зачисления необходимо подключить серверное создание и подтверждение платежа. Баланс пока не изменён.';}
+function openTopup(){showPage('balance');document.querySelector('.topup-main')?.scrollIntoView({behavior:'smooth',block:'center'});}
+function updateTopupPreview(){
+ const input=document.getElementById('topupStarsAmount');
+ const stars=Number(input?.value||0);
+ const preview=document.getElementById('topupRublePreview');
+ if(preview)preview.textContent=Number.isInteger(stars)&&stars>=10&&stars<=10000?formatRuble(stars*2):'Укажи от 10 до 10 000 ⭐';
+}
+async function startTopup(){
+ const input=document.getElementById('topupStarsAmount');
+ const notice=document.getElementById('topupNotice');
+ const button=document.getElementById('topupPayButton');
+ const stars=Number(input?.value||0);
+ if(!Number.isSafeInteger(stars)||stars<10||stars>10000){notice.textContent='Можно пополнить от 10 до 10 000 ⭐.';return;}
+ if(!tg?.openInvoice){notice.textContent='Открой Mini App внутри официального приложения Telegram, чтобы оплатить Stars.';return;}
+ button.disabled=true;button.textContent='Создаём счёт…';notice.textContent='Подготавливаем защищённый счёт Telegram Stars…';
+ try{
+  const invoice=await walletApi('create_invoice',{starsAmount:stars});
+  if(!invoice.invoice_url||!invoice.invoice_payload)throw new Error('Сервер не вернул ссылку на счёт.');
+  button.textContent='Ожидаем оплату…';
+  tg.openInvoice(invoice.invoice_url,async(status)=>{
+   if(status==='paid'){
+    notice.textContent='Telegram сообщил об оплате. Проверяем транзакцию и зачисление…';
+    try{
+     const confirmed=await walletApi('reconcile_payment',{invoicePayload:invoice.invoice_payload});
+     if(confirmed.paid===true){
+      if(confirmed.wallet)updateWalletUI(confirmed.wallet,confirmed.is_admin===true);
+      await loadWallet();
+      notice.textContent='Оплата подтверждена! На баланс зачислено '+formatRuble(invoice.ruble_amount)+'.';
+     }else{
+      notice.textContent='Платёж принят Telegram, но подтверждение ещё обрабатывается. Обнови баланс чуть позже.';
+     }
+    }catch(e){notice.textContent='Оплата прошла в Telegram. Проверка зачисления временно недоступна: '+(e.message||'попробуй позже');}
+   }else if(status==='cancelled'){notice.textContent='Оплата отменена. Деньги не списаны.';}
+   else{notice.textContent='Не удалось завершить оплату. Если Stars были списаны, не повторяй платёж — обнови баланс и проверь историю.';}
+   button.disabled=false;button.textContent='Оплатить ⭐ в Telegram';
+  });
+  button.disabled=false;button.textContent='Оплатить ⭐ в Telegram';
+ }catch(error){
+  notice.textContent=error.message||'Не удалось создать счёт Telegram Stars.';
+  button.disabled=false;button.textContent='Оплатить ⭐ в Telegram';
+ }
+}
 
 // Баланс и журнал операций загружаются из защищённой серверной функции Supabase.
 let walletSnapshot=null;
 function formatRuble(value){return Number(value||0).toLocaleString('ru-RU',{minimumFractionDigits:0,maximumFractionDigits:2})+' ₽';}
+updateTopupPreview();
 function escapeWalletText(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
-async function walletApi(action){
+async function walletApi(action,extra={}){
  if(!tg?.initData)throw new Error('Открой NUR SHOP через Telegram, чтобы подключить личный баланс.');
  const response=await fetch('https://dfonsybvktrgwryovmua.supabase.co/functions/v1/nur-shop-wallet',{
-  method:'POST',headers:{'Content-Type':'application/json','apikey':'sb_publishable_YbSIIwYKnMGqUBbhB62v2A_-756p1MO'},body:JSON.stringify({action,initData:tg.initData})
+  method:'POST',headers:{'Content-Type':'application/json','apikey':'sb_publishable_YbSIIwYKnMGqUBbhB62v2A_-756p1MO'},body:JSON.stringify({action,initData:tg.initData,...extra})
  });
  const data=await response.json().catch(()=>({}));
  if(!response.ok)throw new Error(data.error||'Сервер временно недоступен.');
