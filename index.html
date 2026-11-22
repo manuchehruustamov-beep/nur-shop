@@ -133,7 +133,7 @@
     .category-tile { border-radius:20px 17px 21px 16px; }
     .profile,.cart { border-radius:19px 16px 21px 18px; }
     .product:hover { border-color:#35dfff; box-shadow:inset 0 0 0 1px #00c8ff22,0 10px 25px #0005; }
-    .bottom-nav { grid-template-columns:repeat(5,1fr); }
+    .bottom-nav { grid-template-columns:repeat(4,1fr); }
     .game-category .category-icon { background:radial-gradient(circle at 50% 35%,#064b69,#07131d); }
     #gamesPanel { padding-bottom:20px; }
     .game-heading { margin:4px 0 15px; }
@@ -233,9 +233,6 @@
       <button class="category-tile" type="button" onclick="openCategory('vpn')">
         <span class="category-icon">🛡️</span><strong>VPN</strong><small>Подписки по срокам</small>
       </button>
-      <button class="category-tile game-category" type="button" onclick="openGames()">
-        <span class="category-icon">🎮</span><strong>Игры</strong><small>Крестики-нолики</small>
-      </button>
       <a class="category-tile banner-tt-category" href="https://t.me/+no2Tl-ysru84YzRi" target="_blank" rel="noopener noreferrer" aria-label="Открыть видеоинструкцию BANER TT в Telegram">
         <span class="category-icon">🎬</span><strong>BANER TT</strong><small>Как установить баннер в TikTok</small>
       </a>
@@ -309,7 +306,6 @@
     <a href="#"><span>⌂</span>Главная</a>
     <a href="#categories" onclick="showCategories()"><span>▦</span>Каталог</a>
     <a href="#cart"><span>🛒</span>Корзина</a>
-    <a href="#gamesPanel" onclick="openGames()"><span>🎮</span>Игры</a>
     <a href="#customerName"><span>👤</span>Профиль</a>
   </nav>
 </div>
