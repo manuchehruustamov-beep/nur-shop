@@ -578,6 +578,7 @@ function fazerOfferPrice(x){
 }
 let fazerCategoriesCache=null;
 let fazerSelectedCategory=null;
+let fazerSelectedSection='Алмазы';
 function fazerEscape(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
 function fazerRussianName(value){
  let s=String(value??'').trim();
@@ -666,7 +667,7 @@ async function loadFazerOffers(index){
  try{
   const data=await fazerApi('offers',{category_id:category.category_id});
   const allOffers=Array.isArray(data.offers)?data.offers:[];
-  const isVoucher=(fazerSelectedCategory?.__nurItem==='Ваучеры');
+  const isVoucher=(fazerSelectedSection==='Ваучеры');
   const offers=allOffers.filter(x=>{
    const label=String(x.name||x.title||x.product_name||'').toLowerCase();
    return isVoucher?/voucher|вaучер|ваучер|membership|card|pass|ticket/.test(label):/diamond|алмаз|\bdiamonds?\b/.test(label);
@@ -685,7 +686,7 @@ function showCategoryProducts(category,item){
  document.getElementById('productsTitle').textContent=item;
  if(category==='Free Fire'&&(item==='Алмазы'||item==='Ваучеры')){
   panel.style.display='block';
-  fazerSelectedCategory={__nurItem:item};
+  fazerSelectedSection=item;
   loadFazerFreeFireCatalog();
   panel.scrollIntoView({behavior:'smooth',block:'start'});
   return;
