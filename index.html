@@ -670,7 +670,7 @@ async function loadFazerOffers(index){
   const isVoucher=(fazerSelectedSection==='Ваучеры');
   const offers=allOffers.filter(x=>{
    const label=String(x.name||x.title||x.product_name||'').toLowerCase();
-   return isVoucher?/voucher|вaучер|ваучер|membership|card|pass|ticket/.test(label):/diamond|алмаз|\bdiamonds?\b/.test(label);
+   return isVoucher?/voucher|ваучер/.test(label):/diamond|алмаз|\bdiamonds?\b/.test(label);
   });
   const fields=Array.isArray(data.fields)?data.fields:[];
   const fieldHtml=fields.length?'<div class="fazer-fields">'+fields.map((field,i)=>'<label>'+fazerEscape(field.label||field.key||('Поле '+(i+1)))+'<input type="'+(field.type==='number'?'number':'text')+'" autocomplete="off" placeholder="'+fazerEscape(field.placeholder||field.label||'Введи данные игрока')+'" data-fazer-field="'+fazerEscape(field.key||'')+'"></label>').join('')+'</div>':'';
