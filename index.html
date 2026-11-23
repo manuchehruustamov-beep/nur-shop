@@ -295,7 +295,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #54aa
 <div class="panel wheel-prize-panel"><h2>Призы в ленте</h2><p class="muted">В каждой карточке предусмотрено отдельное место для фотографии и названия приза. Сами призы и результат вращения пока остаются под управлением текущего сервера.</p><div class="wheel-prize-list" id="wheelPrizeList"></div></div>
 </section>
 <section class="page" id="balancePage"><h2 class="section-title">Мой баланс</h2><div class="info-card"><span>Доступный баланс</span><strong id="balanceAmount">0 ₽</strong></div><button class="action topup-main" onclick="openTopup()">＋ ПОПОЛНИТЬ БАЛАНС</button><p class="muted">Баланс отображается в российских рублях. Зачисление возможно только после подтверждения оплаты.</p><div class="panel"><h2>Пополнение баланса</h2><p class="muted">Оплата прямо в Telegram через Stars. 1 ⭐ = 2 ₽. Введи количество звёзд (от 10 до 10 000).</p><div class="promo-input-row"><input id="topupStarsAmount" type="number" min="10" max="10000" step="1" value="50" inputmode="numeric" oninput="updateTopupPreview()" placeholder="Количество ⭐"></div><div class="info-card" style="margin-top:12px"><span>Будет зачислено на баланс</span><strong id="topupRublePreview">100 ₽</strong></div><button class="action" id="topupPayButton" onclick="startTopup()">Оплатить ⭐ в Telegram</button><p class="muted" id="topupNotice">Счёт откроется в Telegram. Рубли будут зачислены только после подтверждения платежа сервером.</p></div></section>
-<section class="page" id="historyPage"><h2 class="section-title">История операций</h2><div class="panel"><h2>Пополнения и списания</h2><p class="history-caption">Все суммы указаны в российских рублях (₽).</p><div id="balanceHistory"><div class="empty">Операций пока нет</div></div></div><div class="panel"><h2>Выигрыши рулетки</h2><div id="wheelHistory" class="empty">Выигрышей пока нет</div></div><div class="panel"><h2>История заказов</h2><div class="empty">Пока заказов нет</div></div></section>
+<section class="page" id="historyPage"><h2 class="section-title">История операций</h2><div class="panel"><h2>Пополнения и списания</h2><p class="history-caption">Все суммы указаны в российских рублях (₽).</p><div id="balanceHistory"><div class="empty">Операций пока нет</div></div></div><div class="panel"><h2>Выигрыши рулетки</h2><div id="wheelHistory" class="empty">Выигрышей пока нет</div></div><div class="panel"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><h2 style="margin:0">История заказов</h2><button class="admin-secondary" onclick="loadFazerTestOrderHistory()">↻ Обновить</button></div><div id="fazerTestOrderHistory" style="margin-top:12px"><div class="empty">Загрузка заказов…</div></div></div></section>
 <section class="page" id="profilePage"><h2 class="section-title">Мой профиль</h2><div class="profile-card"><div class="avatar" id="profileAvatar">N</div><div><b id="profileName">Пользователь</b><small id="profileTag">@nurshop</small></div></div><div class="info-card"><span>Мой баланс</span><strong id="profileBalanceAmount">0 ₽</strong></div><div class="info-card promo-card">
 <b>🎟️ Активировать промокод</b>
 <p class="muted">Введи промокод, чтобы получить подарок от NUR SHOP.</p>
@@ -539,7 +539,7 @@ async function spinWheel(){
  }
 }
 renderWheelPrizes();
-function showPage(p){if(p==='admin'&&!adminUnlocked){openAdminAuth();return;}document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(p+'Page').classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===p));if(p==='balance'||p==='history'||p==='wheel')loadWallet();window.scrollTo({top:0,behavior:'smooth'});}
+function showPage(p){if(p==='admin'&&!adminUnlocked){openAdminAuth();return;}document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(p+'Page').classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===p));if(p==='balance'||p==='history'||p==='wheel')loadWallet();if(p==='history')loadFazerTestOrderHistory();window.scrollTo({top:0,behavior:'smooth'});}
 function freeFireCategoryArt(item){
  const art='<svg viewBox="0 0 220 140" role="img" aria-label="Реалистичный голубой бриллиант"><defs><linearGradient id="nurGemTop" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffffff"/><stop offset=".24" stop-color="#bff8ff"/><stop offset=".55" stop-color="#4ccfff"/><stop offset="1" stop-color="#1261c9"/></linearGradient><linearGradient id="nurGemLeft" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f4ffff"/><stop offset="1" stop-color="#43bfff"/></linearGradient><linearGradient id="nurGemRight" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#68eaff"/><stop offset="1" stop-color="#123caa"/></linearGradient><linearGradient id="nurGemFace" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#dfffff"/><stop offset=".42" stop-color="#49caff"/><stop offset="1" stop-color="#1647b9"/></linearGradient><filter id="nurGemGlow"><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><ellipse cx="110" cy="119" rx="57" ry="8" fill="#16aaff" opacity=".24"/><g filter="url(#nurGemGlow)"><path d="M54 28 82 12h56l28 16 18 28-74 72L36 56z" fill="url(#nurGemTop)" stroke="#e8ffff" stroke-width="2.5" stroke-linejoin="round"/><path d="m54 28 28-16-8 36-38 8z" fill="#d9ffff" stroke="#fff" stroke-width="1.5"/><path d="m82 12 28 36H74z" fill="#ffffff" opacity=".92"/><path d="m82 12 56 0-28 36z" fill="#8ceeff"/><path d="m138 12 28 16 18 28-38-8z" fill="#42bfff"/><path d="m74 48 36 0-74 8z" fill="#c9ffff"/><path d="m110 48 36 0 38 8-74 62z" fill="url(#nurGemRight)"/><path d="m74 48 36 0-74 8 74 62z" fill="url(#nurGemLeft)"/><path d="m36 56 74 62 0-70z" fill="#83eaff" opacity=".8"/><path d="m110 48 74 8-74 62z" fill="url(#nurGemFace)"/><path d="m74 48 36 0 36 0-36 70z" fill="#d5ffff" opacity=".42"/><path d="M54 28 82 12h56l28 16M36 56h148M74 48l36 70 36-70" fill="none" stroke="#fff" stroke-width="2" opacity=".95"/><path d="m83 17 20 0" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".9"/><path d="m28 20 4 10 10 4-10 4-4 10-4-10-10-4 10-4zM190 82l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" fill="#fff" opacity=".95"/></g></svg>';
  return art;
@@ -635,6 +635,30 @@ async function fazerApi(action,extra={}){
  if(!response.ok||data.ok===false)throw new Error(data.error||'Не удалось получить данные FazerCards.');
  return data;
 }
+async function fazerOrdersApi(action,extra={}){
+ if(!tg?.initData)throw new Error('Открой NUR SHOP через Telegram.');
+ const response=await fetch(FAZER_ORDERS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,initData:tg.initData,...extra})});
+ const data=await response.json().catch(()=>({}));
+ if(!response.ok||data.ok===false)throw new Error(data.error||'Не удалось загрузить историю заказов.');
+ return data;
+}
+async function loadFazerTestOrderHistory(){
+ const box=document.getElementById('fazerTestOrderHistory');
+ if(!box)return;
+ box.innerHTML='<div class="empty">Загружаем историю заказов…</div>';
+ try{
+  const data=await fazerOrdersApi('list_orders');
+  const orders=Array.isArray(data.orders)?data.orders:[];
+  if(!orders.length){box.innerHTML='<div class="empty">Тестовых заказов пока нет</div>';return;}
+  box.innerHTML=orders.map(order=>{
+   const date=order.created_at?new Date(order.created_at).toLocaleString('ru-RU'):'';
+   const price=order.supplier_price_rub==null?'Цена уточняется':formatRuble(order.supplier_price_rub);
+   return '<div class="fazer-note" style="margin:10px 0"><b>'+fazerEscape(order.test_order_number||'')+'</b><br>'+fazerEscape(order.offer_name||'Free Fire')+'<br>Статус: '+fazerEscape(order.status==='test_created'?'Тест создан':order.status||'Неизвестно')+'<br>Расчётная оптовая цена: '+fazerEscape(price)+'<br><small>'+fazerEscape(date)+'</small><br><b>Тестовый режим · Деньги не списаны</b></div>';
+  }).join('');
+ }catch(error){
+  box.innerHTML='<div class="fazer-note">Не удалось загрузить историю: '+fazerEscape(error.message)+'</div>';
+ }
+}
 async function fazerTestOrderApi(extra={}){
  if(!tg?.initData)throw new Error('Открой NUR SHOP через Telegram.');
  const response=await fetch(FAZER_ORDERS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'test_order',initData:tg.initData,...extra})});
@@ -661,6 +685,7 @@ async function createFazerTestOrder(index){
   notice.innerHTML='<b>✓ Тестовый заказ создан: '+fazerEscape(order.test_order_number||'')+'</b><br>'+fazerEscape(order.offer_name||'Free Fire')+'<br>Статус: '+fazerEscape(order.status||'test_created')+'<br>Оптовая цена (расчёт): '+(order.supplier_price_rub==null?'уточняется':fazerEscape(formatRuble(order.supplier_price_rub)))+'<br><b>Деньги не списаны. Поставщику заказ не отправлялся.</b>';
   area.prepend(notice);
   notice.scrollIntoView({behavior:'smooth',block:'center'});
+  loadFazerTestOrderHistory();
  }catch(error){
   if(button){button.disabled=false;button.textContent='Создать тестовый заказ';}
   const notice=document.createElement('div');notice.className='fazer-note';notice.textContent=error.message||'Ошибка тестового заказа.';area.appendChild(notice);
