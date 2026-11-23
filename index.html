@@ -57,6 +57,17 @@
 .wheel-prize-panel{border-color:#6d2c68;background:linear-gradient(145deg,#1c1025,#0e0a16)}
 .wheel-prize-list span{border-color:#63335f;background:linear-gradient(145deg,#2a1732,#160e20);color:#f0d7ee}
 @media(max-width:390px){.wheel-strip-item{flex-basis:108px;width:108px;height:145px}.strip-art{height:91px}.wheel-strip-track{gap:8px}}
+
+.admin-form{width:100%;padding:12px;border:1px solid #315579;border-radius:10px;background:#080f1c;color:#fff;font-size:14px;outline:none}
+.admin-prize-row{display:grid;grid-template-columns:62px minmax(0,1fr);gap:11px;padding:12px 0;border-bottom:1px solid #26364d}
+.admin-prize-photo{width:62px;height:62px;border:1px dashed #a83a91;border-radius:12px;background:#170d20;display:grid;place-items:center;overflow:hidden;color:#dca4d4;font-size:9px;text-align:center}
+.admin-prize-photo img{width:100%;height:100%;object-fit:cover}
+.admin-prize-fields{min-width:0;display:grid;grid-template-columns:minmax(0,1fr) 86px;gap:7px}
+.admin-prize-fields input[type=text],.admin-prize-fields input[type=number]{min-width:0;width:100%;padding:10px 8px;border:1px solid #315579;border-radius:9px;background:#080f1c;color:#fff;font-size:12px}
+.admin-prize-fields .photo-input{grid-column:1/-1;font-size:10px;color:#a9c0dc}
+.admin-user-result,.admin-assignment{padding:12px;border:1px solid #315579;border-radius:11px;background:#0b1626;margin-top:9px;font-size:12px;line-height:1.5}
+.admin-secondary{border:1px solid #315579;border-radius:9px;background:#14243a;color:#dceaff;padding:9px 11px;font-weight:800}
+
 </style>
 </head>
 <body>
@@ -109,8 +120,13 @@
 </div>
 <button class="admin-entry" onclick="openAdminAuth()"><span>▣</span> Войти в админ-панель NUR SHOP</button><div class="info-card"><b>Приглашай друзей 🎁</b><p class="muted">За нового приглашённого друга предусмотрен бонус +7 дней VPN после проверки регистрации. Автоматическое начисление пока не подключено.</p><div class="ref-link" id="refLink">Запусти приложение через Telegram, чтобы получить ссылку</div><div class="ref-actions"><button onclick="copyRef()">Скопировать ссылку</button><button onclick="shareRef()">Пригласить друга</button></div></div></section>
 
-<section class="page" id="adminPage"><div class="admin-head"><h2 class="section-title" style="margin:0;text-align:left">Админ-панель</h2><button onclick="adminLogout()">Выйти</button></div><div class="panel"><h2>Добро пожаловать в NUR SHOP</h2><p class="muted">Вход выполнен. Здесь будет управление промокодами, призами и историей активаций.</p><div class="admin-note">Локальный режим: пароль и данные сохраняются только в этом браузере. Это не защищает админку от других пользователей приложения и не синхронизирует данные между устройствами. Для настоящей защиты понадобится сервер.</div></div></section>
-<div class="admin-overlay" id="adminAuth" role="dialog" aria-modal="true" aria-labelledby="adminAuthTitle"><div class="admin-auth-card"><h2 id="adminAuthTitle">🔐 Вход в админку</h2><p id="adminAuthDescription">Введите пароль администратора NUR SHOP.</p><input id="adminPassword" type="password" autocomplete="current-password" placeholder="Пароль администратора"><div class="admin-auth-actions"><button onclick="submitAdminPassword()">Продолжить</button><button class="secondary" onclick="closeAdminAuth()">Отмена</button></div><p id="adminAuthNotice" aria-live="polite"></p></div></div>
+<section class="page" id="adminPage">
+<div class="admin-head"><h2 class="section-title" style="margin:0;text-align:left">Админ-панель</h2><button onclick="adminLogout()">Выйти</button></div>
+<div class="panel"><h2>🎁 Настройки призов рулетки</h2><p class="muted">Измени название, вероятность и фотографию каждого приза. Общая сумма вероятностей должна быть ровно 100%.</p><div id="adminPrizeEditor"></div><div class="info-card"><span>Сумма вероятностей</span><strong id="adminProbabilityTotal">100%</strong></div><button class="action" onclick="saveWheelPrizes()">Сохранить призы и вероятности</button><p class="muted" id="adminPrizeNotice" aria-live="polite"></p></div>
+<div class="panel"><h2>🎯 Персональный приз</h2><p class="muted">Найди пользователя по Telegram ID или username и назначь ему приз на следующее вращение.</p><input class="admin-form" id="adminUserQuery" placeholder="Telegram ID или @username" autocomplete="off"><button class="action" onclick="searchWheelUser()">Найти пользователя</button><div id="adminUserSearchResult"></div><div style="margin-top:12px"><select class="admin-form" id="adminAssignedPrize"></select></div><button class="action" onclick="assignWheelPrize()">Назначить на следующее вращение</button><p class="muted" id="adminAssignmentNotice" aria-live="polite"></p><h2 style="margin-top:20px">Активные назначения</h2><div id="adminAssignments"><div class="empty">Загрузка…</div></div></div>
+<div class="admin-note">Все изменения проверяются сервером. Персональный приз списывается автоматически после следующего успешного вращения.</div>
+</section>
+<div class="admin-overlay" id="adminAuth" role="dialog" aria-modal="true" aria-labelledby="adminAuthTitle"><div class="admin-auth-card"><h2 id="adminAuthTitle">🔐 Проверка администратора</h2><p id="adminAuthDescription">Проверяем Telegram ID через защищённый сервер NUR SHOP.</p><div class="admin-auth-actions"><button onclick="openAdminAuth()">Проверить снова</button><button class="secondary" onclick="closeAdminAuth()">Закрыть</button></div><p id="adminAuthNotice" aria-live="polite"></p></div></div>
 </main>
 <nav class="nav"><button data-page="wheel" onclick="showPage('wheel')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/><path d="M12 3v7m0 4v7M3 12h7m4 0h7M5.6 5.6l4.9 4.9m3 3 4.9 4.9m0-12.8-4.9 4.9m-3 3-4.9 4.9"/></svg>Рулетка</button>
 
@@ -123,14 +139,100 @@
 const tg=window.Telegram?.WebApp;let referral='';let cart={};
 if(tg){tg.ready();tg.expand();const u=tg.initDataUnsafe?.user;if(u){const name=[u.first_name,u.last_name].filter(Boolean).join(' ')||'Пользователь';document.getElementById('userName').textContent=name;document.getElementById('profileName').textContent=name;const tag=u.username?'@'+u.username:'ID: '+u.id;document.getElementById('userTag').textContent=tag;document.getElementById('profileTag').textContent=tag;const letter=(u.first_name||'N').charAt(0).toUpperCase();document.getElementById('avatarLetter').textContent=letter;document.getElementById('profileAvatar').textContent=letter;if(u.photo_url){document.getElementById('avatar').innerHTML='<img src="'+u.photo_url+'" alt="Аватар">';document.getElementById('profileAvatar').innerHTML='<img src="'+u.photo_url+'" alt="Аватар">';}referral='https://t.me/nurssshop_bot?startapp=ref_'+u.id;document.getElementById('refLink').textContent=referral;if(String(u.id)==='8628245412'){const adminSpin=document.getElementById('wheelSpinButton');if(adminSpin)adminSpin.style.display='';const adminInfo=document.getElementById('wheelSpinInfo');if(adminInfo)adminInfo.textContent='Администратор распознан в Telegram · Подключаем баланс NUR SHOP…';const adminResult=document.getElementById('wheelResult');if(adminResult)adminResult.innerHTML='👑 Добро пожаловать, администратор!<small>Сервер проверит подпись Telegram при каждом вращении.</small>';}}}
 
-// Локальная парольная блокировка админ-панели. Не является серверной авторизацией.
+// Доступ к админ-панели подтверждается сервером по подписи Telegram initData.
 let adminUnlocked=false;
-const ADMIN_AUTH_KEY='nurshop_admin_auth_v1';
-function openAdminAuth(){const saved=localStorage.getItem(ADMIN_AUTH_KEY);document.getElementById('adminAuthTitle').textContent=saved?'🔐 Вход в админку':'🔑 Создание пароля администратора';document.getElementById('adminAuthDescription').textContent=saved?'Введите пароль администратора NUR SHOP.':'Придумайте пароль администратора. Он будет сохранён в этом браузере.';document.getElementById('adminPassword').value='';document.getElementById('adminPassword').placeholder=saved?'Пароль администратора':'Создайте пароль (от 8 символов)';document.getElementById('adminAuthNotice').textContent='';document.getElementById('adminAuth').classList.add('open');setTimeout(()=>document.getElementById('adminPassword').focus(),50);}
+let adminFoundUser=null;
+let adminAssignments=[];
 function closeAdminAuth(){document.getElementById('adminAuth').classList.remove('open');}
-async function hashAdminPassword(password,salt){const enc=new TextEncoder();const key=await crypto.subtle.importKey('raw',enc.encode(password),'PBKDF2',false,['deriveBits']);const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt:Uint8Array.from(atob(salt),ch=>ch.charCodeAt(0)),iterations:150000,hash:'SHA-256'},key,256);return btoa(String.fromCharCode(...new Uint8Array(bits)));}
-async function submitAdminPassword(){const input=document.getElementById('adminPassword');const notice=document.getElementById('adminAuthNotice');const password=input.value;if(!password){notice.textContent='Введите пароль.';return;}if(!window.crypto?.subtle){notice.textContent='Браузер не поддерживает безопасное создание пароля. Откройте Mini App по HTTPS.';return;}const saved=localStorage.getItem(ADMIN_AUTH_KEY);try{if(!saved){if(password.length<8){notice.textContent='Пароль должен содержать не менее 8 символов.';return;}const salt=crypto.getRandomValues(new Uint8Array(16));const salt64=btoa(String.fromCharCode(...salt));const hash=await hashAdminPassword(password,salt64);localStorage.setItem(ADMIN_AUTH_KEY,JSON.stringify({salt:salt64,hash}));}else{const data=JSON.parse(saved);const hash=await hashAdminPassword(password,data.salt);if(hash!==data.hash){notice.textContent='Неверный пароль. Попробуйте ещё раз.';input.value='';return;}}adminUnlocked=true;closeAdminAuth();showPage('admin');}catch(e){notice.textContent='Не удалось проверить пароль. Попробуйте ещё раз.';}}
-function adminLogout(){adminUnlocked=false;showPage('profile');}
+async function openAdminAuth(){
+ const overlay=document.getElementById('adminAuth'),notice=document.getElementById('adminAuthNotice');
+ overlay.classList.add('open');notice.textContent='Проверяем права администратора…';
+ try{
+  const data=await walletApi('admin_wheel_get');
+  if(data.is_admin!==true)throw new Error('Доступ запрещён.');
+  adminUnlocked=true;adminAssignments=data.assignments||[];
+  applyWheelPrizes(data.wheel_prizes||[]);
+  renderAdminPrizes();renderAdminAssignments();
+  closeAdminAuth();showPage('admin');
+ }catch(error){adminUnlocked=false;notice.textContent=error.message||'Не удалось проверить администратора.';}
+}
+function adminLogout(){adminUnlocked=false;adminFoundUser=null;showPage('profile');}
+function applyWheelPrizes(items){
+ if(!Array.isArray(items)||items.length!==12)return;
+ items.forEach(item=>{
+  const p=wheelPrizes[Number(item.prize_index)];if(!p)return;
+  p.label=String(item.label||p.label);p.weight=Number(item.weight)||0;
+  p.image_url=item.image_url||null;p.image_path=item.image_path||null;
+ });
+ renderWheelPrizes();
+}
+function renderAdminPrizes(){
+ const host=document.getElementById('adminPrizeEditor');if(!host)return;
+ host.innerHTML=wheelPrizes.map((p,i)=>'<div class="admin-prize-row"><div class="admin-prize-photo" id="adminPrizePhoto'+i+'">'+(p.image_url?'<img src="'+escapeWalletText(p.image_url)+'" alt="">':'ФОТО')+'</div><div class="admin-prize-fields"><input type="text" maxlength="80" value="'+escapeWalletText(p.label)+'" aria-label="Название приза" data-prize-label="'+i+'"><input type="number" min="0" max="100" step="0.1" value="'+Number(p.weight||0)+'" aria-label="Вероятность в процентах" data-prize-weight="'+i+'"><label class="photo-input">Фото приза · JPG/PNG/WebP до 2 МБ <input type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadWheelPrizeImage('+i+',this)"></label></div></div>').join('');
+ updateAdminProbabilityTotal();
+ const select=document.getElementById('adminAssignedPrize');
+ if(select)select.innerHTML=wheelPrizes.map((p,i)=>'<option value="'+i+'" '+(Number(p.weight)<=0?'disabled':'')+'>'+escapeWalletText(p.label)+'</option>').join('');
+}
+function updateAdminProbabilityTotal(){
+ const total=[...document.querySelectorAll('[data-prize-weight]')].reduce((s,e)=>s+Number(e.value||0),0);
+ const el=document.getElementById('adminProbabilityTotal');if(el)el.textContent=(Math.round(total*10)/10)+'%';
+}
+document.addEventListener('input',e=>{if(e.target?.matches?.('[data-prize-weight]'))updateAdminProbabilityTotal();});
+async function saveWheelPrizes(){
+ const notice=document.getElementById('adminPrizeNotice');
+ try{
+  const prizes=wheelPrizes.map((p,i)=>({prize_index:i,label:document.querySelector('[data-prize-label="'+i+'"]').value.trim(),weight:Number(document.querySelector('[data-prize-weight="'+i+'"]').value)}));
+  const total=prizes.reduce((s,p)=>s+p.weight,0);
+  if(prizes.some(p=>!p.label||p.label.length>80||!Number.isFinite(p.weight)||p.weight<0||p.weight>100))throw new Error('Проверь названия и вероятности призов.');
+  if(Math.abs(total-100)>0.0001)throw new Error('Сумма вероятностей должна быть ровно 100%. Сейчас: '+total+'%.');
+  notice.textContent='Сохраняем настройки…';
+  const data=await walletApi('admin_wheel_save',{prizes});
+  applyWheelPrizes(data.wheel_prizes||[]);renderAdminPrizes();
+  notice.textContent='Изменения сохранены. Новые вероятности действуют для следующих вращений.';
+ }catch(error){notice.textContent=error.message||'Не удалось сохранить настройки.';}
+}
+async function uploadWheelPrizeImage(index,input){
+ const file=input.files?.[0];if(!file)return;
+ const notice=document.getElementById('adminPrizeNotice');
+ try{
+  if(file.size>2*1024*1024)throw new Error('Максимальный размер фотографии — 2 МБ.');
+  if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw new Error('Выбери JPG, PNG или WebP.');
+  notice.textContent='Загружаем фотографию приза №'+(index+1)+'…';
+  const base64=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(',')[1]||'');reader.onerror=()=>reject(new Error('Не удалось прочитать фотографию.'));reader.readAsDataURL(file);});
+  const data=await walletApi('admin_prize_image',{prizeIndex:index,mime:file.type,imageBase64:base64});
+  applyWheelPrizes(data.wheel_prizes||[]);renderAdminPrizes();notice.textContent='Фотография сохранена.';
+ }catch(error){notice.textContent=error.message||'Не удалось загрузить фотографию.';input.value='';}
+}
+async function searchWheelUser(){
+ const query=document.getElementById('adminUserQuery').value.trim(),result=document.getElementById('adminUserSearchResult');
+ result.textContent='Ищем пользователя…';adminFoundUser=null;
+ try{
+  const data=await walletApi('admin_user_search',{query});
+  if(!data.user){result.textContent='Пользователь не найден. Он должен хотя бы один раз открыть NUR SHOP.';return;}
+  adminFoundUser=data.user;
+  result.innerHTML='<div class="admin-user-result"><b>Пользователь найден</b><br>Имя: '+escapeWalletText(data.user.first_name||'не указано')+'<br>Telegram ID: '+escapeWalletText(data.user.telegram_id)+'<br>Username: '+(data.user.username?'@'+escapeWalletText(data.user.username):'не указан')+'</div>';
+ }catch(error){result.textContent=error.message||'Ошибка поиска.';}
+}
+async function assignWheelPrize(){
+ const notice=document.getElementById('adminAssignmentNotice'),query=document.getElementById('adminUserQuery').value.trim();
+ if(!adminFoundUser){notice.textContent='Сначала найди и проверь пользователя.';return;}
+ try{
+  const prizeIndex=Number(document.getElementById('adminAssignedPrize').value);
+  notice.textContent='Назначаем приз…';
+  const data=await walletApi('admin_assign_prize',{query,prizeIndex});
+  adminAssignments=data.assignments||[];renderAdminAssignments();
+  notice.textContent='Готово! '+(data.assignment.prize_label||'Приз')+' назначен пользователю на следующее вращение.';
+ }catch(error){notice.textContent=error.message||'Не удалось назначить приз.';}
+}
+function renderAdminAssignments(){
+ const host=document.getElementById('adminAssignments');if(!host)return;
+ if(!adminAssignments.length){host.innerHTML='<div class="empty">Нет активных назначений</div>';return;}
+ host.innerHTML=adminAssignments.map(a=>'<div class="admin-assignment"><b>'+(a.username?'@'+escapeWalletText(a.username):escapeWalletText(a.telegram_id))+'</b><br>Telegram ID: '+escapeWalletText(a.telegram_id)+'<br>Приз: '+escapeWalletText(a.prize_label)+'<button class="admin-secondary" style="float:right" onclick="cancelWheelAssignment(\''+escapeWalletText(a.assignment_id)+'\')">Отменить</button><div style="clear:both"></div></div>').join('');
+}
+async function cancelWheelAssignment(id){
+ try{await walletApi('admin_assignment_cancel',{assignmentId:id});adminAssignments=adminAssignments.filter(a=>a.assignment_id!==id);renderAdminAssignments();}
+ catch(error){alert(error.message||'Не удалось отменить назначение.');}
+}
 const wheelPrizes=[
  {label:'5 ₽ на баланс',color:'#087fff',text:'#ffffff'},
  {label:'10 ₽ на баланс',color:'#00a9c7',text:'#06111b'},
