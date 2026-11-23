@@ -656,6 +656,7 @@ function selectManualCatalogProduct(productId){
  const product=manualCatalogData.products.find(p=>p.id===productId);
  if(!product)return;
  selectedManualCatalogProduct=product;
+ const orderButton=document.getElementById('catalogOrderButton');orderButton.disabled=false;orderButton.textContent='Отправить заказ';
  document.getElementById('catalogOrderTitle').textContent='Оформление заказа';
  document.getElementById('catalogOrderProduct').innerHTML='<div class="info-card"><b>'+fazerEscape(product.title)+'</b><strong style="display:block;margin-top:8px">'+formatRuble(product.price_rub)+'</strong><p class="muted">'+fazerEscape(product.description||'')+'</p></div>';
  document.getElementById('catalogGameId').value='';
