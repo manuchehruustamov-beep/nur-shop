@@ -552,7 +552,7 @@ function openCategory(name){
  document.getElementById('categoryCart').style.display=vpn?'block':'none';
  if(vpn){desc.textContent='Выбери срок подписки Happ VPN';renderCart();return;}
  const groups={
- 'Free Fire':['Алмазы','Ваучеры','Пропуск','Наборы и предметы'],
+ 'Free Fire':['Алмазы','Ваучеры'],
  'PUBG Mobile':['UC','Ваучеры','Наборы и предметы'],
  'Mobile Legends':['Алмазы','Пропуски','Наборы и предметы'],
  'Steam':['Пополнение Steam','Подарочные карты'],
@@ -561,12 +561,21 @@ function openCategory(name){
  };
  const items=groups[name]||['Товары','Услуги'];
  desc.textContent='Выбери, что хочешь приобрести';
- tiles.innerHTML=items.map((item,i)=>'<button class="tile" style="border:0;background:transparent;padding:0;cursor:pointer" onclick="showCategoryProducts(\''+name+'\',\''+item+'\')"><div class="tile-image" style="display:grid;place-items:center;font-size:35px">'+(['💎','🎟️','🎁','✨'][i%4])+'</div><span class="tile-label">'+item+'</span></button>').join('');
+ tiles.innerHTML=items.map((item,i)=>'<button class="tile" style="border:0;background:transparent;padding:0;cursor:pointer" onclick="showCategoryProducts(\''+name+'\',\''+item+'\')"><div class="tile-image" style="display:grid;place-items:center;font-size:35px">'+(item==='Алмазы'?'💎':'🎟️')+'</div><span class="tile-label">'+item+'</span></button>').join('');
 }
 
 const FAZER_CATALOG_URL='https://dfonsybvktrgwryovmua.supabase.co/functions/v1/fazercards-catalog';
 const FAZER_USD_TO_RUB=82;
-function fazerFormatRubles(usd){const value=Number(usd);return Number.isFinite(value)?Math.ceil(value*FAZER_USD_TO_RUB).toLocaleString('ru-RU')+' ₽':'уточняется';}
+function fazerFormatRubles(raw){
+ if(raw==null||raw==='')return 'уточняется';
+ const value=Number(String(raw).replace(/[^0-9.,-]/g,'').replace(',','.'));
+ if(!Number.isFinite(value))return 'уточняется';
+ return Math.ceil(value*FAZER_USD_TO_RUB).toLocaleString('ru-RU')+' ₽';
+}
+function fazerOfferPrice(x){
+ const raw=x.price_usd??x.usd_price??x.price??x.amount_usd??x.cost_usd??null;
+ return fazerFormatRubles(raw);
+}
 let fazerCategoriesCache=null;
 let fazerSelectedCategory=null;
 function fazerEscape(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
@@ -656,10 +665,15 @@ async function loadFazerOffers(index){
  area.innerHTML='<div class="empty">Загружаем наборы и поля игрока…</div>';
  try{
   const data=await fazerApi('offers',{category_id:category.category_id});
-  const offers=Array.isArray(data.offers)?data.offers:[];
+  const allOffers=Array.isArray(data.offers)?data.offers:[];
+  const isVoucher=(fazerSelectedCategory?.__nurItem==='Ваучеры');
+  const offers=allOffers.filter(x=>{
+   const label=String(x.name||x.title||x.product_name||'').toLowerCase();
+   return isVoucher?/voucher|вaучер|ваучер|membership|card|pass|ticket/.test(label):/diamond|алмаз|\bdiamonds?\b/.test(label);
+  });
   const fields=Array.isArray(data.fields)?data.fields:[];
   const fieldHtml=fields.length?'<div class="fazer-fields">'+fields.map((field,i)=>'<label>'+fazerEscape(field.label||field.key||('Поле '+(i+1)))+'<input type="'+(field.type==='number'?'number':'text')+'" autocomplete="off" placeholder="'+fazerEscape(field.placeholder||field.label||'Введи данные игрока')+'" data-fazer-field="'+fazerEscape(field.key||'')+'"></label>').join('')+'</div>':'';
-  const offerHtml=offers.length?'<div class="fazer-offer-grid">'+offers.map(x=>'<div class="fazer-offer"><b>'+fazerEscape(fazerRussianName(x.name||x.title||'Набор'))+'</b><small>Оптовая цена: '+fazerFormatRubles(x.price_usd)+'</small></div>').join('')+'</div>':'<div class="fazer-note">Поставщик пока не вернул наборы для этой категории.</div>';
+  const offerHtml=offers.length?'<div class="fazer-offer-grid">'+offers.map(x=>'<div class="fazer-offer"><b>'+fazerEscape(fazerRussianName(x.name||x.title||'Набор'))+'</b><small>Оптовая цена: '+fazerOfferPrice(x)+'</small></div>').join('')+'</div>':'<div class="fazer-note">Поставщик пока не вернул наборы для этой категории.</div>';
   area.innerHTML='<h3 style="margin:18px 0 8px">'+fazerEscape(fazerRussianName(data.name||category.name||'Free Fire'))+'</h3>'+fieldHtml+offerHtml+'<div class="fazer-note">Каталог подключён в режиме просмотра. Заказы, списание баланса и оплата пока отключены — ничего не будет куплено случайно.</div>';
  }catch(error){
   area.innerHTML='<div class="fazer-note">Не удалось загрузить наборы: '+fazerEscape(error.message)+'</div><button class="action" onclick="loadFazerOffers('+index+')">Повторить</button>';
@@ -669,13 +683,14 @@ async function loadFazerOffers(index){
 function showCategoryProducts(category,item){
  const panel=document.getElementById('categoryProducts');
  document.getElementById('productsTitle').textContent=item;
- if(category==='Free Fire'&&item==='Алмазы'){
+ if(category==='Free Fire'&&(item==='Алмазы'||item==='Ваучеры')){
   panel.style.display='block';
+  fazerSelectedCategory={__nurItem:item};
   loadFazerFreeFireCatalog();
   panel.scrollIntoView({behavior:'smooth',block:'start'});
   return;
  }
- document.getElementById('categoryProductList').innerHTML='<div class="empty">Раздел «'+item+'» выбран. Товары и актуальные цены появятся здесь после добавления ассортимента.</div>';
+ document.getElementById('categoryProductList').innerHTML='<div class="empty">Раздел «'+item+'» выбран. Товары появятся здесь после подключения ассортимента.</div>';
  panel.style.display='block';
  panel.scrollIntoView({behavior:'smooth',block:'start'});
 }
