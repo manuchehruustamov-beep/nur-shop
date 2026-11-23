@@ -437,6 +437,7 @@ async function startTopup(){
 
 // Баланс и журнал операций загружаются из защищённой серверной функции Supabase.
 let walletSnapshot=null;
+let walletIsAdmin=false;
 function formatRuble(value){return Number(value||0).toLocaleString('ru-RU',{minimumFractionDigits:0,maximumFractionDigits:2})+' ₽';}
 updateTopupPreview();
 function escapeWalletText(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
@@ -454,7 +455,7 @@ function renderWheelCooldown(){
  const button=document.getElementById('wheelSpinButton');
  const info=document.getElementById('wheelSpinInfo');
  if(!button||!walletSnapshot)return;
- const nextAt=walletSnapshot.next_spin_at?new Date(walletSnapshot.next_spin_at).getTime():0;
+ const nextAt=walletIsAdmin?0:(walletSnapshot.next_spin_at?new Date(walletSnapshot.next_spin_at).getTime():0);
  const left=nextAt-Date.now();
  if(left>0){
   button.disabled=true;
@@ -469,7 +470,7 @@ function renderWheelCooldown(){
 }
 function updateWalletUI(snapshot,isAdmin=false,prizes=null){
  if(prizes)applyWheelPrizes(prizes);
- if(!snapshot)return;walletSnapshot=snapshot;
+ if(!snapshot)return;walletSnapshot=snapshot;walletIsAdmin=isAdmin===true;
  const spinButton=document.getElementById('wheelSpinButton');
  if(spinButton)spinButton.style.display='';
  const value=formatRuble(snapshot.balance||0);
