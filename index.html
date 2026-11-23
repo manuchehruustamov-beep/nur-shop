@@ -927,6 +927,67 @@ async function submitManualTopup(){const amount=Number(document.getElementById('
 async function loadAdminPaymentMethods(){const host=document.getElementById('adminPaymentMethods');if(!host)return;try{const data=await paymentApi('admin_methods_get');host.innerHTML=(data.methods||[]).map(m=>'<div class="history-row"><b>'+escapeWalletText(m.title)+'</b><small>'+escapeWalletText(m.method_type)+' · '+(m.is_enabled?'Включён':'Выключен')+'</small><button class="admin-secondary" onclick="editPaymentMethod(\''+escapeWalletText(m.id)+'\')">Изменить</button></div>').join('')||'<div class="empty">Способы оплаты ещё не добавлены.</div>';window.adminPaymentMethods=data.methods||[];}catch(e){host.innerHTML='<div class="empty">'+escapeWalletText(e.message)+'</div>';}}
 function resetPaymentMethodForm(){window.editingPaymentMethodId=null;document.getElementById('payMethodType').value='ru_card';['payMethodTitle','payMethodBank','payMethodCard','payMethodWallet','payMethodRecipient','payMethodInstructions'].forEach(id=>document.getElementById(id).value='');document.getElementById('payMethodEnabled').checked=false;document.getElementById('paymentMethodEditorTitle').textContent='Новый способ оплаты';}function startNewPaymentMethod(){resetPaymentMethodForm();document.getElementById('paymentMethodEditor').style.display='block';document.getElementById('adminPaymentNotice').textContent='Заполни данные нового способа оплаты и нажми «Сохранить». ';document.getElementById('paymentMethodEditor').scrollIntoView({behavior:'smooth',block:'center'});}function closePaymentMethodEditor(){document.getElementById('paymentMethodEditor').style.display='none';resetPaymentMethodForm();}function editPaymentMethod(id){const m=(window.adminPaymentMethods||[]).find(x=>x.id===id);if(!m)return;const d=m.details||{};document.getElementById('payMethodType').value=m.method_type;document.getElementById('payMethodTitle').value=m.title||'';document.getElementById('payMethodBank').value=d.bank||'';document.getElementById('payMethodCard').value=d.card_number||'';document.getElementById('payMethodWallet').value=d.wallet_number||'';document.getElementById('payMethodRecipient').value=d.recipient||'';document.getElementById('payMethodInstructions').value=m.instructions||'';document.getElementById('payMethodEnabled').checked=!!m.is_enabled;window.editingPaymentMethodId=id;document.getElementById('paymentMethodEditorTitle').textContent='Редактирование способа оплаты';document.getElementById('paymentMethodEditor').style.display='block';document.getElementById('adminPaymentNotice').textContent='Редактирование: '+m.title;document.getElementById('paymentMethodEditor').scrollIntoView({behavior:'smooth',block:'center'});}
 async function savePaymentMethod(){const notice=document.getElementById('adminPaymentNotice');try{const title=document.getElementById('payMethodTitle').value.trim();if(!title)throw new Error('Укажи название способа оплаты.');const payload={id:window.editingPaymentMethodId||undefined,methodType:document.getElementById('payMethodType').value,title,details:{bank:document.getElementById('payMethodBank').value.trim(),card_number:document.getElementById('payMethodCard').value.trim(),wallet_number:document.getElementById('payMethodWallet').value.trim(),recipient:document.getElementById('payMethodRecipient').value.trim()},instructions:document.getElementById('payMethodInstructions').value.trim(),isEnabled:document.getElementById('payMethodEnabled').checked};await paymentApi('admin_method_save',payload);notice.textContent='Способ оплаты сохранён.';await loadAdminPaymentMethods();await loadManualPaymentMethods();closePaymentMethodEditor();notice.textContent='Способ оплаты сохранён. Его можно изменить кнопкой «Изменить».';}catch(e){notice.textContent=e.message||'Не удалось сохранить способ оплаты.';}}
+let catalogEditingProductId=null;
+let adminCatalogSnapshot={categories:[],products:[],orders:[]};
+function catalogStatusLabel(status){return ({pending:'Новый',processing:'В обработке',completed:'Выдан',cancelled:'Отменён'})[status]||status;}
+async function loadAdminCatalog(){
+ const productsHost=document.getElementById('adminCatalogProducts'),ordersHost=document.getElementById('adminCatalogOrders');
+ if(!productsHost||!ordersHost)return;
+ productsHost.innerHTML='<div class="empty">Загружаем каталог…</div>';ordersHost.innerHTML='<div class="empty">Загружаем заказы…</div>';
+ try{
+  const data=await paymentApi('admin_catalog_get');
+  adminCatalogSnapshot={categories:data.categories||[],products:data.products||[],orders:data.orders||[]};
+  const select=document.getElementById('catalogProductCategory');
+  select.innerHTML=adminCatalogSnapshot.categories.map(c=>'<option value="'+c.id+'">'+escapeWalletText(c.icon||'🎮')+' '+escapeWalletText(c.title)+'</option>').join('');
+  productsHost.innerHTML=adminCatalogSnapshot.products.length?adminCatalogSnapshot.products.map(p=>'<div class="history-row"><b>'+escapeWalletText(p.title)+'</b><small>'+escapeWalletText(p.catalog_categories?.title||'Раздел')+' · '+formatRuble(p.price_rub)+' · '+(p.is_active?'Показывается':'Скрыт')+'</small><button class="admin-secondary" onclick="editCatalogProduct(\''+p.id+'\')">Изменить</button> <button class="admin-secondary" onclick="toggleCatalogProduct(\''+p.id+'\','+(!p.is_active)+')">'+(p.is_active?'Скрыть':'Показать')+'</button></div>').join(''):'<div class="empty">Товары ещё не добавлены.</div>';
+  ordersHost.innerHTML=adminCatalogSnapshot.orders.length?adminCatalogSnapshot.orders.map(o=>'<div class="history-row"><b>'+escapeWalletText(o.product_title)+' · '+formatRuble(o.price_rub)+'</b><small>Статус: '+catalogStatusLabel(o.status)+'<br>Игровой ID: <b>'+escapeWalletText(o.game_player_id)+'</b><br>Telegram ID: '+escapeWalletText(o.telegram_user_id)+' '+(o.telegram_username?'(@'+escapeWalletText(o.telegram_username)+')':'')+'<br>Заказ: '+escapeWalletText(o.id)+'<br>'+new Date(o.created_at).toLocaleString('ru-RU')+'</small>'+(o.status==='pending'?'<button class="admin-secondary" onclick="setCatalogOrderStatus(\''+o.id+'\',\'processing\')">Взял в работу</button>':'')+(o.status==='pending'||o.status==='processing'?'<button class="admin-secondary" onclick="setCatalogOrderStatus(\''+o.id+'\',\'completed\')">Товар отправлен</button>':'')+(o.status!=='completed'&&o.status!=='cancelled'?'<button class="admin-secondary" onclick="setCatalogOrderStatus(\''+o.id+'\',\'cancelled\')">Отменить</button>':'')+'</div>').join(''):'<div class="empty">Заказов пока нет.</div>';
+ }catch(e){productsHost.innerHTML='<div class="empty">'+escapeWalletText(e.message)+'</div>';ordersHost.innerHTML='<div class="empty">Не удалось загрузить заказы.</div>';}
+}
+async function saveNewCatalogCategory(){
+ const notice=document.getElementById('catalogCategoryNotice');
+ const title=document.getElementById('catalogNewCategoryTitle').value.trim();
+ const icon=document.getElementById('catalogNewCategoryIcon').value.trim()||'🎮';
+ const imageUrl=document.getElementById('catalogNewCategoryImage').value.trim();
+ if(!title){notice.textContent='Введи название нового раздела.';return;}
+ try{
+  await paymentApi('admin_catalog_category_save',{title,icon,imageUrl,isActive:true});
+  document.getElementById('catalogNewCategoryTitle').value='';document.getElementById('catalogNewCategoryImage').value='';
+  notice.textContent='Раздел добавлен. Он появится в Free Fire.';
+  await loadAdminCatalog();
+ }catch(e){notice.textContent=e.message||'Не удалось добавить раздел.';}
+}
+function editCatalogProduct(id){
+ const p=adminCatalogSnapshot.products.find(x=>x.id===id);if(!p)return;
+ catalogEditingProductId=id;
+ document.getElementById('catalogProductCategory').value=p.category_id;
+ document.getElementById('catalogProductTitle').value=p.title||'';
+ document.getElementById('catalogProductDescription').value=p.description||'';
+ document.getElementById('catalogProductPrice').value=p.price_rub||'';
+ document.getElementById('catalogProductImage').value=p.image_url||'';
+ document.getElementById('catalogProductNotice').textContent='Редактирование товара. Сохрани изменения кнопкой ниже.';
+ document.querySelector('#adminCatalogPanel .info-card:nth-of-type(2) button').textContent='Сохранить изменения';
+}
+async function saveCatalogProduct(){
+ const notice=document.getElementById('catalogProductNotice');
+ const payload={id:catalogEditingProductId||undefined,categoryId:document.getElementById('catalogProductCategory').value,title:document.getElementById('catalogProductTitle').value.trim(),description:document.getElementById('catalogProductDescription').value.trim(),priceRub:Number(document.getElementById('catalogProductPrice').value),imageUrl:document.getElementById('catalogProductImage').value.trim(),isActive:true};
+ try{
+  await paymentApi('admin_catalog_product_save',payload);
+  catalogEditingProductId=null;
+  ['catalogProductTitle','catalogProductDescription','catalogProductPrice','catalogProductImage'].forEach(id=>document.getElementById(id).value='');
+  document.querySelector('#adminCatalogPanel .info-card:nth-of-type(2) button').textContent='Сохранить товар';
+  notice.textContent='Товар сохранён и добавлен в каталог.';
+  await loadAdminCatalog();
+ }catch(e){notice.textContent=e.message||'Не удалось сохранить товар.';}
+}
+async function toggleCatalogProduct(id,isActive){
+ try{const p=adminCatalogSnapshot.products.find(x=>x.id===id);if(!p)return;await paymentApi('admin_catalog_product_save',{id,categoryId:p.category_id,title:p.title,description:p.description||'',priceRub:Number(p.price_rub),imageUrl:p.image_url||'',isActive});await loadAdminCatalog();}
+ catch(e){document.getElementById('catalogProductNotice').textContent=e.message||'Не удалось изменить товар.';}
+}
+async function setCatalogOrderStatus(orderId,status){
+ const note=status==='completed'?'Товар отправлен покупателю вручную.':status==='processing'?'Заказ взят в обработку.':'Заказ отменён администратором.';
+ try{await paymentApi('admin_catalog_order_status',{orderId,status,adminNote:note});document.getElementById('adminCatalogOrderNotice').textContent='Статус заказа обновлён.';await loadAdminCatalog();}
+ catch(e){document.getElementById('adminCatalogOrderNotice').textContent=e.message||'Не удалось обновить заказ.';}
+}
 async function loadAdminTopups(){const host=document.getElementById('adminTopupRequests');if(!host)return;try{const data=await paymentApi('admin_topups_get');const items=data.requests||[];host.innerHTML=items.length?items.map(x=>'<div class="history-row"><b>'+escapeWalletText(formatRuble(x.amount))+' · '+escapeWalletText(x.status)+'</b><small>'+escapeWalletText(x.id)+'<br>'+new Date(x.created_at).toLocaleString('ru-RU')+'<br>'+escapeWalletText(x.user_note||'Без комментария')+'</small>'+(x.status==='pending'?'<button class="admin-secondary" onclick="reviewManualTopup(\''+escapeWalletText(x.id)+'\',\'approve\')">Подтвердить зачисление</button> <button class="admin-secondary" onclick="reviewManualTopup(\''+escapeWalletText(x.id)+'\',\'reject\')">Отклонить</button>':'')+'</div>').join(''):'<div class="empty">Заявок пока нет.</div>';}catch(e){host.innerHTML='<div class="empty">'+escapeWalletText(e.message)+'</div>';}}
 async function reviewManualTopup(id,decision){const notice=document.getElementById('adminTopupNotice');if(decision==='approve'&&!confirm('Проверил поступление денег и подтверждаешь зачисление?'))return;try{await paymentApi('admin_topup_review',{requestId:id,decision});notice.textContent=decision==='approve'?'Платёж подтверждён, баланс зачислен.':'Заявка отклонена.';await loadAdminTopups();await loadWallet();}catch(e){notice.textContent=e.message||'Не удалось обработать заявку.';}}
 async function walletApi(action,extra={}){
