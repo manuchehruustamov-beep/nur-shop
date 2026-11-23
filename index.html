@@ -1114,7 +1114,7 @@ async function redeemPromoCode(){
  const playerId=(document.getElementById('promoPlayerId')?.value||'').trim();
  const button=document.getElementById('promoRedeemButton');
  if(!validatedPromoCode){notice.textContent='Сначала проверь промокод.';return;}
- if(!/^\\d{5,20}$/.test(playerId)){notice.textContent='Проверь игровой ID: нужно от 5 до 20 цифр.';return;}
+ if(!/^\d{5,20}$/.test(playerId)){notice.textContent='Проверь игровой ID: нужно от 5 до 20 цифр.';return;}
  button.disabled=true;button.textContent='Отправляем заказ…';
  try{
   const data=await paymentApi('promo_redeem',{code:validatedPromoCode,playerId});
