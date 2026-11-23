@@ -372,14 +372,21 @@ document.addEventListener('input',e=>{if(e.target?.matches?.('[data-prize-weight
 async function saveWheelPrizes(){
  const notice=document.getElementById('adminPrizeNotice');
  try{
-  const prizes=wheelPrizes.map((p,i)=>({prize_index:i,label:document.querySelector('[data-prize-label="'+i+'"]').value.trim(),weight:Number(document.querySelector('[data-prize-weight="'+i+'"]').value)}));
+  if(!adminUnlocked)throw new Error('Сначала войди в админ-панель.');
+  const prizes=wheelPrizes.map((p,i)=>{
+   const label=document.querySelector('[data-prize-label="'+i+'"]');
+   const weight=document.querySelector('[data-prize-weight="'+i+'"]');
+   if(!label||!weight)throw new Error('Не найдены настройки приза №'+(i+1)+'. Открой панель заново.');
+   return {prize_index:i,label:label.value.trim(),weight:Number(weight.value)};
+  });
   const total=prizes.reduce((s,p)=>s+p.weight,0);
-  if(prizes.some(p=>!p.label||p.label.length>80||!Number.isFinite(p.weight)||p.weight<0||p.weight>100))throw new Error('Проверь названия и вероятности призов.');
-  if(Math.abs(total-100)>0.0001)throw new Error('Сумма вероятностей должна быть ровно 100%. Сейчас: '+total+'%.');
-  notice.textContent='Сохраняем настройки…';
+  if(prizes.length!==12||prizes.some(p=>!p.label||p.label.length>80||!Number.isFinite(p.weight)||p.weight<0||p.weight>100))throw new Error('Проверь названия и вероятности всех 12 призов.');
+  if(Math.abs(total-100)>0.0001)throw new Error('Сумма вероятностей должна быть ровно 100%. Сейчас: '+(Math.round(total*1000)/1000)+'%.');
+  notice.textContent='Сохраняем названия и вероятности всех призов…';
   const data=await walletApi('admin_wheel_save',{prizes});
-  applyWheelPrizes(data.wheel_prizes||[]);renderAdminPrizes();
-  notice.textContent='Изменения сохранены. Новые вероятности действуют для следующих вращений.';
+  if(!Array.isArray(data.wheel_prizes)||data.wheel_prizes.length!==12)throw new Error('Сервер не подтвердил сохранение всех 12 призов.');
+  applyWheelPrizes(data.wheel_prizes);renderAdminPrizes();
+  notice.textContent='Все 12 призов сохранены. Новые названия и вероятности действуют для следующих вращений.';
  }catch(error){notice.textContent=error.message||'Не удалось сохранить настройки.';}
 }
 async function saveWheelPrizeLabels(){
@@ -399,12 +406,27 @@ async function uploadWheelPrizeImage(index,input){
  const file=input.files?.[0];if(!file)return;
  const notice=document.getElementById('adminPrizeNotice');
  try{
+  if(!adminUnlocked)throw new Error('Сначала войди в админ-панель.');
   if(file.size>2*1024*1024)throw new Error('Максимальный размер фотографии — 2 МБ.');
   if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw new Error('Выбери JPG, PNG или WebP.');
+  // Сохраняем несохранённые поля, чтобы загрузка фото не стирала введённые названия и проценты.
+  const draft=wheelPrizes.map((p,i)=>({
+   label:document.querySelector('[data-prize-label="'+i+'"]')?.value??p.label,
+   weight:document.querySelector('[data-prize-weight="'+i+'"]')?.value??p.weight
+  }));
   notice.textContent='Загружаем фотографию приза №'+(index+1)+'…';
   const base64=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(',')[1]||'');reader.onerror=()=>reject(new Error('Не удалось прочитать фотографию.'));reader.readAsDataURL(file);});
   const data=await walletApi('admin_prize_image',{prizeIndex:index,mime:file.type,imageBase64:base64});
-  applyWheelPrizes(data.wheel_prizes||[]);renderAdminPrizes();notice.textContent='Фотография сохранена.';
+  if(!Array.isArray(data.wheel_prizes)||data.wheel_prizes.length!==12)throw new Error('Сервер не подтвердил загрузку фотографии.');
+  applyWheelPrizes(data.wheel_prizes);renderAdminPrizes();
+  draft.forEach((item,i)=>{
+   const label=document.querySelector('[data-prize-label="'+i+'"]');
+   const weight=document.querySelector('[data-prize-weight="'+i+'"]');
+   if(label)label.value=item.label;
+   if(weight)weight.value=item.weight;
+  });
+  updateAdminProbabilityTotal();
+  notice.textContent='Фотография приза №'+(index+1)+' сохранена. Незавершённые изменения полей сохранены на экране — нажми «Сохранить призы и вероятности».';
  }catch(error){notice.textContent=error.message||'Не удалось загрузить фотографию.';input.value='';}
 }
 async function searchWheelUser(){
