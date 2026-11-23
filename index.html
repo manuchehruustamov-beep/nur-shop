@@ -371,37 +371,66 @@ body:before{background:radial-gradient(ellipse at 8% 24%,#cbd2da18 0%,transparen
 .ref-link,.admin-note,.admin-user-result,.admin-assignment{border-color:#59636c;background:#181c20;color:#dce1e6}
 :focus-visible{outline:2px solid #e1e6eb;outline-offset:3px}
 
-/* BLACK RED NEON GLOW — keep silver borders */
-.profile-bar,.balance-pill,.avatar,.hero,.hero-link,.action,
-.benefit-strip div,.tile-image,.panel,.info-card,.profile-card,
-.vpn-card,.vpn-card.featured,.wheel-card,.wheel-strip-stage,
-.wheel-strip-item,.wheel-result,.wheel-prize-list span,.nav,
-.topup-option,.admin-form,.admin-auth-card input,.promo-input-row input,
-.ref-link,.admin-note,.admin-user-result,.admin-assignment,
-.promo-input-row button,.ref-actions button,.admin-auth-actions button,
-.admin-secondary,.wheel-spin{
-  border-width:2.5px!important;
-  border-style:solid!important;
-  border-color:#e7edf3!important;
-}
-.hero,.tile-image,.panel,.info-card,.profile-card,.vpn-card,
-.wheel-card,.wheel-strip-stage,.wheel-strip-item,.wheel-result,
-.topup-option,.nav,.balance-pill,.benefit-strip div{
-  box-shadow:0 0 0 1px #ffffff55,0 0 14px #ff2020aa,0 0 32px #ff1010aa,
-  inset 0 0 20px #ffffff20!important;
-}
-.hero h1 em,.catalog-heading span,.benefit-strip b,.vpn-card .price,
-.total b,.info-card strong,.wheel-kicker,.wheel-strip-caption,
-.nav button.active,.tile-label{
-  text-shadow:0 0 5px #fff,0 0 13px #ff7777,0 0 28px #ff2525!important;
-}
-.hero-link,.action,.wheel-spin,.promo-input-row button,
-.ref-actions button,.admin-auth-actions button{
-  border-width:3px!important;
-  box-shadow:0 0 10px #fff,0 0 22px #ff4545,0 0 42px #ff1010cc,
-  inset 0 0 12px #ffffff77!important;
-}
-:focus-visible{outline:3px solid #fff!important;outline-offset:4px;box-shadow:0 0 0 2px #ff2525,0 0 22px #ff2525!important}
+/* ORIGINAL BLACK & BLUE NEON — restore the classic NUR SHOP menu */
+:root{--bg:#050914;--panel:#0b1424;--muted:#a9bdd5;--sienna:#28aaff;--green:#1266c4;--stroke:#164b80;color-scheme:dark}
+html{background:#050914}
+body{background:radial-gradient(ellipse at 50% -18%,#123d70 0%,#0b1b32 34%,#070d19 68%,#03060d 100%);color:#f3f8ff}
+body:before{background:radial-gradient(ellipse at 8% 24%,#168bff22 0%,transparent 38%),radial-gradient(ellipse at 92% 62%,#00c8ff20 0%,transparent 42%),radial-gradient(ellipse at 48% 105%,#176bcb28 0%,transparent 48%),repeating-linear-gradient(115deg,transparent 0 74px,#54baff08 75px 77px,transparent 78px 150px)}
+.profile-bar{border-bottom-color:#1765a5;background:linear-gradient(115deg,#050b16,#10243c 55%,#08111f);box-shadow:0 8px 30px #000b}
+.avatar{border-color:#299fff;background:#10243c;box-shadow:0 0 12px #168bff88,0 0 26px #00c8ff44}
+.user-tag,.balance-pill b,.balance-pill svg{color:#62c7ff;stroke:#62c7ff}
+.balance-pill{border-color:#238bd0;background:#0b1b30;color:#e1f3ff;box-shadow:0 0 18px #168bff33,inset 0 0 15px #168bff18}
+.hero{border-color:#239bdf;background:radial-gradient(ellipse at 78% 45%,#15558b 0%,#102b4c 36%,#070d19 78%);box-shadow:0 16px 38px #000c,0 0 30px #168bff44,inset 0 0 40px #00aaff22}
+.hero:before{background:linear-gradient(110deg,#050b16ee 0%,#0b1b30ed 46%,#12436b66 100%)}
+.hero:after{background:linear-gradient(130deg,transparent 25%,#b8eaff20 50%,transparent 75%)}
+.hero-glow{background:#168bff77}
+.hero-kicker,.hero-mark small{color:#b8e5ff}
+.live-dot,.hero-bottom-line i{background:#56c8ff;box-shadow:0 0 14px #19baff}
+.hero h1 em{color:#d9f3ff;text-shadow:0 0 10px #35baff,0 0 28px #168bff99}
+.hero p{color:#d2e8fa}
+.hero-link,.action,.vpn-card.featured .action{border-color:#65ceff;background:linear-gradient(100deg,#075da5,#20a9ed 55%,#6bd6ff);box-shadow:0 0 12px #168bff77,0 0 28px #00bfff44;color:#04101c}
+.hero-ring{border-color:#42bdff;box-shadow:0 0 28px #168bff88,inset 0 0 25px #00aaff33}
+.hero-ring:before,.hero-ring:after{border-color:#62c7ff99}
+.hero-monogram{color:#fff;text-shadow:0 0 12px #168bff,0 0 34px #00c8ff}
+.hero-monogram span{color:#8edcff}
+.hero-bottom-line{color:#b7d8ef}
+.benefit-strip div{border-color:#205d91;background:linear-gradient(145deg,#142b46,#091321);color:#d5eaff;box-shadow:inset 0 0 18px #168bff12,0 0 12px #168bff22}
+.benefit-strip b,.catalog-heading span{color:#8bdcff;text-shadow:0 0 12px #168bff99}
+.catalog-heading small{color:#91b9dc}
+.tile-image{border-color:#258ac8;background:linear-gradient(145deg,#183957,#0a1728);box-shadow:0 7px 18px #000a,0 0 15px #168bff33,inset 0 0 20px #00aaff12}
+.tile:active .tile-image{border-color:#8cdeff;box-shadow:0 0 12px #00bfff,0 0 30px #168bff88}
+.tile-label{color:#eff9ff;text-shadow:0 0 10px #168bff33}
+.panel,.info-card,.profile-card{border-color:#205d91;background:linear-gradient(145deg,#14283f,#091321);box-shadow:0 10px 28px #0008,0 0 18px #168bff22}
+.vpn-card{border-color:#258ac8;background:radial-gradient(ellipse at 90% 0%,#164b75 0%,transparent 55%),linear-gradient(150deg,#18334f,#091321 82%);box-shadow:0 0 18px #168bff22}
+.vpn-card:before{background:linear-gradient(#55caff,#0876c9)}
+.vpn-card.featured{border-color:#65ceff;box-shadow:0 0 0 1px #65ceff44,0 0 28px #168bff55}
+.vpn-card .emoji{background:linear-gradient(145deg,#164b75,#10243c);border-color:#258ac8}
+.vpn-card .plan-tag{background:linear-gradient(90deg,#0876c9,#65ceff);color:#04101c}
+.vpn-card small,.vpn-card .plan-features{color:#c0d8ec}
+.vpn-card .price,.total b,.info-card strong{color:#8bdcff;text-shadow:0 0 12px #168bff77}
+.wheel-card{border-color:#258ac8;background:radial-gradient(ellipse at 50% -10%,#164b75 0%,#10243c 46%,#060b14 100%);box-shadow:0 0 32px #168bff44,inset 0 0 34px #00aaff18}
+.wheel-card:before{background:linear-gradient(115deg,transparent 15%,#b8eaff18 48%,transparent 78%)}
+.wheel-kicker,.wheel-strip-caption{color:#a8e2ff;text-shadow:0 0 14px #168bff77}
+.wheel-subtitle{color:#c5dff3}
+.wheel-strip-stage{border-color:#258ac8;background:linear-gradient(180deg,#091321,#183957 48%,#08111e);box-shadow:inset 0 0 30px #00aaff18,0 12px 32px #000b,0 0 26px #168bff33}
+.wheel-strip-viewport:before{background:linear-gradient(90deg,#091321,transparent)}
+.wheel-strip-viewport:after{background:linear-gradient(270deg,#091321,transparent)}
+.wheel-strip-item{border-color:#258ac8;background:linear-gradient(155deg,#1a4568,#0d1d30);color:#f3f8ff;box-shadow:inset 0 0 16px #00aaff12,0 0 12px #168bff22}
+.wheel-strip-item.winning{border-color:#a8e8ff;background:linear-gradient(155deg,#1b6ba0,#143451);box-shadow:0 0 14px #00bfff,0 0 34px #168bff88,inset 0 0 18px #ffffff33}
+.wheel-strip-marker{border-top-color:#65ceff;filter:drop-shadow(0 0 8px #168bff) drop-shadow(0 0 16px #00c8ff)}
+.wheel-spin{background:linear-gradient(100deg,#0876c9,#35baff,#a8e8ff);color:#04101c;box-shadow:0 0 16px #168bff99,0 0 34px #00bfff66}
+.wheel-result,.wheel-prize-list span{border-color:#258ac8;background:linear-gradient(145deg,#18334f,#0a1728);color:#eff9ff;box-shadow:inset 0 0 18px #00aaff12}
+.nav{background:#081321f5;border-color:#205d91;box-shadow:0 -8px 28px #000b,0 0 20px #168bff33}
+.nav button{color:#91b9dc}
+.nav button.active{color:#d9f3ff;text-shadow:0 0 12px #168bff,0 0 24px #00c8ff}
+.topup-option,.admin-form,.admin-auth-card input,.promo-input-row input{border-color:#258ac8;background:#0b1b30;color:#f3f8ff}
+.topup-option.selected{border-color:#8cdeff;background:#12395b;box-shadow:0 0 16px #168bff77}
+.promo-input-row button,.ref-actions button,.admin-auth-actions button{background:linear-gradient(100deg,#0876c9,#65ceff);color:#04101c}
+.ref-actions button+button,.admin-auth-actions button.secondary,.admin-secondary{border-color:#258ac8;background:#14283f;color:#eff9ff}
+.ref-link,.admin-note,.admin-user-result,.admin-assignment{border-color:#205d91;background:#0b1b30;color:#d5eaff}
+:focus-visible{outline:2px solid #65ceff;outline-offset:3px}
+/* Classic bold outlines and glow */
+.profile-bar,.balance-pill,.avatar,.hero,.hero-link,.action,.benefit-strip div,.tile-image,.panel,.info-card,.profile-card,.vpn-card,.wheel-card,.wheel-strip-stage,.wheel-strip-item,.wheel-result,.wheel-prize-list span,.nav,.topup-option,.admin-form,.admin-auth-card input,.promo-input-row input,.ref-link,.admin-note,.admin-user-result,.admin-assignment{border-width:2px!important}
 </style>
 <style id="nur-original-black-blue">
 :root{--bg:#050914;--panel:#0b1425;--muted:#a9c5e8;--sienna:#38aaff;--green:#0878d1;--stroke:#174b83;color-scheme:dark}
