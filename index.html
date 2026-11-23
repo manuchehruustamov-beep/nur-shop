@@ -673,7 +673,7 @@ function renderHomeStorefront(){
  tiles.innerHTML=(storefrontSettings.tiles||[]).filter(x=>x.enabled!==false).map(x=>{
   const img=x.image_url?'<img src="'+escapeWalletText(x.image_url)+'" alt="" loading="lazy">':'<span style="font-size:42px">'+(x.key==='happ'?'🛡️':x.key==='community'?'✦':'🎮')+'</span>';
   const inner='<div class="tile-image">'+img+'</div><span class="tile-label">'+escapeWalletText(x.title)+'</span>';
-  return /^https:\/\//i.test(x.target||'')?'<a class="tile" href="'+escapeWalletText(x.target)+'" target="_blank" rel="noopener">'+inner+'</a>':'<button class="tile" type="button" style="border:0;background:transparent;padding:0;cursor:pointer" onclick="openCategory('+JSON.stringify(x.target||x.title)+')">'+inner+'</button>';
+  return /^https:\/\//i.test(x.target||'')?'<a class="tile" href="'+escapeWalletText(x.target)+'" target="_blank" rel="noopener">'+inner+'</a>':'<button class="tile" type="button" style="border:0;background:transparent;padding:0;cursor:pointer" onclick="openCategory('+escapeWalletText(JSON.stringify(x.target||x.title))+')">'+inner+'</button>';
  }).join('');
 }
 async function fetchStorefrontSettings(){
@@ -787,7 +787,7 @@ function openCategory(name){
  };
  const defaults=(groups[name]||['Товары','Услуги']).map(x=>typeof x==='string'?{key:x,title:x,image_url:''}:x);const items=storefrontSettings.groups?.[name]||defaults;
  desc.textContent='Выбери, что хочешь приобрести';
- tiles.innerHTML=items.map((item)=>'<button class="tile" style="border:0;background:transparent;padding:0;cursor:pointer" onclick="showCategoryProducts('+JSON.stringify(name)+','+JSON.stringify(item.key)+')"><div class="tile-image">'+(item.image_url?'<img src="'+escapeWalletText(item.image_url)+'" alt="">':'<span style="font-size:42px">🎁</span>')+'</div><span class="tile-label">'+escapeWalletText(item.title)+'</span></button>').join('');
+ tiles.innerHTML=items.map((item)=>'<button class="tile" style="border:0;background:transparent;padding:0;cursor:pointer" onclick="showCategoryProducts('+escapeWalletText(JSON.stringify(name))+','+escapeWalletText(JSON.stringify(item.key))+')"><div class="tile-image">'+(item.image_url?'<img src="'+escapeWalletText(item.image_url)+'" alt="">':'<span style="font-size:42px">🎁</span>')+'</div><span class="tile-label">'+escapeWalletText(item.title)+'</span></button>').join('');
 }
 async function loadFreeFireCategoryTiles(){
  const tiles=document.getElementById('categoryTiles');
