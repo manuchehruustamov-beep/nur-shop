@@ -627,6 +627,7 @@ async function spinWheel(){
  }
 }
 renderWheelPrizes();
+fetchStorefrontSettings();
 function showPage(p){if(p==='admin'&&!adminUnlocked){openAdminAuth();return;}document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(p+'Page').classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===p));if(p==='balance'||p==='history'||p==='wheel')loadWallet();if(p==='balance')loadManualPaymentMethods();if(p==='history')loadFazerTestOrderHistory();window.scrollTo({top:0,behavior:'smooth'});}
 function freeFireCategoryArt(item){
  const art='<svg viewBox="0 0 220 140" role="img" aria-label="Реалистичный голубой бриллиант"><defs><linearGradient id="nurGemTop" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffffff"/><stop offset=".24" stop-color="#bff8ff"/><stop offset=".55" stop-color="#4ccfff"/><stop offset="1" stop-color="#1261c9"/></linearGradient><linearGradient id="nurGemLeft" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f4ffff"/><stop offset="1" stop-color="#43bfff"/></linearGradient><linearGradient id="nurGemRight" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#68eaff"/><stop offset="1" stop-color="#123caa"/></linearGradient><linearGradient id="nurGemFace" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#dfffff"/><stop offset=".42" stop-color="#49caff"/><stop offset="1" stop-color="#1647b9"/></linearGradient><filter id="nurGemGlow"><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><ellipse cx="110" cy="119" rx="57" ry="8" fill="#16aaff" opacity=".24"/><g filter="url(#nurGemGlow)"><path d="M54 28 82 12h56l28 16 18 28-74 72L36 56z" fill="url(#nurGemTop)" stroke="#e8ffff" stroke-width="2.5" stroke-linejoin="round"/><path d="m54 28 28-16-8 36-38 8z" fill="#d9ffff" stroke="#fff" stroke-width="1.5"/><path d="m82 12 28 36H74z" fill="#ffffff" opacity=".92"/><path d="m82 12 56 0-28 36z" fill="#8ceeff"/><path d="m138 12 28 16 18 28-38-8z" fill="#42bfff"/><path d="m74 48 36 0-74 8z" fill="#c9ffff"/><path d="m110 48 36 0 38 8-74 62z" fill="url(#nurGemRight)"/><path d="m74 48 36 0-74 8 74 62z" fill="url(#nurGemLeft)"/><path d="m36 56 74 62 0-70z" fill="#83eaff" opacity=".8"/><path d="m110 48 74 8-74 62z" fill="url(#nurGemFace)"/><path d="m74 48 36 0 36 0-36 70z" fill="#d5ffff" opacity=".42"/><path d="M54 28 82 12h56l28 16M36 56h148M74 48l36 70 36-70" fill="none" stroke="#fff" stroke-width="2" opacity=".95"/><path d="m83 17 20 0" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".9"/><path d="m28 20 4 10 10 4-10 4-4 10-4-10-10-4 10-4zM190 82l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" fill="#fff" opacity=".95"/></g></svg>';
@@ -638,6 +639,112 @@ async function loadManualCatalogData(){
  const data=await paymentApi('catalog_get');
  manualCatalogData={categories:data.categories||[],products:data.products||[]};
  return manualCatalogData;
+}
+
+const storefrontDefaults={
+ banner:{enabled:false,title:'Добро пожаловать в NUR SHOP',subtitle:'Твои любимые цифровые товары в одном месте',image_url:''},
+ tiles:[
+  {key:'ff',title:'Free Fire',image_url:'https://play-lh.googleusercontent.com/JT88XmsHoGDio7FxONwh382DhuTxuccfMmWFDtRBFjilySzNqWOCxUhqm8IhBKzQSwVrW2HWp_XvSgKFwi3ETA=w240-h480',target:'Free Fire',enabled:true},
+  {key:'pubg',title:'PUBG Mobile',image_url:'https://play-lh.googleusercontent.com/O8jPCZ2EXAt7wGlbZhkhA-3vPIWVBpz8tZrRnsr7uVeqp0UD1AQwIEl_N9So80kdp8gDvIksC64GypylkQV_=w240-h480',target:'PUBG Mobile',enabled:true},
+  {key:'telegram',title:'Telegram',image_url:'https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/9f/7b/e2/9f7be203-d819-9ca9-b0ca-28591f0741c3/AppIcon-0-0-85-220-0-0-4-0-2x-sRGB.png/1200x630bb.png',target:'Telegram',enabled:true},
+  {key:'stars',title:'Звёзды Telegram',image_url:'./assets/telegram-stars.svg',target:'Звёзды Telegram',enabled:true},
+  {key:'happ',title:'Happ VPN',image_url:'',target:'Happ VPN',enabled:true},
+  {key:'community',title:'Баннер TT',image_url:'',target:'https://t.me/+no2Tl-ysru84YzRi',enabled:true}
+ ]
+};
+let storefrontSettings=JSON.parse(JSON.stringify(storefrontDefaults));
+let catalogEditingCategoryId=null;
+function mergeStorefrontSettings(value){
+ if(!value||typeof value!=='object')return JSON.parse(JSON.stringify(storefrontDefaults));
+ return {banner:{...storefrontDefaults.banner,...(value.banner||{})},tiles:Array.isArray(value.tiles)&&value.tiles.length?value.tiles.map((x,i)=>({...storefrontDefaults.tiles.find(t=>t.key===x.key),...x})):JSON.parse(JSON.stringify(storefrontDefaults.tiles))};
+}
+function renderHomeStorefront(){
+ const banner=storefrontSettings.banner||{},host=document.getElementById('homeBanner');
+ if(host){host.style.display=banner.enabled&&banner.image_url?'block':'none';document.getElementById('homeBannerTitle').textContent=banner.title||'';document.getElementById('homeBannerSubtitle').textContent=banner.subtitle||'';document.getElementById('homeBannerImage').src=banner.image_url||'';}
+ const tiles=document.getElementById('homeTiles');if(!tiles)return;
+ tiles.innerHTML=(storefrontSettings.tiles||[]).filter(x=>x.enabled!==false).map(x=>{
+  const img=x.image_url?'<img src="'+escapeWalletText(x.image_url)+'" alt="" loading="lazy">':'<span style="font-size:42px">'+(x.key==='happ'?'🛡️':x.key==='community'?'✦':'🎮')+'</span>';
+  const inner='<div class="tile-image">'+img+'</div><span class="tile-label">'+escapeWalletText(x.title)+'</span>';
+  return /^https:\/\//i.test(x.target||'')?'<a class="tile" href="'+escapeWalletText(x.target)+'" target="_blank" rel="noopener">'+inner+'</a>':'<button class="tile" type="button" style="border:0;background:transparent;padding:0;cursor:pointer" onclick="openCategory('+JSON.stringify(x.target||x.title)+')">'+inner+'</button>';
+ }).join('');
+}
+async function fetchStorefrontSettings(){
+ try{const data=await paymentApi('storefront_get');storefrontSettings=mergeStorefrontSettings(data.settings);renderHomeStorefront();}
+ catch(e){storefrontSettings=mergeStorefrontSettings(null);renderHomeStorefront();}
+}
+function renderStorefrontAdmin(){
+ const b=storefrontSettings.banner||{};
+ document.getElementById('storeBannerEnabled').checked=b.enabled===true;
+ document.getElementById('storeBannerTitle').value=b.title||'';
+ document.getElementById('storeBannerSubtitle').value=b.subtitle||'';
+ document.getElementById('storeBannerImageUrl').value=b.image_url||'';
+ previewStorefrontImage('storeBannerPreview',b.image_url);
+ const host=document.getElementById('storeHomeTileEditor');if(!host)return;
+ host.innerHTML=(storefrontSettings.tiles||[]).map((x,i)=>'<div class="storefront-tile-editor"><div>'+(x.image_url?'<img src="'+escapeWalletText(x.image_url)+'" alt="">':'<div style="width:60px;height:60px;border-radius:10px;background:#1c3424;display:grid;place-items:center;font-size:28px">🎮</div>')+'</div><div><label class="muted">Название иконки</label><input class="admin-form" type="text" id="storeTileTitle'+i+'" value="'+escapeWalletText(x.title)+'"><label class="muted">Ссылка на картинку</label><input class="admin-form" type="text" id="storeTileImage'+i+'" value="'+escapeWalletText(x.image_url||'')+'" placeholder="URL картинки"><label class="photo-input">📷 Загрузить картинку <input type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadStorefrontImage(this,\'tile\','+i+')"></label><label class="muted"><input type="checkbox" id="storeTileEnabled'+i+'" '+(x.enabled!==false?'checked':'')+'> Показывать на главной</label><small class="muted">Открывает: '+escapeWalletText(x.target)+'</small></div></div>').join('');
+}
+async function loadStorefrontAdmin(){
+ const notice=document.getElementById('storefrontNotice');if(notice)notice.textContent='Загружаем оформление…';
+ try{const data=await paymentApi('storefront_get');storefrontSettings=mergeStorefrontSettings(data.settings);renderStorefrontAdmin();renderHomeStorefront();if(notice)notice.textContent='Настройки загружены.';}
+ catch(e){if(notice)notice.textContent=e.message||'Не удалось загрузить оформление.';}
+}
+function previewStorefrontImage(id,url){const host=document.getElementById(id);if(host)host.innerHTML=url?'<img src="'+escapeWalletText(url)+'" alt="Предпросмотр">':'';}
+async function uploadStorefrontImage(input,kind,index){
+ const file=input.files?.[0];if(!file)return;
+ const notice=document.getElementById(kind==='banner'||kind==='tile'?'storefrontNotice':kind==='category'?'catalogCategoryNotice':'catalogProductNotice');
+ try{
+  if(!adminUnlocked)throw new Error('Сначала открой панель администратора.');
+  if(file.size>5*1024*1024)throw new Error('Размер изображения не должен превышать 5 МБ.');
+  if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw new Error('Подойдут только JPG, PNG или WebP.');
+  if(notice)notice.textContent='Загружаем изображение…';
+  const signed=await paymentApi('admin_asset_upload_sign',{fileName:file.name,fileType:file.type,fileSize:file.size});
+  const uploaded=await fetch(signed.signedUrl,{method:'PUT',headers:{'apikey':'sb_publishable_YbSIIwYKnMGqUBbhB62v2A_-756p1MO','Content-Type':file.type},body:file});
+  if(!uploaded.ok)throw new Error('Не удалось загрузить изображение. Попробуй ещё раз.');
+  const url=signed.publicUrl;
+  if(kind==='banner'){document.getElementById('storeBannerImageUrl').value=url;previewStorefrontImage('storeBannerPreview',url);}
+  if(kind==='category'){document.getElementById('catalogNewCategoryImage').value=url;previewStorefrontImage('catalogCategoryPreview',url);}
+  if(kind==='product'){document.getElementById('catalogProductImage').value=url;previewStorefrontImage('catalogProductPreview',url);}
+  if(kind==='tile'){storefrontSettings.tiles[index].image_url=url;const field=document.getElementById('storeTileImage'+index);if(field)field.value=url;renderStorefrontAdmin();}
+  if(notice)notice.textContent='Изображение загружено. Нажми «Сохранить», чтобы применить изменения.';
+ }catch(e){if(notice)notice.textContent=e.message||'Не удалось загрузить изображение.';}
+ finally{input.value='';}
+}
+async function saveStorefrontSettings(){
+ const notice=document.getElementById('storefrontNotice');
+ const banner={enabled:document.getElementById('storeBannerEnabled').checked,title:document.getElementById('storeBannerTitle').value.trim(),subtitle:document.getElementById('storeBannerSubtitle').value.trim(),image_url:document.getElementById('storeBannerImageUrl').value.trim()};
+ const tiles=(storefrontSettings.tiles||[]).map((x,i)=>({...x,title:document.getElementById('storeTileTitle'+i)?.value.trim()||x.title,image_url:document.getElementById('storeTileImage'+i)?.value.trim()||'',enabled:document.getElementById('storeTileEnabled'+i)?.checked===true}));
+ try{notice.textContent='Сохраняем оформление…';const data=await paymentApi('admin_storefront_save',{settings:{banner,tiles}});storefrontSettings=mergeStorefrontSettings(data.settings);renderStorefrontAdmin();renderHomeStorefront();notice.textContent='Готово! Оформление главного экрана сохранено.';}
+ catch(e){notice.textContent=e.message||'Не удалось сохранить оформление.';}
+}
+function resetCatalogCategoryEditor(){
+ catalogEditingCategoryId=null;
+ document.getElementById('catalogCategoryEditorTitle').textContent='＋ Добавить новый раздел / иконку';
+ document.getElementById('catalogNewCategoryTitle').value='';
+ document.getElementById('catalogNewCategoryIcon').value='🎮';
+ document.getElementById('catalogNewCategoryImage').value='';
+ document.getElementById('catalogCategoryImageFile').value='';
+ previewStorefrontImage('catalogCategoryPreview','');
+ document.getElementById('catalogCategoryNotice').textContent='Форма очищена.';
+}
+function editCatalogCategory(id){
+ const c=adminCatalogSnapshot.categories.find(x=>x.id===id);if(!c)return;
+ catalogEditingCategoryId=id;
+ document.getElementById('catalogCategoryEditorTitle').textContent='✏️ Изменить раздел';
+ document.getElementById('catalogNewCategoryTitle').value=c.title||'';
+ document.getElementById('catalogNewCategoryIcon').value=c.icon||'🎮';
+ document.getElementById('catalogNewCategoryImage').value=c.image_url||'';
+ previewStorefrontImage('catalogCategoryPreview',c.image_url||'');
+ document.getElementById('catalogCategoryNotice').textContent='Измени название, значок или изображение и сохрани.';
+ document.getElementById('catalogCategoryEditor').scrollIntoView({behavior:'smooth',block:'center'});
+}
+async function saveCatalogCategory(){
+ const notice=document.getElementById('catalogCategoryNotice'),title=document.getElementById('catalogNewCategoryTitle').value.trim();
+ if(!title){notice.textContent='Введи название раздела.';return;}
+ const old=catalogEditingCategoryId?adminCatalogSnapshot.categories.find(x=>x.id===catalogEditingCategoryId):null;
+ try{
+  await paymentApi('admin_catalog_category_save',{id:catalogEditingCategoryId||undefined,title,icon:document.getElementById('catalogNewCategoryIcon').value.trim()||'🎮',imageUrl:document.getElementById('catalogNewCategoryImage').value.trim(),slug:old?.slug,isActive:old?.is_active!==false,sortOrder:old?.sort_order??100});
+  notice.textContent='Раздел сохранён.';
+  resetCatalogCategoryEditor();await loadAdminCatalog();
+ }catch(e){notice.textContent=e.message||'Не удалось сохранить раздел.';}
 }
 function openCategory(name){
  showPage('category');
