@@ -30,6 +30,33 @@
 .admin-entry{width:100%;margin-top:13px;padding:14px;border:1px solid #1766a0;border-radius:12px;background:linear-gradient(100deg,#10233a,#0b1728);color:#dff5ff;font-size:13px;font-weight:900;box-shadow:0 0 14px #087fff22}.admin-entry span{color:#00e6b0;margin-right:7px}
 .admin-overlay{position:fixed;z-index:100;inset:0;display:none;align-items:center;justify-content:center;padding:22px;background:#030711eF;backdrop-filter:blur(12px)}.admin-overlay.open{display:flex}.admin-auth-card{width:min(100%,420px);padding:22px;border:1px solid #1766a0;border-radius:20px;background:linear-gradient(145deg,#14243a,#080f1c);box-shadow:0 0 35px #087fff33}.admin-auth-card h2{margin:0 0 8px;font-size:21px}.admin-auth-card p{font-size:12px;line-height:1.5;color:#9db1ca}.admin-auth-card input{width:100%;padding:14px;margin:8px 0;border:1px solid #315579;border-radius:11px;background:#080f1c;color:white;font-size:16px;outline:none}.admin-auth-card input:focus{border-color:#168bff}.admin-auth-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}.admin-auth-actions button{padding:12px;border:0;border-radius:10px;background:linear-gradient(90deg,#087fff,#00d9c2);color:#06111b;font-weight:900}.admin-auth-actions button.secondary{background:#17263a;border:1px solid #315579;color:#dceaff}.admin-note{padding:13px;border:1px solid #315579;border-radius:12px;background:#0b1626;color:#a9c0dc;font-size:11px;line-height:1.5}.admin-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.admin-head button{border:1px solid #315579;border-radius:9px;background:#14243a;color:#dceaff;padding:9px 12px;font-weight:800}
 @media(max-width:390px){.hero{height:260px}.hero-copy{left:17px;width:70%}.hero-mark{right:1px;transform:scale(.82);transform-origin:center right}.benefit-strip{gap:5px}.benefit-strip div{font-size:7px;gap:4px}.catalog-heading h2{font-size:20px}.profile-bar{padding:20px 16px;gap:10px}.avatar{width:72px;height:72px}.user-name{font-size:18px}.user-tag{font-size:13px}.balance-pill{padding:12px 13px;gap:7px;font-size:12px}.page{padding:23px 18px}.hero{height:190px}.hero h1{font-size:24px}.hero-copy{width:72%}.tiles{gap:20px 10px}.tile-label{font-size:12px}.tile-label.long{font-size:10px}.section-title{font-size:20px}}
+/* NUR SHOP — Pink Neon + Glass Pro wheel redesign */
+.wheel-card{position:relative;overflow:hidden;border:1px solid #a92c83;border-radius:24px;background:radial-gradient(ellipse at 50% -10%,#592052 0%,#21102d 42%,#090711 100%);box-shadow:0 0 30px #ff36c822,inset 0 0 34px #b43aff12}
+.wheel-card:before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 15%,#ff5bd00a 48%,transparent 78%)}
+.wheel-kicker{color:#ff8be5;text-shadow:0 0 14px #ff36c877;letter-spacing:2.4px}
+.wheel-subtitle{color:#d8b9dc;max-width:320px}
+.wheel-strip-stage{border:1px solid #a83a91;border-radius:19px;background:linear-gradient(180deg,#160d20,#24102b 48%,#120b1c);box-shadow:inset 0 0 30px #ff35c81a,0 12px 32px #0009,0 0 22px #ff35c81a;padding:30px 0 15px}
+.wheel-strip-viewport{padding:12px 0}
+.wheel-strip-viewport:before{background:linear-gradient(90deg,#160d20,transparent)}
+.wheel-strip-viewport:after{background:linear-gradient(270deg,#160d20,transparent)}
+.wheel-strip-track{gap:10px;padding:0 10px}
+.wheel-strip-item{flex:0 0 118px;width:118px;height:150px;justify-content:flex-start;gap:8px;padding:8px;border:1px solid #a45b9b;border-radius:14px;background:linear-gradient(145deg,#ffffff19,#b76ab00b 60%,#ffffff08);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:inset 0 1px 0 #ffffff24,0 7px 18px #0005;color:#fff}
+.strip-art{width:100%;height:96px;display:grid;place-items:center;overflow:hidden;border:1px dashed #e77bd0a8;border-radius:10px;background:linear-gradient(145deg,#ffffff12,#ff42cb0b);box-shadow:inset 0 0 18px #ff45d015}
+.strip-photo-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#f5b7e9;letter-spacing:1px}
+.strip-photo-placeholder i{font-style:normal;font-size:26px;line-height:1;text-shadow:0 0 12px #ff43c8}
+.strip-photo-placeholder small{font-size:7px;font-weight:900;letter-spacing:1.1px}
+.wheel-strip-item .strip-label{width:100%;min-height:27px;display:flex;align-items:center;justify-content:center;font-size:10px;line-height:1.2;font-weight:850;color:#fff;text-shadow:0 1px 8px #000;text-align:center}
+.wheel-strip-item.winning{border:2px solid #ff65d7;background:linear-gradient(145deg,#6a1b60aa,#30123fdd);box-shadow:0 0 10px #ff55d9,0 0 28px #ff35c877,inset 0 0 20px #ff7be733}
+.wheel-strip-item.winning .strip-art{border-color:#ff9be8;background:linear-gradient(145deg,#ff7bd51c,#ffffff0b);box-shadow:inset 0 0 20px #ff4bc52b}
+.wheel-strip-marker{top:0;border-left:17px solid transparent;border-right:17px solid transparent;border-top:28px solid #ff70dc;filter:drop-shadow(0 0 7px #ff38c9) drop-shadow(0 0 14px #ff38c9)}
+.wheel-strip-marker span{color:#310d31}
+.wheel-strip-caption{color:#e99ad9;letter-spacing:1px}
+.wheel-spin{background:linear-gradient(100deg,#ff39bd,#b64dff);color:#21091f;box-shadow:0 0 18px #ff35c866,0 0 35px #a93dff33}
+.wheel-result{border:1px solid #a83a91;background:linear-gradient(145deg,#24102d,#100b19);color:#ffe8fa;box-shadow:inset 0 0 18px #ff35c811}
+.wheel-result small{color:#d6a9d0}
+.wheel-prize-panel{border-color:#6d2c68;background:linear-gradient(145deg,#1c1025,#0e0a16)}
+.wheel-prize-list span{border-color:#63335f;background:linear-gradient(145deg,#2a1732,#160e20);color:#f0d7ee}
+@media(max-width:390px){.wheel-strip-item{flex-basis:108px;width:108px;height:145px}.strip-art{height:91px}.wheel-strip-track{gap:8px}}
 </style>
 </head>
 <body>
@@ -64,12 +91,12 @@
 <h2 class="section-title">Рулетка удачи</h2>
 <div class="wheel-card">
 <div class="wheel-kicker">✦ NUR SHOP / LUCKY WHEEL ✦</div>
-<p class="wheel-subtitle" id="wheelSpinInfo">Крути колесо и получай настоящие призы на баланс NUR SHOP!</p>
+<p class="wheel-subtitle" id="wheelSpinInfo">Открывай призы NUR SHOP: лента остановится на карточке с выигрышем.</p>
 <div class="wheel-strip-stage"><div class="wheel-strip-marker"><span>▼</span></div><div class="wheel-strip-viewport" id="wheelStripViewport"><div class="wheel-strip-track" id="wheelStripTrack"></div></div><div class="wheel-strip-caption"><span>← ЛЕНТА ПРИЗОВ →</span><span>ОСТАНОВКА ПО ЦЕНТРУ</span></div></div>
 <button class="action wheel-spin" id="wheelSpinButton" style="display:none" onclick="spinWheel()">✦ КРУТИТЬ РУЛЕТКУ</button>
 <div class="wheel-result" id="wheelResult" aria-live="polite">Проверяем права администратора…<small>Бесплатная прокрутка доступна только администраторам.</small></div>
 </div>
-<div class="panel"><h2>Призы рулетки</h2><div class="wheel-prize-list" id="wheelPrizeList"></div><p class="muted" style="margin:13px 0 0">Бесплатная прокрутка доступна только администраторам. Если выпадет «Ещё попытка», она добавится автоматически. Денежные призы сразу зачисляются на баланс.</p></div>
+<div class="panel wheel-prize-panel"><h2>Призы в ленте</h2><p class="muted">В каждой карточке предусмотрено отдельное место для фотографии и названия приза. Сами призы и результат вращения пока остаются под управлением текущего сервера.</p><div class="wheel-prize-list" id="wheelPrizeList"></div></div>
 </section>
 <section class="page" id="balancePage"><h2 class="section-title">Мой баланс</h2><div class="info-card"><span>Доступный баланс</span><strong id="balanceAmount">0 ₽</strong></div><button class="action topup-main" onclick="openTopup()">＋ ПОПОЛНИТЬ БАЛАНС</button><p class="muted">Баланс отображается в российских рублях. Зачисление возможно только после подтверждения оплаты.</p><div class="panel"><h2>Пополнение баланса</h2><p class="muted">Оплата прямо в Telegram через Stars. 1 ⭐ = 2 ₽. Введи количество звёзд (от 10 до 10 000).</p><div class="promo-input-row"><input id="topupStarsAmount" type="number" min="10" max="10000" step="1" value="50" inputmode="numeric" oninput="updateTopupPreview()" placeholder="Количество ⭐"></div><div class="info-card" style="margin-top:12px"><span>Будет зачислено на баланс</span><strong id="topupRublePreview">100 ₽</strong></div><button class="action" id="topupPayButton" onclick="startTopup()">Оплатить ⭐ в Telegram</button><p class="muted" id="topupNotice">Счёт откроется в Telegram. Рубли будут зачислены только после подтверждения платежа сервером.</p></div></section>
 <section class="page" id="historyPage"><h2 class="section-title">История операций</h2><div class="panel"><h2>Пополнения и списания</h2><p class="history-caption">Все суммы указаны в российских рублях (₽).</p><div id="balanceHistory"><div class="empty">Операций пока нет</div></div></div><div class="panel"><h2>Выигрыши рулетки</h2><div id="wheelHistory" class="empty">Выигрышей пока нет</div></div><div class="panel"><h2>История заказов</h2><div class="empty">Пока заказов нет</div></div></section>
@@ -136,7 +163,7 @@ function renderWheelStrip(winnerIndex){
  }
  track.style.transition='none';
  track.style.transform='translateX(0px)';
- track.innerHTML=items.map((item,i)=>'<div class="wheel-strip-item '+(item.winner?'winning':'')+'" data-strip-index="'+i+'"><span class="strip-icon">'+(wheelIcons[wheelPrizes.indexOf(item.prize)]||'🎁')+'</span><span class="strip-label">'+escapeWalletText(item.prize.label)+'</span></div>').join('');
+  track.innerHTML=items.map((item,i)=>'<div class="wheel-strip-item '+(item.winner?'winning':'')+'" data-strip-index="'+i+'"><div class="strip-art"><span class="strip-photo-placeholder"><i>＋</i><small>ФОТО ПРИЗА</small></span></div><span class="strip-label">'+escapeWalletText(item.prize.label)+'</span></div>').join('');
  void track.offsetWidth;
  return {track,viewport,winningPosition};
 }
