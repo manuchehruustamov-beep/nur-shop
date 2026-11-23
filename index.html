@@ -68,6 +68,7 @@
 .admin-user-result,.admin-assignment{padding:12px;border:1px solid #315579;border-radius:11px;background:#0b1626;margin-top:9px;font-size:12px;line-height:1.5}
 .admin-secondary{border:1px solid #315579;border-radius:9px;background:#14243a;color:#dceaff;padding:9px 11px;font-weight:800}
 
+.strip-prize-photo{width:100%;height:100%;max-height:90px;object-fit:contain;border-radius:8px;display:block}.wheel-strip-item .strip-art{width:100%;height:86px;display:grid;place-items:center;overflow:hidden}.wheel-strip-item .strip-photo-placeholder{width:100%;height:100%}
 </style>
 </head>
 <body>
@@ -209,7 +210,7 @@ async function searchWheelUser(){
  try{
   const data=await walletApi('admin_user_search',{query});
   if(!data.user){result.textContent='Пользователь не найден. Он должен хотя бы один раз открыть NUR SHOP.';return;}
-  adminFoundUser=data.user;
+  adminFoundUser=data.user;document.getElementById('adminUserQuery').value=String(data.user.telegram_id);
   result.innerHTML='<div class="admin-user-result"><b>Пользователь найден</b><br>Имя: '+escapeWalletText(data.user.first_name||'не указано')+'<br>Telegram ID: '+escapeWalletText(data.user.telegram_id)+'<br>Username: '+(data.user.username?'@'+escapeWalletText(data.user.username):'не указан')+'</div>';
  }catch(error){result.textContent=error.message||'Ошибка поиска.';}
 }
@@ -251,7 +252,7 @@ let wheelBusy=false;
 const wheelIcons=['💰','💎','🎟️','🔹','🏷️','✨','🔐','🎁','⭐','🎊','🔥','🍀'];
 function renderWheelPrizes(){
  const el=document.getElementById('wheelPrizeList');
- if(el)el.innerHTML=wheelPrizes.map((p,i)=>'<span>'+(i+1)+'. '+p.label+'</span>').join('');
+ if(el)el.innerHTML=wheelPrizes.map((p,i)=>'<span>'+(i+1)+'. '+escapeWalletText(p.label)+'</span>').join('');
 }
 function renderWheelStrip(winnerIndex){
  const track=document.getElementById('wheelStripTrack');
@@ -265,7 +266,7 @@ function renderWheelStrip(winnerIndex){
  }
  track.style.transition='none';
  track.style.transform='translateX(0px)';
-  track.innerHTML=items.map((item,i)=>'<div class="wheel-strip-item '+(item.winner?'winning':'')+'" data-strip-index="'+i+'"><div class="strip-art"><span class="strip-photo-placeholder"><i>＋</i><small>ФОТО ПРИЗА</small></span></div><span class="strip-label">'+escapeWalletText(item.prize.label)+'</span></div>').join('');
+  track.innerHTML=items.map((item,i)=>'<div class="wheel-strip-item '+(item.winner?'winning':'')+'" data-strip-index="'+i+'"><div class="strip-art">'+(item.prize.image_url?'<img class="strip-prize-photo" src="'+escapeWalletText(item.prize.image_url)+'" alt="">':'<span class="strip-photo-placeholder"><i>＋</i><small>ФОТО ПРИЗА</small></span>')+'</div><span class="strip-label">'+escapeWalletText(item.prize.label)+'</span></div>').join('');
  void track.offsetWidth;
  return {track,viewport,winningPosition};
 }
@@ -291,7 +292,7 @@ async function spinWheel(){
   if(!response.prize)throw new Error('Сервер не вернул результат рулетки.');
   const winner=Number(response.prize.prize_index);
   if(!Number.isInteger(winner)||winner<0||winner>=wheelPrizes.length)throw new Error('Получен некорректный результат.');
-  updateWalletUI(response.wallet,response.is_admin===true);
+  updateWalletUI(response.wallet,response.is_admin===true,response.wheel_prizes);
   btn.textContent='ЛЕНТА ВРАЩАЕТСЯ…';
   result.innerHTML='Лента набирает скорость!<small>Ожидай остановки на выигрышной карточке.</small>';
   await animateWheelStrip(winner);
@@ -402,7 +403,8 @@ async function walletApi(action,extra={}){
  if(!response.ok)throw new Error(data.error||'Сервер временно недоступен.');
  return data;
 }
-function updateWalletUI(snapshot,isAdmin=false){
+function updateWalletUI(snapshot,isAdmin=false,prizes=null){
+ if(prizes)applyWheelPrizes(prizes);
  if(!snapshot)return;walletSnapshot=snapshot;
  const spinButton=document.getElementById('wheelSpinButton');
  const wheelResult=document.getElementById('wheelResult');
@@ -416,7 +418,7 @@ function updateWalletUI(snapshot,isAdmin=false){
  renderBalanceHistory();
 }
 async function loadWallet(){
- try{const data=await walletApi('balance');updateWalletUI(data.wallet,data.is_admin===true);}
+ try{const data=await walletApi('balance');updateWalletUI(data.wallet,data.is_admin===true,data.wheel_prizes);}
  catch(error){
   const info=document.getElementById('wheelSpinInfo');
   if(info)info.textContent=error.message||'Не удалось загрузить баланс.';
