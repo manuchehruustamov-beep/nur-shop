@@ -339,15 +339,34 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #54aa
 <div class="admin-head"><h2 style="margin:0">🎨 Оформление магазина</h2><button class="admin-secondary" onclick="loadStorefrontAdmin()">↻ Обновить</button></div>
 <p class="muted">Меняй баннер, названия и картинки главного экрана, разделов и товаров прямо здесь. Изображения загружаются с телефона.</p>
 <div class="info-card">
-<b>🌌 Фон всего приложения</b>
-<p class="muted">Загрузи свою картинку — она будет фоном на главной, в магазине, рулетке и остальных разделах. Затемнение помогает сохранить читаемость текста.</p>
-<label class="muted" style="display:block;margin-top:10px"><input id="storeBackgroundEnabled" type="checkbox"> Включить общий фон</label>
-<input class="admin-form" id="storeBackgroundImageUrl" placeholder="Ссылка на изображение фона">
-<label class="photo-input">📷 Загрузить фон с устройства · JPG/PNG/WebP до 5 МБ <input id="storeBackgroundFile" type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadStorefrontImage(this,'background')"></label>
-<div id="storeBackgroundPreview" class="storefront-preview"></div>
-<label class="muted" style="display:block;margin-top:12px">Затемнение фона: <b id="storeBackgroundOverlayValue">58%</b></label>
-<input id="storeBackgroundOverlay" type="range" min="0" max="90" step="5" value="58" style="width:100%" oninput="document.getElementById('storeBackgroundOverlayValue').textContent=this.value+'%'">
-<button class="action" onclick="saveStorefrontSettings()">Сохранить фон приложения</button>
+<b>🌌 Отдельные фоны страниц</b>
+<p class="muted">Выбери свою картинку для каждой страницы. Можно включать и отключать фон и отдельно настраивать затемнение.</p>
+<div style="margin-top:16px;padding-top:13px;border-top:1px solid #29422e">
+<b>🏠 Главная страница</b>
+<label class="muted" style="display:block;margin-top:8px"><input id="storeBgHomeEnabled" type="checkbox"> Включить фон</label>
+<input class="admin-form" id="storeBgHomeImageUrl" placeholder="Ссылка на изображение">
+<label class="photo-input">📷 Загрузить картинку · JPG/PNG/WebP до 5 МБ <input type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadStorefrontImage(this,'bg_home')"></label>
+<div id="storeBgHomePreview" class="storefront-preview"></div>
+<label class="muted" style="display:block;margin-top:10px">Затемнение: <b id="storeBgHomeOverlayValue">58%</b></label>
+<input id="storeBgHomeOverlay" type="range" min="0" max="90" step="5" value="58" style="width:100%" oninput="document.getElementById('storeBgHomeOverlayValue').textContent=this.value+'%'">
+</div><div style="margin-top:16px;padding-top:13px;border-top:1px solid #29422e">
+<b>🛍️ Магазин</b>
+<label class="muted" style="display:block;margin-top:8px"><input id="storeBgShopEnabled" type="checkbox"> Включить фон</label>
+<input class="admin-form" id="storeBgShopImageUrl" placeholder="Ссылка на изображение">
+<label class="photo-input">📷 Загрузить картинку · JPG/PNG/WebP до 5 МБ <input type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadStorefrontImage(this,'bg_shop')"></label>
+<div id="storeBgShopPreview" class="storefront-preview"></div>
+<label class="muted" style="display:block;margin-top:10px">Затемнение: <b id="storeBgShopOverlayValue">58%</b></label>
+<input id="storeBgShopOverlay" type="range" min="0" max="90" step="5" value="58" style="width:100%" oninput="document.getElementById('storeBgShopOverlayValue').textContent=this.value+'%'">
+</div><div style="margin-top:16px;padding-top:13px;border-top:1px solid #29422e">
+<b>🎡 Рулетка</b>
+<label class="muted" style="display:block;margin-top:8px"><input id="storeBgRouletteEnabled" type="checkbox"> Включить фон</label>
+<input class="admin-form" id="storeBgRouletteImageUrl" placeholder="Ссылка на изображение">
+<label class="photo-input">📷 Загрузить картинку · JPG/PNG/WebP до 5 МБ <input type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadStorefrontImage(this,'bg_roulette')"></label>
+<div id="storeBgRoulettePreview" class="storefront-preview"></div>
+<label class="muted" style="display:block;margin-top:10px">Затемнение: <b id="storeBgRouletteOverlayValue">58%</b></label>
+<input id="storeBgRouletteOverlay" type="range" min="0" max="90" step="5" value="58" style="width:100%" oninput="document.getElementById('storeBgRouletteOverlayValue').textContent=this.value+'%'">
+</div>
+<button class="action" onclick="saveStorefrontSettings()">Сохранить все фоны</button>
 </div>
 <div class="info-card">
 <b>🖼️ Баннер главного экрана</b>
@@ -639,7 +658,7 @@ async function spinWheel(){
 }
 renderWheelPrizes();
 fetchStorefrontSettings();
-function showPage(p){if(p==='admin'&&!adminUnlocked){openAdminAuth();return;}document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(p+'Page').classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===p));if(p==='balance'||p==='history'||p==='wheel')loadWallet();if(p==='balance')loadManualPaymentMethods();if(p==='history')loadFazerTestOrderHistory();window.scrollTo({top:0,behavior:'smooth'});}
+function showPage(p){if(p==='admin'&&!adminUnlocked){openAdminAuth();return;}document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(p+'Page').classList.add('active');applyPageBackground(p);document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===p));if(p==='balance'||p==='history'||p==='wheel')loadWallet();if(p==='balance')loadManualPaymentMethods();if(p==='history')loadFazerTestOrderHistory();window.scrollTo({top:0,behavior:'smooth'});}
 function freeFireCategoryArt(item){
  const art='<svg viewBox="0 0 220 140" role="img" aria-label="Реалистичный голубой бриллиант"><defs><linearGradient id="nurGemTop" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffffff"/><stop offset=".24" stop-color="#bff8ff"/><stop offset=".55" stop-color="#4ccfff"/><stop offset="1" stop-color="#1261c9"/></linearGradient><linearGradient id="nurGemLeft" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f4ffff"/><stop offset="1" stop-color="#43bfff"/></linearGradient><linearGradient id="nurGemRight" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#68eaff"/><stop offset="1" stop-color="#123caa"/></linearGradient><linearGradient id="nurGemFace" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#dfffff"/><stop offset=".42" stop-color="#49caff"/><stop offset="1" stop-color="#1647b9"/></linearGradient><filter id="nurGemGlow"><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><ellipse cx="110" cy="119" rx="57" ry="8" fill="#16aaff" opacity=".24"/><g filter="url(#nurGemGlow)"><path d="M54 28 82 12h56l28 16 18 28-74 72L36 56z" fill="url(#nurGemTop)" stroke="#e8ffff" stroke-width="2.5" stroke-linejoin="round"/><path d="m54 28 28-16-8 36-38 8z" fill="#d9ffff" stroke="#fff" stroke-width="1.5"/><path d="m82 12 28 36H74z" fill="#ffffff" opacity=".92"/><path d="m82 12 56 0-28 36z" fill="#8ceeff"/><path d="m138 12 28 16 18 28-38-8z" fill="#42bfff"/><path d="m74 48 36 0-74 8z" fill="#c9ffff"/><path d="m110 48 36 0 38 8-74 62z" fill="url(#nurGemRight)"/><path d="m74 48 36 0-74 8 74 62z" fill="url(#nurGemLeft)"/><path d="m36 56 74 62 0-70z" fill="#83eaff" opacity=".8"/><path d="m110 48 74 8-74 62z" fill="url(#nurGemFace)"/><path d="m74 48 36 0 36 0-36 70z" fill="#d5ffff" opacity=".42"/><path d="M54 28 82 12h56l28 16M36 56h148M74 48l36 70 36-70" fill="none" stroke="#fff" stroke-width="2" opacity=".95"/><path d="m83 17 20 0" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".9"/><path d="m28 20 4 10 10 4-10 4-4 10-4-10-10-4 10-4zM190 82l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" fill="#fff" opacity=".95"/></g></svg>';
  return art;
@@ -675,10 +694,21 @@ let storefrontSettings=JSON.parse(JSON.stringify(storefrontDefaults));
 let catalogEditingCategoryId=null;
 function mergeStorefrontSettings(value){
  if(!value||typeof value!=='object')return JSON.parse(JSON.stringify(storefrontDefaults));
- return {background:{enabled:value.background?.enabled===true,image_url:typeof value.background?.image_url==='string'?value.background.image_url:'',overlay:Number.isFinite(Number(value.background?.overlay))?Math.min(0.9,Math.max(0,Number(value.background.overlay))):0.58},banner:{...storefrontDefaults.banner,...(value.banner||{})},diamond_tile:{...storefrontDefaults.diamond_tile,...(value.diamond_tile||{})},groups:{...storefrontDefaults.groups,...(value.groups||{})},tiles:Array.isArray(value.tiles)&&value.tiles.length?value.tiles.map((x,i)=>({...storefrontDefaults.tiles.find(t=>t.key===x.key),...x})):JSON.parse(JSON.stringify(storefrontDefaults.tiles))};
+ return {background:{enabled:value.background?.enabled===true,image_url:typeof value.background?.image_url==='string'?value.background.image_url:'',overlay:Number.isFinite(Number(value.background?.overlay))?Math.min(0.9,Math.max(0,Number(value.background.overlay))):0.58},backgrounds:{home:{enabled:value.backgrounds?.home?.enabled===true,image_url:typeof value.backgrounds?.home?.image_url==='string'?value.backgrounds.home.image_url:(value.background?.image_url||''),overlay:Number.isFinite(Number(value.backgrounds?.home?.overlay))?Math.min(.9,Math.max(0,Number(value.backgrounds.home.overlay))):Number(value.background?.overlay??.58)},shop:{enabled:value.backgrounds?.shop?.enabled===true,image_url:typeof value.backgrounds?.shop?.image_url==='string'?value.backgrounds.shop.image_url:'',overlay:Number.isFinite(Number(value.backgrounds?.shop?.overlay))?Math.min(.9,Math.max(0,Number(value.backgrounds.shop.overlay))):.58},roulette:{enabled:value.backgrounds?.roulette?.enabled===true,image_url:typeof value.backgrounds?.roulette?.image_url==='string'?value.backgrounds.roulette.image_url:'',overlay:Number.isFinite(Number(value.backgrounds?.roulette?.overlay))?Math.min(.9,Math.max(0,Number(value.backgrounds.roulette.overlay))):.58}},banner:{...storefrontDefaults.banner,...(value.banner||{})},diamond_tile:{...storefrontDefaults.diamond_tile,...(value.diamond_tile||{})},groups:{...storefrontDefaults.groups,...(value.groups||{})},tiles:Array.isArray(value.tiles)&&value.tiles.length?value.tiles.map((x,i)=>({...storefrontDefaults.tiles.find(t=>t.key===x.key),...x})):JSON.parse(JSON.stringify(storefrontDefaults.tiles))};
 }
 function renderHomeStorefront(){
- const bg=storefrontSettings.background||{};let bgUrl='';try{const parsed=new URL(bg.image_url||'');if(parsed.protocol==='https:')bgUrl=parsed.href;}catch(e){}const shade=Math.min(.9,Math.max(0,Number(bg.overlay??.58)));document.body.style.backgroundImage=bg.enabled&&bgUrl?'linear-gradient(rgba(5,9,20,'+shade+'),rgba(5,9,20,'+shade+')),url("'+bgUrl+'")':'';document.body.style.backgroundSize='cover';document.body.style.backgroundPosition='center';document.body.style.backgroundAttachment='fixed';
+function applyPageBackground(page){
+ const key=page==='home'?'home':page==='category'?'shop':page==='wheel'?'roulette':null;
+ const target=document.getElementById(page+'Page');
+ if(!target||!key)return;
+ const bg=storefrontSettings.backgrounds?.[key]||(key==='home'?storefrontSettings.background:null)||{};
+ let url='';try{const parsed=new URL(bg.image_url||'');if(parsed.protocol==='https:')url=parsed.href;}catch(e){}
+ const shade=Math.min(.9,Math.max(0,Number(bg.overlay??.58)));
+ target.style.backgroundImage=bg.enabled&&url?'linear-gradient(rgba(5,9,20,'+shade+'),rgba(5,9,20,'+shade+')),url("'+url+'")':'';
+ target.style.backgroundSize='cover';target.style.backgroundPosition='center';target.style.backgroundAttachment='fixed';target.style.backgroundRepeat='no-repeat';
+}
+
+ applyPageBackground('home');
  const banner=storefrontSettings.banner||{},host=document.getElementById('homeBanner');
  if(host){host.style.display=banner.enabled&&banner.image_url?'block':'none';document.getElementById('homeBannerTitle').textContent=banner.title||'';document.getElementById('homeBannerSubtitle').textContent=banner.subtitle||'';document.getElementById('homeBannerImage').src=banner.image_url||'';}
  const tiles=document.getElementById('homeTiles');if(!tiles)return;
@@ -694,7 +724,7 @@ async function fetchStorefrontSettings(){
  catch(e){storefrontSettings=mergeStorefrontSettings(null);renderHomeStorefront();}
 }
 function renderStorefrontAdmin(){
- const bg=storefrontSettings.background||{};document.getElementById('storeBackgroundEnabled').checked=bg.enabled===true;document.getElementById('storeBackgroundImageUrl').value=bg.image_url||'';document.getElementById('storeBackgroundOverlay').value=Math.round(Number(bg.overlay??.58)*100);document.getElementById('storeBackgroundOverlayValue').textContent=document.getElementById('storeBackgroundOverlay').value+'%';previewStorefrontImage('storeBackgroundPreview',bg.image_url||'');
+ const bgs=storefrontSettings.backgrounds||{};['home','shop','roulette'].forEach(key=>{const bg=bgs[key]||{};const prefix={home:'Home',shop:'Shop',roulette:'Roulette'}[key];const enabled=document.getElementById('storeBg'+prefix+'Enabled');const image=document.getElementById('storeBg'+prefix+'ImageUrl');const overlay=document.getElementById('storeBg'+prefix+'Overlay');const value=document.getElementById('storeBg'+prefix+'OverlayValue');if(enabled)enabled.checked=bg.enabled===true;if(image)image.value=bg.image_url||'';if(overlay)overlay.value=Math.round(Number(bg.overlay??.58)*100);if(value)value.textContent=(overlay?.value||58)+'%';previewStorefrontImage('storeBg'+prefix+'Preview',bg.image_url||'');});
  const b=storefrontSettings.banner||{};
  document.getElementById('storeBannerEnabled').checked=b.enabled===true;
  document.getElementById('storeBannerTitle').value=b.title||'';
@@ -726,7 +756,7 @@ async function uploadStorefrontImage(input,kind,index,subindex){
   const uploaded=await fetch(signed.signedUrl,{method:'PUT',headers:{'apikey':'sb_publishable_YbSIIwYKnMGqUBbhB62v2A_-756p1MO','Content-Type':file.type},body:file});
   if(!uploaded.ok)throw new Error('Не удалось загрузить изображение. Попробуй ещё раз.');
   const url=signed.publicUrl;
-  if(kind==='background'){document.getElementById('storeBackgroundImageUrl').value=url;previewStorefrontImage('storeBackgroundPreview',url);}
+  if(kind==='bg_home'||kind==='bg_shop'||kind==='bg_roulette'){const prefix={bg_home:'Home',bg_shop:'Shop',bg_roulette:'Roulette'}[kind];document.getElementById('storeBg'+prefix+'ImageUrl').value=url;previewStorefrontImage('storeBg'+prefix+'Preview',url);}
   if(kind==='banner'){document.getElementById('storeBannerImageUrl').value=url;previewStorefrontImage('storeBannerPreview',url);}
   if(kind==='diamond'){document.getElementById('storeDiamondImageUrl').value=url;previewStorefrontImage('storeDiamondPreview',url);}
   if(kind==='category'){document.getElementById('catalogNewCategoryImage').value=url;previewStorefrontImage('catalogCategoryPreview',url);}
@@ -740,13 +770,13 @@ async function uploadStorefrontImage(input,kind,index,subindex){
 }
 async function saveStorefrontSettings(){
  const notice=document.getElementById('storefrontNotice');
- const background={enabled:document.getElementById('storeBackgroundEnabled').checked,image_url:document.getElementById('storeBackgroundImageUrl').value.trim(),overlay:Number(document.getElementById('storeBackgroundOverlay').value)/100};
+ const backgrounds={home:{enabled:document.getElementById('storeBgHomeEnabled').checked,image_url:document.getElementById('storeBgHomeImageUrl').value.trim(),overlay:Number(document.getElementById('storeBgHomeOverlay').value)/100},shop:{enabled:document.getElementById('storeBgShopEnabled').checked,image_url:document.getElementById('storeBgShopImageUrl').value.trim(),overlay:Number(document.getElementById('storeBgShopOverlay').value)/100},roulette:{enabled:document.getElementById('storeBgRouletteEnabled').checked,image_url:document.getElementById('storeBgRouletteImageUrl').value.trim(),overlay:Number(document.getElementById('storeBgRouletteOverlay').value)/100}};
  const banner={enabled:document.getElementById('storeBannerEnabled').checked,title:document.getElementById('storeBannerTitle').value.trim(),subtitle:document.getElementById('storeBannerSubtitle').value.trim(),image_url:document.getElementById('storeBannerImageUrl').value.trim()};
  const tiles=(storefrontSettings.tiles||[]).map((x,i)=>({...x,title:document.getElementById('storeTileTitle'+i)?.value.trim()||x.title,image_url:document.getElementById('storeTileImage'+i)?.value.trim()||'',enabled:document.getElementById('storeTileEnabled'+i)?.checked===true}));
  const diamond_tile={title:document.getElementById('storeDiamondTitle').value.trim()||'Алмазы',image_url:document.getElementById('storeDiamondImageUrl').value.trim()};
  const groups={};Object.keys(storefrontDefaults.groups).forEach((name,pi)=>{groups[name]=(storefrontSettings.groups[name]||storefrontDefaults.groups[name]).map((item,ii)=>({...item,title:document.getElementById('storeGroupTitle'+pi+'_'+ii)?.value.trim()||item.title,image_url:document.getElementById('storeGroupImage'+pi+'_'+ii)?.value.trim()||''}));});
 
- try{notice.textContent='Сохраняем оформление…';const data=await paymentApi('admin_storefront_save',{settings:{background,banner,tiles,diamond_tile,groups}});storefrontSettings=mergeStorefrontSettings(data.settings);renderStorefrontAdmin();renderHomeStorefront();notice.textContent='Готово! Оформление главного экрана сохранено.';}
+ try{notice.textContent='Сохраняем оформление…';const data=await paymentApi('admin_storefront_save',{settings:{background:backgrounds.home,backgrounds,banner,tiles,diamond_tile,groups}});storefrontSettings=mergeStorefrontSettings(data.settings);renderStorefrontAdmin();renderHomeStorefront();const active=document.querySelector('.page.active');if(active)applyPageBackground(active.id.replace(/Page$/,''));notice.textContent='Готово! Фоны страниц сохранены.';}
  catch(e){notice.textContent=e.message||'Не удалось сохранить оформление.';}
 }
 function resetCatalogCategoryEditor(){
