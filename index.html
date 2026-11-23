@@ -303,7 +303,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #54aa
 <div id="promoCodeNotice" class="promo-notice" aria-live="polite">Промокоды скоро появятся. Следи за обновлениями!</div>
 <div class="promo-prizes"><span>🎁 Ваучер на 7 дней</span><span>🏆 Ваучер на 30 дней</span><span>🔐 VPN на 1 месяц</span></div>
 </div>
-<button class="admin-entry" onclick="openAdminAuth()"><span>▣</span> Войти в админ-панель NUR SHOP</button><div class="info-card"><b>Приглашай друзей 🎁</b><p class="muted">За нового приглашённого друга предусмотрен бонус +7 дней VPN после проверки регистрации. Автоматическое начисление пока не подключено.</p><div class="ref-link" id="refLink">Запусти приложение через Telegram, чтобы получить ссылку</div><div class="ref-actions"><button onclick="copyRef()">Скопировать ссылку</button><button onclick="shareRef()">Пригласить друга</button></div></div></section>
+<button class="admin-entry" id="adminEntryButton" style="display:none" onclick="openAdminAuth()"><span>▣</span> Панель админа NUR SHOP</button><div class="info-card"><b>Приглашай друзей 🎁</b><p class="muted">За нового приглашённого друга предусмотрен бонус +7 дней VPN после проверки регистрации. Автоматическое начисление пока не подключено.</p><div class="ref-link" id="refLink">Запусти приложение через Telegram, чтобы получить ссылку</div><div class="ref-actions"><button onclick="copyRef()">Скопировать ссылку</button><button onclick="shareRef()">Пригласить друга</button></div></div></section>
 
 <section class="page" id="adminPage">
 <div class="admin-head"><h2 class="section-title" style="margin:0;text-align:left">Админ-панель</h2><button onclick="adminLogout()">Выйти</button></div>
@@ -347,7 +347,7 @@ async function openAdminAuth(){
   adminHistoryTimer=setInterval(()=>{if(adminUnlocked&&!document.hidden)loadWheelWinHistory();},5000);
  }catch(error){adminUnlocked=false;notice.textContent=error.message||'Не удалось проверить администратора.';}
 }
-function adminLogout(){adminUnlocked=false;adminFoundUser=null;if(adminHistoryTimer)clearInterval(adminHistoryTimer);adminHistoryTimer=null;showPage('profile');}
+function adminLogout(){adminUnlocked=false;adminFoundUser=null;walletIsAdmin=false;const adminEntry=document.getElementById("adminEntryButton");if(adminEntry)adminEntry.style.display="none";if(adminHistoryTimer)clearInterval(adminHistoryTimer);adminHistoryTimer=null;showPage('profile');}
 function applyWheelPrizes(items){
  if(!Array.isArray(items)||items.length!==12)return;
  items.forEach(item=>{
@@ -839,7 +839,7 @@ function renderWheelCooldown(){
 }
 function updateWalletUI(snapshot,isAdmin=false,prizes=null){
  if(prizes)applyWheelPrizes(prizes);
- if(!snapshot)return;walletSnapshot=snapshot;walletIsAdmin=isAdmin===true;
+ if(!snapshot)return;walletSnapshot=snapshot;walletIsAdmin=isAdmin===true;const adminEntry=document.getElementById("adminEntryButton");if(adminEntry)adminEntry.style.display=walletIsAdmin?"":"none";
  const spinButton=document.getElementById('wheelSpinButton');
  if(spinButton)spinButton.style.display='';
  const value=formatRuble(snapshot.balance||0);
