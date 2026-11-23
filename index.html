@@ -400,7 +400,38 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #54aa
 </div>
 <p class="muted" id="storefrontNotice" aria-live="polite"></p>
 </div>
-<div class="panel" id="adminCatalogPanel"><div class="admin-head"><h2 style="margin:0">🎮 Каталог Free Fire</h2><button class="admin-secondary" onclick="loadAdminCatalog()">↻ Обновить</button></div><p class="muted">Добавляй наборы, эмоции и новые разделы. Покупатель отправит игровой ID, а ты увидишь заказ здесь и выдашь товар вручную.</p><div class="info-card" id="catalogCategoryEditor"><b id="catalogCategoryEditorTitle">＋ Добавить или изменить раздел</b><input class="admin-form" id="catalogNewCategoryTitle" placeholder="Название раздела, например Скины FF"><input class="admin-form" id="catalogNewCategoryIcon" placeholder="Эмодзи, например 🎮" value="🎮"><input class="admin-form" id="catalogNewCategoryImage" placeholder="Ссылка на картинку (необязательно)"><label class="photo-input">📷 Загрузить иконку с устройства · JPG/PNG/WebP до 5 МБ <input id="catalogCategoryImageFile" type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadStorefrontImage(this,'category')"></label><div id="catalogCategoryPreview" class="storefront-preview"></div><button class="admin-secondary" onclick="saveCatalogCategory()">Сохранить раздел</button><button class="admin-secondary" onclick="resetCatalogCategoryEditor()">Очистить форму</button><p class="muted" id="catalogCategoryNotice"></p></div><input class="admin-form" id="catalogNewCategoryTitle" placeholder="Название раздела, например Скины FF"><input class="admin-form" id="catalogNewCategoryIcon" placeholder="Иконка, например 🎮" value="🎮"><input class="admin-form" id="catalogNewCategoryImage" placeholder="Ссылка на картинку (необязательно)"><button class="admin-secondary" onclick="saveNewCatalogCategory()">Добавить иконку</button><p class="muted" id="catalogCategoryNotice"></p></div><div class="info-card"><b>＋ Добавить товар</b><div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0"><button class="admin-secondary" type="button" onclick="startCatalogProduct('ff_sets')">＋ Добавить набор</button><button class="admin-secondary" type="button" onclick="startCatalogProduct('ff_emotes')">＋ Добавить эмоцию</button></div><select class="admin-form" id="catalogProductCategory"></select><input class="admin-form" id="catalogProductTitle" placeholder="Название товара"><textarea class="admin-form" id="catalogProductDescription" placeholder="Описание товара (необязательно)"></textarea><input class="admin-form" id="catalogProductPrice" type="number" min="1" step="0.01" placeholder="Цена, ₽"><input class="admin-form" id="catalogProductImage" placeholder="Ссылка на изображение (необязательно)"><label class="photo-input">📷 Загрузить фото товара · JPG/PNG/WebP до 5 МБ <input id="catalogProductImageFile" type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadStorefrontImage(this,'product')"></label><div id="catalogProductPreview" class="storefront-preview"></div><button class="action" id="catalogProductSaveButton" onclick="saveCatalogProduct()">Сохранить товар</button><p class="muted" id="catalogProductNotice"></p></div><h3>Разделы каталога</h3><div id="adminCatalogCategories"><div class="empty">Загрузка…</div></div><h3>Товары в каталоге</h3><div id="adminCatalogProducts"><div class="empty">Загрузка…</div></div><h3 style="margin-top:20px">📦 Заказы покупателей</h3><div id="adminCatalogOrders"><div class="empty">Загрузка…</div></div><p class="muted" id="adminCatalogOrderNotice"></p></div><div class="panel" id="adminPromoPanel"><div class="admin-head"><h2 style="margin:0">🎟️ Промокоды на 110 алмазов</h2><button class="admin-secondary" onclick="loadAdminPromoCodes()">↻ Обновить</button></div><p class="muted">10 одноразовых промокодов. После успешного пополнения статус станет «Использован».</p><div id="adminPromoCodes"><div class="empty">Загрузка промокодов…</div></div></div>
+<div class="panel" id="adminCatalogPanel">
+ <div class="admin-head"><h2 style="margin:0">🎮 Каталог Free Fire</h2><button class="admin-secondary" onclick="loadAdminCatalog()">↻ Обновить</button></div>
+ <p class="muted">Добавляй разделы и товары. После сохранения активный товар появится у покупателей в соответствующем разделе Free Fire. Заказы покупателей будут отображаться ниже.</p>
+ <div class="info-card" id="catalogCategoryEditor">
+  <b id="catalogCategoryEditorTitle">＋ Добавить новый раздел</b>
+  <input class="admin-form" id="catalogNewCategoryTitle" placeholder="Название раздела, например Скины FF">
+  <input class="admin-form" id="catalogNewCategoryIcon" placeholder="Иконка, например 🎮" value="🎮">
+  <input class="admin-form" id="catalogNewCategoryImage" placeholder="Ссылка на изображение (необязательно)">
+  <label class="photo-input">📷 Загрузить иконку · JPG/PNG/WebP до 5 МБ <input id="catalogCategoryImageFile" type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadStorefrontImage(this,'category')"></label>
+  <div id="catalogCategoryPreview" class="storefront-preview"></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="admin-secondary" onclick="saveCatalogCategory()">Сохранить раздел</button><button class="admin-secondary" onclick="resetCatalogCategoryEditor()">Очистить форму</button></div>
+  <p class="muted" id="catalogCategoryNotice" aria-live="polite"></p>
+ </div>
+ <div class="info-card" id="catalogProductEditor">
+  <b>＋ Добавить товар</b>
+  <p class="muted">Выбери раздел, укажи название и цену. Фото можно загрузить с телефона.</p>
+  <select class="admin-form" id="catalogProductCategory"><option value="">Сначала выбери раздел</option></select>
+  <input class="admin-form" id="catalogProductTitle" placeholder="Название товара">
+  <textarea class="admin-form" id="catalogProductDescription" placeholder="Описание товара (необязательно)"></textarea>
+  <input class="admin-form" id="catalogProductPrice" type="number" min="1" step="0.01" placeholder="Цена, ₽">
+  <input class="admin-form" id="catalogProductImage" placeholder="Ссылка на изображение (необязательно)">
+  <label class="photo-input">📷 Загрузить фото товара · JPG/PNG/WebP до 5 МБ <input id="catalogProductImageFile" type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadStorefrontImage(this,'product')"></label>
+  <div id="catalogProductPreview" class="storefront-preview"></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="action" id="catalogProductSaveButton" onclick="saveCatalogProduct()">Сохранить товар</button><button class="admin-secondary" type="button" onclick="resetCatalogProductForm()">Очистить форму</button></div>
+  <p class="muted" id="catalogProductNotice" aria-live="polite"></p>
+ </div>
+ <h3>Разделы каталога</h3><div id="adminCatalogCategories"><div class="empty">Загрузка…</div></div>
+ <h3>Товары в каталоге</h3><div id="adminCatalogProducts"><div class="empty">Загрузка…</div></div>
+ <h3 style="margin-top:20px">📦 Заказы покупателей</h3><div id="adminCatalogOrders"><div class="empty">Загрузка…</div></div>
+ <p class="muted" id="adminCatalogOrderNotice"></p>
+</div>
+<div class="panel" id="adminPromoPanel"><div class="admin-head"><h2 style="margin:0">🎟️ Промокоды на 110 алмазов</h2><button class="admin-secondary" onclick="loadAdminPromoCodes()">↻ Обновить</button></div><p class="muted">10 одноразовых промокодов. После успешного пополнения статус станет «Использован».</p><div id="adminPromoCodes"><div class="empty">Загрузка промокодов…</div></div></div>
 <div class="panel"><h2>🧾 Заявки на пополнение</h2><button class="admin-secondary" onclick="loadAdminTopups()">↻ Обновить заявки</button><div id="adminTopupRequests" style="margin-top:12px"><div class="empty">Загрузка заявок…</div></div><p class="muted" id="adminTopupNotice" aria-live="polite"></p></div><div class="panel"><h2>🎁 Настройки призов рулетки</h2><p class="muted">Для каждого из 12 призов можно изменить название и фотографию прямо здесь. Нажми «Фото приза» и выбери JPG, PNG или WebP до 2 МБ — фото сохранится сразу. Названия сохраняются отдельной кнопкой. Вероятности меняются отдельно; их общая сумма должна быть ровно 100%.</p><div id="adminPrizeEditor"></div><div class="info-card"><span>Сумма вероятностей</span><strong id="adminProbabilityTotal">100%</strong></div><button class="action" onclick="saveWheelPrizes()">Сохранить призы и вероятности</button><button class="action" style="margin-top:8px;background:linear-gradient(90deg,#173d66,#087fff);color:#fff" onclick="saveWheelPrizeLabels()">Сохранить только названия призов</button><p class="muted" id="adminPrizeNotice" aria-live="polite"></p></div>
 <div class="panel"><h2>🎯 Персональный приз</h2><p class="muted">Найди пользователя по Telegram ID или username и назначь ему приз на следующее вращение.</p><input class="admin-form" id="adminUserQuery" placeholder="Telegram ID или @username" autocomplete="off"><button class="action" onclick="searchWheelUser()">Найти пользователя</button><div id="adminUserSearchResult"></div><div style="margin-top:12px"><select class="admin-form" id="adminAssignedPrize"></select></div><button class="action" onclick="assignWheelPrize()">Назначить на следующее вращение</button><p class="muted" id="adminAssignmentNotice" aria-live="polite"></p><h2 style="margin-top:20px">Активные назначения</h2><div id="adminAssignments"><div class="empty">Загрузка…</div></div></div>
 <div class="panel"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><h2 style="margin:0">📡 Выигрыши в реальном времени</h2><span id="adminHistoryLive" style="font-size:10px;color:#65e6a3">● LIVE</span></div><p class="muted">Последние 100 вращений. Список автоматически обновляется каждые 5 секунд.</p><button class="admin-secondary" onclick="loadWheelWinHistory()">↻ Обновить сейчас</button><div id="adminWinHistory" style="margin-top:12px"><div class="empty">Загрузка выигрышей…</div></div><p class="muted" id="adminHistoryUpdated"></p></div>
@@ -862,15 +893,17 @@ async function loadFreeFireCategoryTiles(){
  }catch(e){tiles.innerHTML='<div class="empty">'+fazerEscape(e.message||'Не удалось загрузить разделы')+'</div>';}
 }
 async function openManualCatalogCategory(categoryId){
+ const panel=document.getElementById('categoryProducts');
+ const host=document.getElementById('categoryProductList');
+ panel.style.display='block';host.innerHTML='<div class="empty">Обновляем товары…</div>';
+ try{await loadManualCatalogData();}catch(e){host.innerHTML='<div class="empty">'+fazerEscape(e.message||'Не удалось загрузить товары')+'</div>';return;}
  const category=manualCatalogData.categories.find(x=>x.id===categoryId);
- if(!category)return;
+ if(!category){host.innerHTML='<div class="empty">Этот раздел больше недоступен.</div>';return;}
  document.getElementById('categoryTitle').textContent=category.title;
  document.getElementById('categoryDescription').textContent='Выбери товар, чтобы посмотреть цену и оформить заказ';
  document.getElementById('categoryTiles').style.display='none';
  document.getElementById('categoryCart').style.display='none';
  document.getElementById('catalogOrderBox').style.display='none';
- const panel=document.getElementById('categoryProducts');
- const host=document.getElementById('categoryProductList');
  document.getElementById('productsTitle').textContent=category.title;
  panel.style.display='block';
  const products=manualCatalogData.products.filter(p=>p.category_id===categoryId);
@@ -1203,7 +1236,7 @@ async function loadAdminCatalog(){
   if(categoriesHost)categoriesHost.innerHTML=adminCatalogSnapshot.categories.length?adminCatalogSnapshot.categories.map(c=>'<div class="history-row"><div style="display:flex;align-items:center;gap:10px">'+(c.image_url?'<img src="'+escapeWalletText(c.image_url)+'" alt="" style="width:48px;height:48px;object-fit:cover;border-radius:9px">':'<span style="font-size:28px">'+escapeWalletText(c.icon||'🎮')+'</span>')+'<div><b>'+escapeWalletText(c.title)+'</b><small>'+(c.is_active?'Показывается покупателям':'Скрыт')+'</small></div></div><button class="admin-secondary" onclick="editCatalogCategory(&quot;'+c.id+'&quot;)">Изменить название / иконку</button> <button class="admin-secondary" onclick="toggleCatalogCategory(&quot;'+c.id+'&quot;,'+(!c.is_active)+')">'+(c.is_active?'Скрыть':'Показать')+'</button></div>').join(''):'<div class="empty">Разделов пока нет.</div>';
 
   const select=document.getElementById('catalogProductCategory');
-  select.innerHTML=adminCatalogSnapshot.categories.map(c=>'<option value="'+c.id+'">'+escapeWalletText(c.icon||'🎮')+' '+escapeWalletText(c.title)+'</option>').join('');
+  if(select){const previous=select.value;select.innerHTML='<option value="">Выбери раздел для товара</option>'+adminCatalogSnapshot.categories.filter(c=>c.is_active).map(c=>'<option value="'+c.id+'">'+escapeWalletText(c.icon||'🎮')+' '+escapeWalletText(c.title)+'</option>').join('');if(adminCatalogSnapshot.categories.some(c=>c.id===previous&&c.is_active))select.value=previous;}
   productsHost.innerHTML=adminCatalogSnapshot.products.length?adminCatalogSnapshot.products.map(p=>'<div class="history-row"><div style="display:flex;align-items:center;gap:10px">'+(p.image_url?'<img src="'+escapeWalletText(p.image_url)+'" alt="" style="width:52px;height:52px;object-fit:cover;border-radius:9px">':'<span style="font-size:26px">🛍️</span>')+'<div><b>'+escapeWalletText(p.title)+'</b><small>'+escapeWalletText(p.catalog_categories?.title||'Раздел')+' · '+formatRuble(p.price_rub)+' · '+(p.is_active?'Показывается':'Скрыт')+'</small></div></div><button class="admin-secondary" onclick="editCatalogProduct(&quot;'+p.id+'&quot;)">Изменить название / фото</button> <button class="admin-secondary" onclick="toggleCatalogProduct(&quot;'+p.id+'&quot;,'+(!p.is_active)+')">'+(p.is_active?'Скрыть':'Показать')+'</button></div>').join(''):'<div class="empty">Товары ещё не добавлены.</div>';
   ordersHost.innerHTML=adminCatalogSnapshot.orders.length?adminCatalogSnapshot.orders.map(o=>'<div class="history-row"><b>'+escapeWalletText(o.product_title)+' · '+formatRuble(o.price_rub)+'</b><small>Статус: '+catalogStatusLabel(o.status)+'<br>Игровой ID: <b>'+escapeWalletText(o.game_player_id)+'</b><br>Telegram ID: '+escapeWalletText(o.telegram_user_id)+' '+(o.telegram_username?'(@'+escapeWalletText(o.telegram_username)+')':'')+'<br>Заказ: '+escapeWalletText(o.id)+'<br>'+new Date(o.created_at).toLocaleString('ru-RU')+'</small>'+(o.status==='pending'?'<button class="admin-secondary" onclick="setCatalogOrderStatus(\''+o.id+'\',\'processing\')">Взял в работу</button>':'')+(o.status==='pending'||o.status==='processing'?'<button class="admin-secondary" onclick="setCatalogOrderStatus(\''+o.id+'\',\'completed\')">Товар отправлен</button>':'')+(o.status!=='completed'&&o.status!=='cancelled'?'<button class="admin-secondary" onclick="setCatalogOrderStatus(\''+o.id+'\',\'cancelled\')">Отменить</button>':'')+'</div>').join(''):'<div class="empty">Заказов пока нет.</div>';
  }catch(e){productsHost.innerHTML='<div class="empty">'+escapeWalletText(e.message)+'</div>';ordersHost.innerHTML='<div class="empty">Не удалось загрузить заказы.</div>';}
@@ -1244,17 +1277,28 @@ function editCatalogProduct(id){
  document.getElementById('catalogProductNotice').textContent='Редактирование товара. Сохрани изменения кнопкой ниже.';
  document.getElementById('catalogProductSaveButton').textContent='Сохранить изменения';
 }
+function resetCatalogProductForm(){
+ catalogEditingProductId=null;
+ ['catalogProductTitle','catalogProductDescription','catalogProductPrice','catalogProductImage'].forEach(id=>document.getElementById(id).value='');
+ const select=document.getElementById('catalogProductCategory');if(select)select.value='';
+ const file=document.getElementById('catalogProductImageFile');if(file)file.value='';
+ previewStorefrontImage('catalogProductPreview','');
+ document.getElementById('catalogProductSaveButton').textContent='Сохранить товар';
+ document.getElementById('catalogProductNotice').textContent='Форма очищена.';
+}
 async function saveCatalogProduct(){
  const notice=document.getElementById('catalogProductNotice');
  const payload={id:catalogEditingProductId||undefined,categoryId:document.getElementById('catalogProductCategory').value,title:document.getElementById('catalogProductTitle').value.trim(),description:document.getElementById('catalogProductDescription').value.trim(),priceRub:Number(document.getElementById('catalogProductPrice').value),imageUrl:document.getElementById('catalogProductImage').value.trim(),isActive:true};
+ if(!payload.categoryId){notice.textContent='Сначала выбери раздел каталога.';return;}
+ if(!payload.title){notice.textContent='Введи название товара.';return;}
+ if(!Number.isFinite(payload.priceRub)||payload.priceRub<=0){notice.textContent='Укажи цену больше нуля.';return;}
+ const button=document.getElementById('catalogProductSaveButton');button.disabled=true;
  try{
   await paymentApi('admin_catalog_product_save',payload);
-  catalogEditingProductId=null;
-  ['catalogProductTitle','catalogProductDescription','catalogProductPrice','catalogProductImage'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('catalogProductSaveButton').textContent='Сохранить товар';
-  notice.textContent='Товар сохранён и добавлен в каталог.';
+  resetCatalogProductForm();notice.textContent='Товар сохранён. Он опубликован в выбранном разделе Free Fire.';
   await loadAdminCatalog();
  }catch(e){notice.textContent=e.message||'Не удалось сохранить товар.';}
+ finally{button.disabled=false;}
 }
 async function toggleCatalogProduct(id,isActive){
  try{const p=adminCatalogSnapshot.products.find(x=>x.id===id);if(!p)return;await paymentApi('admin_catalog_product_save',{id,categoryId:p.category_id,title:p.title,description:p.description||'',priceRub:Number(p.price_rub),imageUrl:p.image_url||'',isActive});await loadAdminCatalog();}
