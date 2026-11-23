@@ -123,7 +123,7 @@
 
 <section class="page" id="adminPage">
 <div class="admin-head"><h2 class="section-title" style="margin:0;text-align:left">Админ-панель</h2><button onclick="adminLogout()">Выйти</button></div>
-<div class="panel"><h2>🎁 Настройки призов рулетки</h2><p class="muted">Измени название, вероятность и фотографию каждого приза. Общая сумма вероятностей должна быть ровно 100%.</p><div id="adminPrizeEditor"></div><div class="info-card"><span>Сумма вероятностей</span><strong id="adminProbabilityTotal">100%</strong></div><button class="action" onclick="saveWheelPrizes()">Сохранить призы и вероятности</button><p class="muted" id="adminPrizeNotice" aria-live="polite"></p></div>
+<div class="panel"><h2>🎁 Настройки призов рулетки</h2><p class="muted">Измени название, вероятность и фотографию каждого приза. Общая сумма вероятностей должна быть ровно 100%.</p><div id="adminPrizeEditor"></div><div class="info-card"><span>Сумма вероятностей</span><strong id="adminProbabilityTotal">100%</strong></div><button class="action" onclick="saveWheelPrizes()">Сохранить призы и вероятности</button><button class="action" style="margin-top:8px;background:linear-gradient(90deg,#173d66,#087fff);color:#fff" onclick="saveWheelPrizeLabels()">Сохранить только названия призов</button><p class="muted" id="adminPrizeNotice" aria-live="polite"></p></div>
 <div class="panel"><h2>🎯 Персональный приз</h2><p class="muted">Найди пользователя по Telegram ID или username и назначь ему приз на следующее вращение.</p><input class="admin-form" id="adminUserQuery" placeholder="Telegram ID или @username" autocomplete="off"><button class="action" onclick="searchWheelUser()">Найти пользователя</button><div id="adminUserSearchResult"></div><div style="margin-top:12px"><select class="admin-form" id="adminAssignedPrize"></select></div><button class="action" onclick="assignWheelPrize()">Назначить на следующее вращение</button><p class="muted" id="adminAssignmentNotice" aria-live="polite"></p><h2 style="margin-top:20px">Активные назначения</h2><div id="adminAssignments"><div class="empty">Загрузка…</div></div></div>
 <div class="panel"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><h2 style="margin:0">📡 Выигрыши в реальном времени</h2><span id="adminHistoryLive" style="font-size:10px;color:#65e6a3">● LIVE</span></div><p class="muted">Последние 100 вращений. Список автоматически обновляется каждые 5 секунд.</p><button class="admin-secondary" onclick="loadWheelWinHistory()">↻ Обновить сейчас</button><div id="adminWinHistory" style="margin-top:12px"><div class="empty">Загрузка выигрышей…</div></div><p class="muted" id="adminHistoryUpdated"></p></div>
 <div class="admin-note">Все изменения проверяются сервером. Персональный приз списывается автоматически после следующего успешного вращения.</div>
@@ -197,6 +197,19 @@ async function saveWheelPrizes(){
   applyWheelPrizes(data.wheel_prizes||[]);renderAdminPrizes();
   notice.textContent='Изменения сохранены. Новые вероятности действуют для следующих вращений.';
  }catch(error){notice.textContent=error.message||'Не удалось сохранить настройки.';}
+}
+async function saveWheelPrizeLabels(){
+ const notice=document.getElementById('adminPrizeNotice');
+ try{
+  const labels=wheelPrizes.map((p,i)=>({prize_index:i,label:document.querySelector('[data-prize-label="'+i+'"]')?.value?.trim()||''}));
+  if(labels.some(p=>!p.label||p.label.length>80))throw new Error('Каждое название должно содержать от 1 до 80 символов.');
+  notice.textContent='Сохраняем названия призов…';
+  const data=await walletApi('admin_wheel_labels_save',{labels});
+  if(!Array.isArray(data.wheel_prizes)||data.wheel_prizes.length!==12)throw new Error('Сервер не подтвердил сохранение всех призов.');
+  applyWheelPrizes(data.wheel_prizes);
+  renderAdminPrizes();
+  notice.textContent='Названия всех призов сохранены! Они обновлены для рулетки.';
+ }catch(error){notice.textContent=error.message||'Не удалось сохранить названия.';}
 }
 async function uploadWheelPrizeImage(index,input){
  const file=input.files?.[0];if(!file)return;
