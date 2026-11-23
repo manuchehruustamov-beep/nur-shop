@@ -106,7 +106,7 @@
 <p class="wheel-subtitle" id="wheelSpinInfo">Открывай призы NUR SHOP: лента остановится на карточке с выигрышем.</p>
 <div class="wheel-strip-stage"><div class="wheel-strip-marker"><span>▼</span></div><div class="wheel-strip-viewport" id="wheelStripViewport"><div class="wheel-strip-track" id="wheelStripTrack"></div></div><div class="wheel-strip-caption"><span>← ЛЕНТА ПРИЗОВ →</span><span>ОСТАНОВКА ПО ЦЕНТРУ</span></div></div>
 <button class="action wheel-spin" id="wheelSpinButton" style="display:none" onclick="spinWheel()">✦ КРУТИТЬ РУЛЕТКУ</button>
-<div class="wheel-result" id="wheelResult" aria-live="polite">Проверяем права администратора…<small>Каждый пользователь может использовать бесплатную попытку раз в день.</small></div>
+<div class="wheel-result" id="wheelResult" aria-live="polite">Проверяем права администратора…<small>Каждый пользователь получает одну бесплатную попытку раз в 24 часа.</small></div>
 </div>
 <div class="panel wheel-prize-panel"><h2>Призы в ленте</h2><p class="muted">В каждой карточке предусмотрено отдельное место для фотографии и названия приза. Сами призы и результат вращения пока остаются под управлением текущего сервера.</p><div class="wheel-prize-list" id="wheelPrizeList"></div></div>
 </section>
@@ -331,7 +331,7 @@ async function spinWheel(){
   await animateWheelStrip(winner);
   btn.textContent='✦ КРУТИТЬ ЕЩЁ РАЗ';
   const label=response.prize.prize_label;
-  const note=response.prize.prize_type==='cash'?'Приз зачислен на твой баланс!':response.prize.prize_type==='bonus_spin'?'Дополнительная попытка добавлена!':response.prize.prize_type==='non_cash'?'Выигрыш сохранён в истории. Для выдачи этого приза потребуется подтверждение магазина.':'Попробуй удачу завтра!';
+  const note=response.prize.prize_type==='cash'?'Приз зачислен на твой баланс!':response.prize.prize_type==='bonus_spin'?'Бесплатная следующая попытка будет доступна через 24 часа.':response.prize.prize_type==='non_cash'?'Выигрыш сохранён в истории. Для выдачи этого приза потребуется подтверждение магазина.':'Попробуй удачу завтра!';
   result.innerHTML='🎉 Выпало: '+escapeWalletText(label)+'<small>'+note+'</small>';
   renderBalanceHistory();
  }catch(error){
@@ -436,18 +436,34 @@ async function walletApi(action,extra={}){
  if(!response.ok)throw new Error(data.error||'Сервер временно недоступен.');
  return data;
 }
+let wheelCooldownInterval=null;
+function renderWheelCooldown(){
+ const button=document.getElementById('wheelSpinButton');
+ const info=document.getElementById('wheelSpinInfo');
+ if(!button||!walletSnapshot)return;
+ const nextAt=walletSnapshot.next_spin_at?new Date(walletSnapshot.next_spin_at).getTime():0;
+ const left=nextAt-Date.now();
+ if(left>0){
+  button.disabled=true;
+  button.textContent='⏳ СЛЕДУЮЩАЯ ПОПЫТКА ЧЕРЕЗ 24 ЧАСА';
+  const hours=Math.floor(left/3600000),minutes=Math.floor((left%3600000)/60000),seconds=Math.floor((left%60000)/1000);
+  if(info)info.textContent='Баланс: '+formatRuble(walletSnapshot.balance||0)+' · Следующая бесплатная попытка через '+hours+' ч '+minutes+' мин '+seconds+' сек';
+ }else{
+  button.disabled=false;
+  button.textContent='✦ КРУТИТЬ РУЛЕТКУ';
+  if(info)info.textContent='Баланс: '+formatRuble(walletSnapshot.balance||0)+' · Бесплатное вращение доступно!';
+ }
+}
 function updateWalletUI(snapshot,isAdmin=false,prizes=null){
  if(prizes)applyWheelPrizes(prizes);
  if(!snapshot)return;walletSnapshot=snapshot;
  const spinButton=document.getElementById('wheelSpinButton');
- const wheelResult=document.getElementById('wheelResult');
  if(spinButton)spinButton.style.display='';
- if(wheelResult&&!isAdmin)wheelResult.innerHTML='🎁 Твоя попытка доступна!<small>Одна бесплатная попытка в день. Дополнительные попытки появятся после специальных призов.</small>';
-
  const value=formatRuble(snapshot.balance||0);
  ['balanceAmount','headerBalance','profileBalanceAmount'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=value;});
- const info=document.getElementById('wheelSpinInfo');
- if(info)info.textContent='Баланс: '+value+' · Дополнительных попыток: '+(snapshot.bonus_spins||0)+(isAdmin?' · Администратор: бесплатные прокрутки без лимита':' · Одна бесплатная попытка в день');
+ renderWheelCooldown();
+ if(wheelCooldownInterval)clearInterval(wheelCooldownInterval);
+ wheelCooldownInterval=setInterval(renderWheelCooldown,1000);
  renderBalanceHistory();
 }
 async function loadWallet(){
