@@ -239,6 +239,20 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #54aa
 #wheelPage .wheel-prize-card img,#wheelPage .wheel-prize-card .wheel-prize-placeholder{background:#140b19;border-color:#8D3B80}
 #wheelPage .wheel-prize-name{color:#F7D8F0}
 
+
+/* FazerCards live catalog */
+.fazer-category-list{display:grid;gap:9px;margin:12px 0}
+.fazer-category{width:100%;padding:13px;text-align:left;border:1px solid #1765ad;border-radius:12px;background:linear-gradient(145deg,#0c1b32,#091326);color:#e8f3ff;font-weight:850}
+.fazer-category small{display:block;margin-top:5px;color:#9fc2e9;font-weight:500}
+.fazer-offer-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:12px 0}
+.fazer-offer{padding:12px;border:1px solid #1765ad;border-radius:12px;background:#0c1b32;min-width:0}
+.fazer-offer b{display:block;font-size:13px;line-height:1.35}
+.fazer-offer small{display:block;margin-top:7px;color:#9fc2e9;font-size:11px}
+.fazer-fields{display:grid;gap:9px;margin:12px 0}
+.fazer-fields label{display:grid;gap:6px;color:#b8d5f5;font-size:12px}
+.fazer-fields input{width:100%;padding:12px;border:1px solid #17528e;border-radius:10px;background:#091326;color:#fff;font-size:14px}
+.fazer-note{padding:11px;border:1px solid #174b83;border-radius:10px;background:#091326;color:#9fc2e9;font-size:11px;line-height:1.5}
+
 </style>
 </head>
 <body>
@@ -549,9 +563,73 @@ function openCategory(name){
  desc.textContent='Выбери, что хочешь приобрести';
  tiles.innerHTML=items.map((item,i)=>'<button class="tile" style="border:0;background:transparent;padding:0;cursor:pointer" onclick="showCategoryProducts(\''+name+'\',\''+item+'\')"><div class="tile-image" style="display:grid;place-items:center;font-size:35px">'+(['💎','🎟️','🎁','✨'][i%4])+'</div><span class="tile-label">'+item+'</span></button>').join('');
 }
+
+const FAZER_CATALOG_URL='https://dfonsybvktrgwryovmua.supabase.co/functions/v1/fazercards-catalog';
+let fazerCategoriesCache=null;
+let fazerSelectedCategory=null;
+function fazerEscape(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
+async function fazerApi(action,extra={}){
+ if(!tg?.initData)throw new Error('Открой NUR SHOP через Telegram, чтобы загрузить каталог.');
+ const response=await fetch(FAZER_CATALOG_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,initData:tg.initData,...extra})});
+ const data=await response.json().catch(()=>({}));
+ if(!response.ok||data.ok===false)throw new Error(data.error||'Не удалось получить данные FazerCards.');
+ return data;
+}
+async function loadFazerFreeFireCatalog(){
+ const box=document.getElementById('categoryProductList');
+ box.innerHTML='<div class="empty">Загружаем каталог Free Fire от поставщика…</div>';
+ try{
+  if(!fazerCategoriesCache){
+   let cursor=null,all=[];
+   for(let page=0;page<8;page++){
+    const data=await fazerApi('categories',{limit:500,...(cursor?{cursor}:{})});
+    all=all.concat(Array.isArray(data.items)?data.items:[]);
+    const meta=data.meta||{};
+    if(!meta.has_more||!meta.next_cursor)break;
+    cursor=meta.next_cursor;
+   }
+   fazerCategoriesCache=all;
+  }
+  const matches=fazerCategoriesCache.filter(x=>/free\s*fire/i.test(String(x.name||'')));
+  const cis=matches.filter(x=>/cis|снг|содружеств/i.test(String(x.name||'')+' '+String(x.note||'')));
+  const list=cis.length?cis:matches;
+  if(!list.length){
+   box.innerHTML='<div class="fazer-note">Поставщик не вернул категорию Free Fire в загруженных страницах каталога. Обнови каталог позже или проверь категорию в кабинете FazerCards.</div>';
+   return;
+  }
+  window.fazerVisibleCategories=list;
+  box.innerHTML='<p class="muted">Выбери регион пополнения. Цены и наборы загружаются напрямую от поставщика.</p><div class="fazer-category-list">'+list.map((x,i)=>'<button class="fazer-category" onclick="loadFazerOffers('+i+')">'+fazerEscape(x.name||'Free Fire')+'<small>'+fazerEscape(x.note||'Категория поставщика')+'</small></button>').join('')+'</div><div id="fazerOffersArea"></div>';
+ }catch(error){
+  box.innerHTML='<div class="fazer-note">Ошибка загрузки каталога: '+fazerEscape(error.message)+'<br>Проверь подключение Telegram и серверную функцию.</div><button class="action" onclick="loadFazerFreeFireCatalog()">Повторить загрузку</button>';
+ }
+}
+async function loadFazerOffers(index){
+ const category=(window.fazerVisibleCategories||[])[index];
+ const area=document.getElementById('fazerOffersArea');
+ if(!category||!area)return;
+ fazerSelectedCategory=category;
+ area.innerHTML='<div class="empty">Загружаем наборы и поля игрока…</div>';
+ try{
+  const data=await fazerApi('offers',{category_id:category.category_id});
+  const offers=Array.isArray(data.offers)?data.offers:[];
+  const fields=Array.isArray(data.fields)?data.fields:[];
+  const fieldHtml=fields.length?'<div class="fazer-fields">'+fields.map((field,i)=>'<label>'+fazerEscape(field.label||field.key||('Поле '+(i+1)))+'<input type="'+(field.type==='number'?'number':'text')+'" autocomplete="off" placeholder="'+fazerEscape(field.placeholder||field.label||'Введи данные игрока')+'" data-fazer-field="'+fazerEscape(field.key||'')+'"></label>').join('')+'</div>':'';
+  const offerHtml=offers.length?'<div class="fazer-offer-grid">'+offers.map(x=>'<div class="fazer-offer"><b>'+fazerEscape(x.name||x.title||'Набор')+'</b><small>Оптовая цена: '+(x.price_usd!=null?'$'+fazerEscape(x.price_usd):'уточняется')+'</small></div>').join('')+'</div>':'<div class="fazer-note">Поставщик пока не вернул наборы для этой категории.</div>';
+  area.innerHTML='<h3 style="margin:18px 0 8px">'+fazerEscape(data.name||category.name||'Free Fire')+'</h3>'+fieldHtml+offerHtml+'<div class="fazer-note">Каталог подключён в режиме просмотра. Заказы, списание баланса и оплата пока отключены — ничего не будет куплено случайно.</div>';
+ }catch(error){
+  area.innerHTML='<div class="fazer-note">Не удалось загрузить наборы: '+fazerEscape(error.message)+'</div><button class="action" onclick="loadFazerOffers('+index+')">Повторить</button>';
+ }
+}
+
 function showCategoryProducts(category,item){
  const panel=document.getElementById('categoryProducts');
  document.getElementById('productsTitle').textContent=item;
+ if(category==='Free Fire'&&item==='Алмазы'){
+  panel.style.display='block';
+  loadFazerFreeFireCatalog();
+  panel.scrollIntoView({behavior:'smooth',block:'start'});
+  return;
+ }
  document.getElementById('categoryProductList').innerHTML='<div class="empty">Раздел «'+item+'» выбран. Товары и актуальные цены появятся здесь после добавления ассортимента.</div>';
  panel.style.display='block';
  panel.scrollIntoView({behavior:'smooth',block:'start'});
