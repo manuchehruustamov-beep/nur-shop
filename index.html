@@ -351,7 +351,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #54aa
 <div class="info-card">
 <b>🏠 Иконки главного экрана</b>
 <p class="muted">Для каждой иконки можно изменить название и картинку. Раздел, который открывается при нажатии, сохраняется за этой иконкой.</p>
-<div id="storeHomeTileEditor"><div class="empty">Загружаем настройки…</div></div>
+<div id="storeHomeTileEditor"><div class="empty">Загружаем настройки…</div></div><div style="margin-top:16px;padding-top:12px;border-top:1px solid #35543b"><b>💎 Иконка «Алмазы» внутри Free Fire</b><input class="admin-form" id="storeDiamondTitle" placeholder="Название иконки"><input class="admin-form" id="storeDiamondImageUrl" placeholder="Ссылка на изображение"><label class="photo-input">📷 Загрузить картинку алмазов <input id="storeDiamondFile" type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadStorefrontImage(this,'diamond')"></label><div id="storeDiamondPreview" class="storefront-preview"></div></div>
 <button class="action" onclick="saveStorefrontSettings()">Сохранить иконки главного экрана</button>
 </div>
 <p class="muted" id="storefrontNotice" aria-live="polite"></p>
@@ -643,6 +643,7 @@ async function loadManualCatalogData(){
 
 const storefrontDefaults={
  banner:{enabled:false,title:'Добро пожаловать в NUR SHOP',subtitle:'Твои любимые цифровые товары в одном месте',image_url:''},
+ diamond_tile:{title:'Алмазы',image_url:''},
  tiles:[
   {key:'ff',title:'Free Fire',image_url:'https://play-lh.googleusercontent.com/JT88XmsHoGDio7FxONwh382DhuTxuccfMmWFDtRBFjilySzNqWOCxUhqm8IhBKzQSwVrW2HWp_XvSgKFwi3ETA=w240-h480',target:'Free Fire',enabled:true},
   {key:'pubg',title:'PUBG Mobile',image_url:'https://play-lh.googleusercontent.com/O8jPCZ2EXAt7wGlbZhkhA-3vPIWVBpz8tZrRnsr7uVeqp0UD1AQwIEl_N9So80kdp8gDvIksC64GypylkQV_=w240-h480',target:'PUBG Mobile',enabled:true},
@@ -656,7 +657,7 @@ let storefrontSettings=JSON.parse(JSON.stringify(storefrontDefaults));
 let catalogEditingCategoryId=null;
 function mergeStorefrontSettings(value){
  if(!value||typeof value!=='object')return JSON.parse(JSON.stringify(storefrontDefaults));
- return {banner:{...storefrontDefaults.banner,...(value.banner||{})},tiles:Array.isArray(value.tiles)&&value.tiles.length?value.tiles.map((x,i)=>({...storefrontDefaults.tiles.find(t=>t.key===x.key),...x})):JSON.parse(JSON.stringify(storefrontDefaults.tiles))};
+ return {banner:{...storefrontDefaults.banner,...(value.banner||{})},diamond_tile:{...storefrontDefaults.diamond_tile,...(value.diamond_tile||{})},tiles:Array.isArray(value.tiles)&&value.tiles.length?value.tiles.map((x,i)=>({...storefrontDefaults.tiles.find(t=>t.key===x.key),...x})):JSON.parse(JSON.stringify(storefrontDefaults.tiles))};
 }
 function renderHomeStorefront(){
  const banner=storefrontSettings.banner||{},host=document.getElementById('homeBanner');
@@ -679,6 +680,7 @@ function renderStorefrontAdmin(){
  document.getElementById('storeBannerSubtitle').value=b.subtitle||'';
  document.getElementById('storeBannerImageUrl').value=b.image_url||'';
  previewStorefrontImage('storeBannerPreview',b.image_url);
+ document.getElementById('storeDiamondTitle').value=storefrontSettings.diamond_tile.title||'Алмазы';document.getElementById('storeDiamondImageUrl').value=storefrontSettings.diamond_tile.image_url||'';previewStorefrontImage('storeDiamondPreview',storefrontSettings.diamond_tile.image_url||'');
  const host=document.getElementById('storeHomeTileEditor');if(!host)return;
  host.innerHTML=(storefrontSettings.tiles||[]).map((x,i)=>'<div class="storefront-tile-editor"><div>'+(x.image_url?'<img src="'+escapeWalletText(x.image_url)+'" alt="">':'<div style="width:60px;height:60px;border-radius:10px;background:#1c3424;display:grid;place-items:center;font-size:28px">🎮</div>')+'</div><div><label class="muted">Название иконки</label><input class="admin-form" type="text" id="storeTileTitle'+i+'" value="'+escapeWalletText(x.title)+'"><label class="muted">Ссылка на картинку</label><input class="admin-form" type="text" id="storeTileImage'+i+'" value="'+escapeWalletText(x.image_url||'')+'" placeholder="URL картинки"><label class="photo-input">📷 Загрузить картинку <input type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadStorefrontImage(this,\'tile\','+i+')"></label><label class="muted"><input type="checkbox" id="storeTileEnabled'+i+'" '+(x.enabled!==false?'checked':'')+'> Показывать на главной</label><small class="muted">Открывает: '+escapeWalletText(x.target)+'</small></div></div>').join('');
 }
@@ -701,6 +703,7 @@ async function uploadStorefrontImage(input,kind,index){
   if(!uploaded.ok)throw new Error('Не удалось загрузить изображение. Попробуй ещё раз.');
   const url=signed.publicUrl;
   if(kind==='banner'){document.getElementById('storeBannerImageUrl').value=url;previewStorefrontImage('storeBannerPreview',url);}
+  if(kind==='diamond'){document.getElementById('storeDiamondImageUrl').value=url;previewStorefrontImage('storeDiamondPreview',url);}
   if(kind==='category'){document.getElementById('catalogNewCategoryImage').value=url;previewStorefrontImage('catalogCategoryPreview',url);}
   if(kind==='product'){document.getElementById('catalogProductImage').value=url;previewStorefrontImage('catalogProductPreview',url);}
   if(kind==='tile'){storefrontSettings.tiles[index].image_url=url;const field=document.getElementById('storeTileImage'+index);if(field)field.value=url;renderStorefrontAdmin();}
@@ -712,7 +715,8 @@ async function saveStorefrontSettings(){
  const notice=document.getElementById('storefrontNotice');
  const banner={enabled:document.getElementById('storeBannerEnabled').checked,title:document.getElementById('storeBannerTitle').value.trim(),subtitle:document.getElementById('storeBannerSubtitle').value.trim(),image_url:document.getElementById('storeBannerImageUrl').value.trim()};
  const tiles=(storefrontSettings.tiles||[]).map((x,i)=>({...x,title:document.getElementById('storeTileTitle'+i)?.value.trim()||x.title,image_url:document.getElementById('storeTileImage'+i)?.value.trim()||'',enabled:document.getElementById('storeTileEnabled'+i)?.checked===true}));
- try{notice.textContent='Сохраняем оформление…';const data=await paymentApi('admin_storefront_save',{settings:{banner,tiles}});storefrontSettings=mergeStorefrontSettings(data.settings);renderStorefrontAdmin();renderHomeStorefront();notice.textContent='Готово! Оформление главного экрана сохранено.';}
+ const diamond_tile={title:document.getElementById('storeDiamondTitle').value.trim()||'Алмазы',image_url:document.getElementById('storeDiamondImageUrl').value.trim()};
+ try{notice.textContent='Сохраняем оформление…';const data=await paymentApi('admin_storefront_save',{settings:{banner,tiles,diamond_tile}});storefrontSettings=mergeStorefrontSettings(data.settings);renderStorefrontAdmin();renderHomeStorefront();notice.textContent='Готово! Оформление главного экрана сохранено.';}
  catch(e){notice.textContent=e.message||'Не удалось сохранить оформление.';}
 }
 function resetCatalogCategoryEditor(){
@@ -775,7 +779,8 @@ async function loadFreeFireCategoryTiles(){
  tiles.innerHTML='<div class="empty">Загружаем разделы Free Fire…</div>';
  try{
   const data=await loadManualCatalogData();
-  const diamond='<button class="tile" style="border:0;background:transparent;padding:0;cursor:pointer" onclick="showCategoryProducts(\'Free Fire\',\'Алмазы\')"><div class="tile-image ff-art-wrap ff-art-diamond">'+freeFireCategoryArt('Алмазы')+'</div><span class="tile-label">Алмазы</span></button>';
+  const dt=storefrontSettings.diamond_tile||{title:'Алмазы',image_url:''};
+  const diamond='<button class="tile" style="border:0;background:transparent;padding:0;cursor:pointer" onclick="showCategoryProducts(\\'Free Fire\\','+JSON.stringify(dt.title||'Алмазы')+')"><div class="tile-image">'+(dt.image_url?'<img src="'+fazerEscape(dt.image_url)+'" alt="">':'<div class="ff-art-wrap ff-art-diamond">'+freeFireCategoryArt('Алмазы')+'</div>')+'</div><span class="tile-label">'+fazerEscape(dt.title||'Алмазы')+'</span></button>';
   const extra=data.categories.map(c=>'<button class="tile" style="border:0;background:transparent;padding:0;cursor:pointer" onclick="openManualCatalogCategory(\''+c.id+'\')"><div class="tile-image">'+(c.image_url?'<img src="'+fazerEscape(c.image_url)+'" alt="">':'<span style="font-size:42px">'+fazerEscape(c.icon||'🎮')+'</span>')+'</div><span class="tile-label">'+fazerEscape(c.title)+'</span></button>').join('');
   tiles.innerHTML=diamond+extra;
  }catch(e){tiles.innerHTML='<div class="empty">'+fazerEscape(e.message||'Не удалось загрузить разделы')+'</div>';}
