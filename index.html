@@ -669,13 +669,9 @@ async function loadFazerOffers(index){
  area.innerHTML='<div class="empty">Загружаем наборы и поля игрока…</div>';
  try{
   const data=await fazerApi('offers',{category_id:category.category_id});
-  const allOffers=Array.isArray(data.offers)?data.offers:[];
-  const isVoucher=(fazerSelectedSection==='Ваучеры');
-  const offers=allOffers.filter(x=>{
-   const label=[x.name,x.title,x.product_name,x.code,x.sku,x.type].filter(Boolean).join(' ').toLowerCase();
-   if(isVoucher)return /voucher|ваучер|membership|подписк|monthly|weekly|месячн|недел|lite|evo access|card|карта/.test(label);
-   return /diamond|алмаз|\bdiamonds?\b/.test(label);
-  });
+  // Показываем все офферы, которые вернул FazerCards.
+  // Не фильтруем по названию: у поставщика названия SKU могут отличаться.
+  const offers=Array.isArray(data.offers)?data.offers:[];
   const fields=Array.isArray(data.fields)?data.fields:[];
   const fieldHtml=fields.length?'<div class="fazer-fields">'+fields.map((field,i)=>'<label>'+fazerEscape(field.label||field.key||('Поле '+(i+1)))+'<input type="'+(field.type==='number'?'number':'text')+'" autocomplete="off" placeholder="'+fazerEscape(field.placeholder||field.label||'Введи данные игрока')+'" data-fazer-field="'+fazerEscape(field.key||'')+'"></label>').join('')+'</div>':'';
   const offerHtml=offers.length?'<div class="fazer-offer-grid">'+offers.map(x=>'<div class="fazer-offer"><b>'+fazerEscape(fazerRussianName(x.name||x.title||'Набор'))+'</b><small>Оптовая цена: '+fazerOfferPrice(x)+'</small></div>').join('')+'</div>':'<div class="fazer-note">Поставщик пока не вернул наборы для этой категории.</div>';
