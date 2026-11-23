@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><meta name="theme-color" content="#080d18">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><meta name="theme-color" content="#050914">
 <title>NUR SHOP</title><script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 :root{--bg:#100d09;--panel:#1b2117;--muted:#b7a995;--sienna:#a45d38;--green:#315b3b;--stroke:#3a3024}
@@ -146,6 +146,75 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;bac
 .admin-auth-actions button.secondary{background:#280b15;border-color:#702039;color:#ffe6ea}
 .admin-note{border-color:#702039;background:#260b14;color:#e4b9c1}.admin-head button{border-color:#702039;background:#280b15;color:#ffe6ea}
 button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #ff536b;outline-offset:3px}
+
+
+/* NUR SHOP — RETURN TO BLACK & NEON BLUE */
+:root{--bg:#050914;--panel:#0c1424;--muted:#9aaecb;--sienna:#168cff;--green:#0755a8;--stroke:#17365e;color-scheme:dark}
+html{background:#050914}
+body{background:radial-gradient(ellipse at 50% -18%,#123c78 0%,#0a1b37 36%,#070e1d 68%,#040711 100%);color:#f2f7ff}
+body:before{background:radial-gradient(ellipse at 8% 24%,#087dff24 0%,transparent 38%),radial-gradient(ellipse at 92% 62%,#0755b820 0%,transparent 42%),radial-gradient(ellipse at 48% 105%,#073b7b30 0%,transparent 48%),repeating-linear-gradient(115deg,transparent 0 74px,#258bff08 75px 77px,transparent 78px 150px)}
+.profile-bar{border-bottom-color:#174b83;background:linear-gradient(115deg,#070d19,#0b1c36 55%,#080f20)}
+.avatar{border-color:#168cff;background:#0a1d39;box-shadow:0 0 18px #168cff66}
+.user-tag{color:#54aaff}
+.balance-pill{border-color:#1765ad;background:#0a1d38;color:#dceeff;box-shadow:inset 0 0 15px #087dff24}
+.balance-pill svg{stroke:#39a0ff}.balance-pill b{color:#39a0ff}
+.hero{border-color:#168cff;background:radial-gradient(ellipse at 78% 45%,#0755a8 0%,#0a2447 36%,#070d19 78%);box-shadow:0 16px 38px #000b,0 0 27px #087dff35,inset 0 0 38px #168cff20}
+.hero:before{background:linear-gradient(110deg,#050914 0%,#09172bed 46%,#08234b66 100%)}
+.hero:after{background:linear-gradient(130deg,transparent 25%,#168cff20 50%,transparent 75%)}
+.hero-glow{background:#087dff48}
+.hero-kicker{color:#80c4ff}.live-dot{background:#168cff;box-shadow:0 0 12px #168cff}
+.hero h1 em{color:#39a0ff;text-shadow:0 0 18px #168cff99}.hero p{color:#c5dcf7}
+.hero-link{border-color:#54aaff88;background:linear-gradient(100deg,#0755a8,#168cff);box-shadow:0 0 20px #087dff66;color:#fff}
+.hero-ring{border-color:#39a0ff88;box-shadow:0 0 22px #168cff66,inset 0 0 25px #168cff22}
+.hero-ring:before,.hero-ring:after{border-color:#54aaff66}.hero-ring:after{border-color:#168cff44}
+.hero-monogram{color:#f4faff;text-shadow:0 0 12px #168cff,0 0 30px #087dff}.hero-monogram span{color:#39a0ff}
+.hero-mark small{color:#80c4ff}.hero-bottom-line{color:#9fc9f2}.hero-bottom-line i{background:#168cff;box-shadow:0 0 7px #168cff}
+.benefit-strip div{border-color:#174b83;background:linear-gradient(145deg,#0b1d38,#080f20);color:#b8d5f5}
+.benefit-strip b{color:#54aaff;text-shadow:0 0 10px #168cff}
+.catalog-heading span{color:#54aaff}.catalog-heading small{color:#729ac8}
+.tile-image{border-color:#17528e;background:linear-gradient(145deg,#102c50,#091326);box-shadow:0 7px 18px #0009,0 0 14px #087dff20}
+.tile:active .tile-image{border-color:#54aaff;box-shadow:0 0 20px #168cff66}.tile-label{color:#e1efff}
+.panel{border-color:#17365e;background:linear-gradient(145deg,#0c1b32,#080e1b);box-shadow:0 10px 28px #0007}
+.vpn-card{border-color:#17528e;background:radial-gradient(ellipse at 90% 0%,#0755a8 0%,transparent 55%),linear-gradient(150deg,#0d2340,#080d19 82%)}
+.vpn-card:before{background:linear-gradient(#54aaff,#0755a8)}
+.vpn-card.featured{border-color:#168cff;box-shadow:0 0 0 1px #168cff33,0 10px 28px #087dff2c}
+.vpn-card .emoji{background:linear-gradient(145deg,#10447c,#0a1d38);border-color:#1765ad}
+.vpn-card .plan-tag{color:#fff;background:linear-gradient(90deg,#0755a8,#168cff)}
+.vpn-card small,.vpn-card .plan-features{color:#abc8eb}.vpn-card .price{color:#54aaff}.vpn-card .price small{color:#8faed5}
+.vpn-card .action{box-shadow:0 5px 15px #087dff44}.vpn-card.featured .action{background:linear-gradient(100deg,#0755a8,#168cff)}
+.action{background:linear-gradient(90deg,#0755a8,#168cff);color:#fff;box-shadow:0 0 15px #087dff44}
+.wheel-card{border-color:#1765ad;background:radial-gradient(ellipse at 50% -10%,#103d70 0%,#0b1d38 46%,#070d19 100%);box-shadow:0 0 30px #087dff30,inset 0 0 34px #168cff1c}
+.wheel-card:before{background:linear-gradient(115deg,transparent 15%,#54aaff16 48%,transparent 78%)}
+.wheel-kicker{color:#80c4ff;text-shadow:0 0 14px #168cff88}.wheel-subtitle{color:#b8d5f5}
+.wheel-strip-stage{border-color:#1765ad;background:linear-gradient(180deg,#081326,#0d2c50 48%,#081326);box-shadow:inset 0 0 30px #087dff22,0 12px 32px #000a,0 0 22px #087dff33}
+.wheel-strip-viewport:before{background:linear-gradient(90deg,#081326,transparent)}.wheel-strip-viewport:after{background:linear-gradient(270deg,#081326,transparent)}
+.wheel-strip-item{border-color:#17528e;background:linear-gradient(155deg,#10447c,#0a1d38);color:#f2f7ff;box-shadow:inset 0 0 16px #168cff20}
+.wheel-strip-item.winning{border-color:#54aaff;background:linear-gradient(155deg,#0755a8,#0d2b50);box-shadow:0 0 24px #168cff88,inset 0 0 18px #168cff33}
+.wheel-strip-caption{color:#80c4ff}.wheel-strip-marker{border-top-color:#54aaff;filter:drop-shadow(0 2px 8px #168cff)}.wheel-strip-marker span{color:#07101e}
+.wheel-spin{background:linear-gradient(100deg,#0755a8,#168cff);color:#fff;box-shadow:0 0 22px #087dff77}
+.wheel-result{border-color:#1765ad;background:#0b1b34;color:#b9dcff}.wheel-result small{color:#9fc2e9}
+.wheel-prize-card{border-color:#174b83;background:linear-gradient(145deg,#102b4b,#091326);color:#e8f3ff}
+.wheel-prize-card img,.wheel-prize-card .wheel-prize-placeholder{background:#091326;border-color:#1765ad}
+.cart-line{border-bottom-color:#17365e}.total b{color:#54aaff}
+.profile-card,.info-card{border-color:#174b83;background:#0c1b32}.profile-card small{color:#54aaff}.info-card strong{color:#54aaff}
+.ref-link{border-color:#1765ad;color:#b9dcff;background:#091326}
+.ref-actions button{background:#0755a8;color:#fff}.ref-actions button+button{background:#0c2341;border-color:#1765ad}
+.history-row{border-bottom-color:#17365e}
+.nav{background:#080f20f5;border-color:#17365e;box-shadow:0 -8px 28px #000b}
+.nav button{color:#91afd5}.nav button.active{color:#54aaff}
+.topup-option{border-color:#174b83;background:#0c1b32;color:#e8f3ff}.topup-option.selected{border-color:#54aaff;background:#10345c;box-shadow:0 0 16px #168cff55}
+.transaction-row{border-bottom-color:#17365e}.transaction-amount.in{color:#54aaff}.transaction-amount.out{color:#b9dcff}
+.promo-card{border-color:#1765ad;box-shadow:0 0 18px #087dff2a}
+.promo-input-row input,.admin-auth-card input{border-color:#17528e;background:#091326;color:#fff}
+.promo-input-row input:focus,.admin-auth-card input:focus{border-color:#54aaff;box-shadow:0 0 0 2px #168cff33}
+.promo-input-row button{background:linear-gradient(100deg,#0755a8,#168cff);color:#fff}
+.promo-notice{color:#9fc2e9}.promo-prizes span{border-color:#174b83;background:#0c1b32;color:#e1efff}
+.admin-entry{border-color:#1765ad;background:linear-gradient(100deg,#0d2b50,#091326);color:#e1efff;box-shadow:0 0 16px #087dff2a}.admin-entry span{color:#54aaff}
+.admin-overlay{background:#040711f2}.admin-auth-card{border-color:#1765ad;background:linear-gradient(145deg,#102b4b,#080e1b);box-shadow:0 0 38px #087dff44}
+.admin-auth-card p{color:#9fc2e9}.admin-auth-actions button{background:linear-gradient(90deg,#0755a8,#168cff);color:#fff}
+.admin-auth-actions button.secondary{background:#0c1b32;border-color:#17528e;color:#e1efff}
+.admin-note{border-color:#17528e;background:#0c1b32;color:#b8d5f5}.admin-head button{border-color:#17528e;background:#0c1b32;color:#e1efff}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #54aaff;outline-offset:3px}
 
 </style>
 </head>
