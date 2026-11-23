@@ -655,11 +655,12 @@ async function createFazerTestOrder(index){
  try{
   const result=await fazerTestOrderApi({category_id:fazerSelectedCategory.category_id,offer_id:String(offer.offer_id||offer.id||''),fields,request_id:crypto.randomUUID()});
   const order=result.order||{};
-  area.querySelectorAll('[data-test-order]').forEach(b=>b.disabled=true);
+  area.querySelectorAll('[data-test-order]').forEach(b=>{b.disabled=true;if(b===button)b.textContent='✓ Тест создан';});
   const notice=document.createElement('div');
   notice.className='fazer-note';
   notice.innerHTML='<b>✓ Тестовый заказ создан: '+fazerEscape(order.test_order_number||'')+'</b><br>'+fazerEscape(order.offer_name||'Free Fire')+'<br>Статус: '+fazerEscape(order.status||'test_created')+'<br>Оптовая цена (расчёт): '+(order.supplier_price_rub==null?'уточняется':fazerEscape(formatRuble(order.supplier_price_rub)))+'<br><b>Деньги не списаны. Поставщику заказ не отправлялся.</b>';
-  area.appendChild(notice);
+  area.prepend(notice);
+  notice.scrollIntoView({behavior:'smooth',block:'center'});
  }catch(error){
   if(button){button.disabled=false;button.textContent='Создать тестовый заказ';}
   const notice=document.createElement('div');notice.className='fazer-note';notice.textContent=error.message||'Ошибка тестового заказа.';area.appendChild(notice);
