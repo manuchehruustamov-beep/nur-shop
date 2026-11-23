@@ -569,6 +569,7 @@ function openCategory(name){
 }
 
 const FAZER_CATALOG_URL='https://dfonsybvktrgwryovmua.supabase.co/functions/v1/fazercards-catalog';
+const FAZER_ORDERS_URL='https://dfonsybvktrgwryovmua.supabase.co/functions/v1/fazercards-orders';
 const FAZER_USD_TO_RUB=82;
 function fazerFormatRubles(raw){
  if(raw==null||raw==='')return 'уточняется';
@@ -634,6 +635,36 @@ async function fazerApi(action,extra={}){
  if(!response.ok||data.ok===false)throw new Error(data.error||'Не удалось получить данные FazerCards.');
  return data;
 }
+async function fazerTestOrderApi(extra={}){
+ if(!tg?.initData)throw new Error('Открой NUR SHOP через Telegram.');
+ const response=await fetch(FAZER_ORDERS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'test_order',initData:tg.initData,...extra})});
+ const data=await response.json().catch(()=>({}));
+ if(!response.ok||data.ok===false)throw new Error(data.error||'Не удалось создать тестовый заказ.');
+ return data;
+}
+async function createFazerTestOrder(index){
+ const offers=window.fazerCurrentOffers||[];
+ const offer=offers[index];
+ const area=document.getElementById('fazerOffersArea');
+ if(!offer||!area)return;
+ const fields={};
+ area.querySelectorAll('[data-fazer-field]').forEach(input=>{fields[input.dataset.fazerField]=String(input.value||'').trim();});
+ if(Object.values(fields).some(v=>!v)){alert('Заполни все поля игрока перед тестированием.');return;}
+ const button=area.querySelector('[data-test-order="'+index+'"]');
+ if(button){button.disabled=true;button.textContent='Проверяем…';}
+ try{
+  const result=await fazerTestOrderApi({category_id:fazerSelectedCategory.category_id,offer_id:String(offer.offer_id||offer.id||''),fields,request_id:crypto.randomUUID()});
+  const order=result.order||{};
+  area.querySelectorAll('[data-test-order]').forEach(b=>b.disabled=true);
+  const notice=document.createElement('div');
+  notice.className='fazer-note';
+  notice.innerHTML='<b>✓ Тестовый заказ создан: '+fazerEscape(order.test_order_number||'')+'</b><br>'+fazerEscape(order.offer_name||'Free Fire')+'<br>Статус: '+fazerEscape(order.status||'test_created')+'<br>Оптовая цена (расчёт): '+(order.supplier_price_rub==null?'уточняется':fazerEscape(formatRuble(order.supplier_price_rub)))+'<br><b>Деньги не списаны. Поставщику заказ не отправлялся.</b>';
+  area.appendChild(notice);
+ }catch(error){
+  if(button){button.disabled=false;button.textContent='Создать тестовый заказ';}
+  const notice=document.createElement('div');notice.className='fazer-note';notice.textContent=error.message||'Ошибка тестового заказа.';area.appendChild(notice);
+ }
+}
 async function loadFazerFreeFireCatalog(){
  const box=document.getElementById('categoryProductList');
  box.innerHTML='<div class="empty">Загружаем каталог Free Fire от поставщика…</div>';
@@ -674,9 +705,11 @@ async function loadFazerOffers(index){
   // Не фильтруем по названию: у поставщика названия SKU могут отличаться.
   const offers=Array.isArray(data.offers)?data.offers:[];
   const fields=Array.isArray(data.fields)?data.fields:[];
+  window.fazerCurrentOffers=offers;
+  window.fazerCurrentFields=fields;
   const fieldHtml=fields.length?'<div class="fazer-fields">'+fields.map((field,i)=>'<label>'+fazerEscape(field.label||field.key||('Поле '+(i+1)))+'<input type="'+(field.type==='number'?'number':'text')+'" autocomplete="off" placeholder="'+fazerEscape(field.placeholder||field.label||'Введи данные игрока')+'" data-fazer-field="'+fazerEscape(field.key||'')+'"></label>').join('')+'</div>':'';
-  const offerHtml=offers.length?'<div class="fazer-offer-grid">'+offers.map(x=>'<div class="fazer-offer"><b>'+fazerEscape(fazerRussianName(x.name||x.title||'Набор'))+'</b><small>Оптовая цена: '+fazerOfferPrice(x)+'</small></div>').join('')+'</div>':'<div class="fazer-note">Поставщик пока не вернул наборы для этой категории.</div>';
-  area.innerHTML='<h3 style="margin:18px 0 8px">'+fazerEscape(fazerRussianName(data.name||category.name||'Free Fire'))+'</h3>'+fieldHtml+offerHtml+'<div class="fazer-note">Каталог подключён в режиме просмотра. Заказы, списание баланса и оплата пока отключены — ничего не будет куплено случайно.</div>';
+  const offerHtml=offers.length?'<div class="fazer-offer-grid">'+offers.map((x,i)=>'<div class="fazer-offer"><b>'+fazerEscape(fazerRussianName(x.name||x.title||'Набор'))+'</b><small>Оптовая цена: '+fazerOfferPrice(x)+'</small><button class="action" data-test-order="'+i+'" onclick="createFazerTestOrder('+i+')">Создать тестовый заказ</button></div>').join('')+'</div>':'<div class="fazer-note">Поставщик пока не вернул наборы для этой категории.</div>';
+  area.innerHTML='<h3 style="margin:18px 0 8px">'+fazerEscape(fazerRussianName(data.name||category.name||'Free Fire'))+'</h3>'+fieldHtml+offerHtml+'<div class="fazer-note"><b>ТЕСТОВЫЙ РЕЖИМ.</b> Кнопка создаёт только тестовую запись в NUR SHOP. Реальный заказ FazerCards не отправляется, баланс покупателя и поставщика не списывается.</div>';
  }catch(error){
   area.innerHTML='<div class="fazer-note">Не удалось загрузить наборы: '+fazerEscape(error.message)+'</div><button class="action" onclick="loadFazerOffers('+index+')">Повторить</button>';
  }
