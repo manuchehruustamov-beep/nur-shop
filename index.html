@@ -769,17 +769,11 @@ async function fetchStorefrontSettings(){
  catch(e){storefrontSettings=mergeStorefrontSettings(null);renderHomeStorefront();}
 }
 function renderStorefrontAdmin(){
- const cardStyle=storefrontSettings.cardStyle||{};
- const shopSlider=document.getElementById('storeShopCardOpacity');
- const wheelSlider=document.getElementById('storeRouletteCardOpacity');
- if(shopSlider)shopSlider.value=Math.round(Number(cardStyle.shop_opacity??.82)*100);
- if(wheelSlider)wheelSlider.value=Math.round(Number(cardStyle.roulette_opacity??.82)*100);
- const shopVal=document.getElementById('storeShopCardOpacityValue');
- const wheelVal=document.getElementById('storeRouletteCardOpacityValue');
- if(shopVal)shopVal.textContent=(shopSlider?.value||82)+'%';
- if(wheelVal)wheelVal.textContent=(wheelSlider?.value||82)+'%';
- const bgs=storefrontSettings.backgrounds||{};
- ['home','shop','roulette'].forEach(key=>{const bg=bgs[key]||{};const prefix={home:'Home',shop:'Shop',roulette:'Roulette'}[key];const enabled=document.getElementById('storeBg'+prefix+'Enabled');const image=document.getElementById('storeBg'+prefix+'ImageUrl');const overlay=document.getElementById('storeBg'+prefix+'Overlay');const value=document.getElementById('storeBg'+prefix+'OverlayValue');if(enabled)enabled.checked=bg.enabled===true;if(image)image.value=bg.image_url||'';if(overlay)overlay.value=Math.round(Number(bg.overlay??.58)*100);if(value)value.textContent=(overlay?.value||58)+'%';previewStorefrontImage('storeBg'+prefix+'Preview',bg.image_url||'');});
+ const cardStyle=storefrontSettings.cardStyle||{};const shopSlider=document.getElementById('storeShopCardOpacity');const wheelSlider=document.getElementById('storeRouletteCardOpacity');
+ if(shopSlider)shopSlider.value=Math.round(Number(cardStyle.shop_opacity??.82)*100);if(wheelSlider)wheelSlider.value=Math.round(Number(cardStyle.roulette_opacity??.82)*100);
+ const shopVal=document.getElementById('storeShopCardOpacityValue');const wheelVal=document.getElementById('storeRouletteCardOpacityValue');
+ if(shopVal)shopVal.textContent=(shopSlider?.value||82)+'%';if(wheelVal)wheelVal.textContent=(wheelSlider?.value||82)+'%';
+ const bgs=storefrontSettings.backgrounds||{};['home','shop','roulette'].forEach(key=>{const bg=bgs[key]||{};const prefix={home:'Home',shop:'Shop',roulette:'Roulette'}[key];const enabled=document.getElementById('storeBg'+prefix+'Enabled');const image=document.getElementById('storeBg'+prefix+'ImageUrl');const overlay=document.getElementById('storeBg'+prefix+'Overlay');const value=document.getElementById('storeBg'+prefix+'OverlayValue');if(enabled)enabled.checked=bg.enabled===true;if(image)image.value=bg.image_url||'';if(overlay)overlay.value=Math.round(Number(bg.overlay??.58)*100);if(value)value.textContent=(overlay?.value||58)+'%';previewStorefrontImage('storeBg'+prefix+'Preview',bg.image_url||'');});
  const banner=storefrontSettings.banner||{};document.getElementById('storeBannerEnabled').checked=banner.enabled===true;document.getElementById('storeBannerTitle').value=banner.title||'';document.getElementById('storeBannerSubtitle').value=banner.subtitle||'';document.getElementById('storeBannerImageUrl').value=banner.image_url||'';previewStorefrontImage('storeBannerPreview',banner.image_url);
  document.getElementById('storeDiamondTitle').value=storefrontSettings.diamond_tile.title||'Алмазы';document.getElementById('storeDiamondImageUrl').value=storefrontSettings.diamond_tile.image_url||'';previewStorefrontImage('storeDiamondPreview',storefrontSettings.diamond_tile.image_url||'');
  const groupHost=document.getElementById('storeGroupEditor');
@@ -1193,13 +1187,8 @@ function selectManualPayment(id){
  const rows=[['Банк',details.bank],['Номер карты',details.card_number],['Номер телефона',details.wallet_number],['Получатель',details.recipient]].filter(row=>row[1]);
  const host=document.getElementById('selectedPaymentDetails');
  let detailsHtml='';
- rows.forEach(row=>{
-  const label=row[0],value=row[1];
-  detailsHtml+='<div class="payment-detail-row"><div class="payment-detail-main"><div class="payment-detail-label">'+escapeWalletText(label)+'</div><div class="payment-detail-value">'+escapeWalletText(value)+'</div></div><button type="button" class="payment-copy-btn" data-copy="'+encodeURIComponent(String(value))+'" onclick="copyPaymentDetail(this)">Копировать</button></div>';
- });
- if(method.instructions){
-  detailsHtml+='<div class="payment-detail-row"><div class="payment-detail-main"><div class="payment-detail-label">Инструкция</div><div class="payment-detail-value" style="font-size:14px;font-weight:600">'+escapeWalletText(method.instructions)+'</div></div><button type="button" class="payment-copy-btn" data-copy="'+encodeURIComponent(String(method.instructions))+'" onclick="copyPaymentDetail(this)">Копировать</button></div>';
- }
+ rows.forEach(row=>{const label=row[0],value=row[1];detailsHtml+='<div class="payment-detail-row"><div class="payment-detail-main"><div class="payment-detail-label">'+escapeWalletText(label)+'</div><div class="payment-detail-value">'+escapeWalletText(value)+'</div></div><button type="button" class="payment-copy-btn" data-copy="'+encodeURIComponent(String(value))+'" onclick="copyPaymentDetail(this)">Копировать</button></div>';});
+ if(method.instructions){detailsHtml+='<div class="payment-detail-row"><div class="payment-detail-main"><div class="payment-detail-label">Инструкция</div><div class="payment-detail-value" style="font-size:14px;font-weight:600">'+escapeWalletText(method.instructions)+'</div></div><button type="button" class="payment-copy-btn" data-copy="'+encodeURIComponent(String(method.instructions))+'" onclick="copyPaymentDetail(this)">Копировать</button></div>';}
  host.innerHTML=detailsHtml||'<div class="muted">Реквизиты пока не заполнены. Обратись к администратору.</div>';
  document.getElementById('selectedPaymentTitle').textContent=method.title;
  document.getElementById('manualPaymentForm').style.display='block';
