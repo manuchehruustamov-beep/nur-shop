@@ -568,6 +568,49 @@ const FAZER_CATALOG_URL='https://dfonsybvktrgwryovmua.supabase.co/functions/v1/f
 let fazerCategoriesCache=null;
 let fazerSelectedCategory=null;
 function fazerEscape(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
+function fazerRussianName(value){
+ let s=String(value??'').trim();
+ const exact={
+  'Free Fire (CIS)':'Free Fire — СНГ',
+  'Free Fire CIS':'Free Fire — СНГ',
+  'Monthly Membership':'Месячная подписка',
+  'Weekly Membership':'Недельная подписка',
+  'Monthly Card':'Месячная карта',
+  'Weekly Card':'Недельная карта',
+  'Evo Access 30d':'Доступ к Эво на 30 дней',
+  'Evo Access':'Доступ к Эво',
+  'Level Up Pass':'Пропуск повышения уровня',
+  'Booyah Pass':'Пропуск «Боя»',
+  'Diamonds':'Алмазы',
+  'Diamond':'Алмаз',
+  'Membership':'Подписка',
+  'Top Up':'Пополнение'
+ };
+ if(exact[s])return exact[s];
+ return s
+  .replace(/Free\\s*Fire\\s*\\(CIS\\)/ig,'Free Fire — СНГ')
+  .replace(/Free\\s*Fire\\s*CIS/ig,'Free Fire — СНГ')
+  .replace(/Monthly\\s+Membership/ig,'Месячная подписка')
+  .replace(/Weekly\\s+Membership/ig,'Недельная подписка')
+  .replace(/Monthly\\s+Card/ig,'Месячная карта')
+  .replace(/Weekly\\s+Card/ig,'Недельная карта')
+  .replace(/Evo\\s+Access/ig,'Доступ к Эво')
+  .replace(/Level\\s+Up\\s+Pass/ig,'Пропуск повышения уровня')
+  .replace(/Booyah\\s+Pass/ig,'Пропуск «Боя»')
+  .replace(/Diamonds?/ig,'алмазов')
+  .replace(/Membership/ig,'Подписка')
+  .replace(/Weekly/ig,'Недельная')
+  .replace(/Monthly/ig,'Месячная')
+  .replace(/Global/ig,'Весь мир')
+  .replace(/Turkey/ig,'Турция')
+  .replace(/Brazil/ig,'Бразилия')
+  .replace(/Indonesia/ig,'Индонезия')
+  .replace(/Thailand/ig,'Таиланд')
+  .replace(/Vietnam/ig,'Вьетнам')
+  .replace(/Pakistan/ig,'Пакистан')
+  .replace(/Egypt/ig,'Египет')
+  .replace(/CIS/ig,'СНГ');
+}
 async function fazerApi(action,extra={}){
  if(!tg?.initData)throw new Error('Открой NUR SHOP через Telegram, чтобы загрузить каталог.');
  const response=await fetch(FAZER_CATALOG_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,initData:tg.initData,...extra})});
@@ -598,7 +641,7 @@ async function loadFazerFreeFireCatalog(){
    return;
   }
   window.fazerVisibleCategories=list;
-  box.innerHTML='<p class="muted">Выбери регион пополнения. Цены и наборы загружаются напрямую от поставщика.</p><div class="fazer-category-list">'+list.map((x,i)=>'<button class="fazer-category" onclick="loadFazerOffers('+i+')">'+fazerEscape(x.name||'Free Fire')+'<small>'+fazerEscape(x.note||'Категория поставщика')+'</small></button>').join('')+'</div><div id="fazerOffersArea"></div>';
+  box.innerHTML='<p class="muted">Выбери регион пополнения. Цены и наборы загружаются напрямую от поставщика.</p><div class="fazer-category-list">'+list.map((x,i)=>'<button class="fazer-category" onclick="loadFazerOffers('+i+')">'+fazerEscape(fazerRussianName(x.name||'Free Fire'))+'<small>'+fazerEscape(fazerRussianName(x.note||'Категория поставщика'))+'</small></button>').join('')+'</div><div id="fazerOffersArea"></div>';
  }catch(error){
   box.innerHTML='<div class="fazer-note">Ошибка загрузки каталога: '+fazerEscape(error.message)+'<br>Проверь подключение Telegram и серверную функцию.</div><button class="action" onclick="loadFazerFreeFireCatalog()">Повторить загрузку</button>';
  }
@@ -614,8 +657,8 @@ async function loadFazerOffers(index){
   const offers=Array.isArray(data.offers)?data.offers:[];
   const fields=Array.isArray(data.fields)?data.fields:[];
   const fieldHtml=fields.length?'<div class="fazer-fields">'+fields.map((field,i)=>'<label>'+fazerEscape(field.label||field.key||('Поле '+(i+1)))+'<input type="'+(field.type==='number'?'number':'text')+'" autocomplete="off" placeholder="'+fazerEscape(field.placeholder||field.label||'Введи данные игрока')+'" data-fazer-field="'+fazerEscape(field.key||'')+'"></label>').join('')+'</div>':'';
-  const offerHtml=offers.length?'<div class="fazer-offer-grid">'+offers.map(x=>'<div class="fazer-offer"><b>'+fazerEscape(x.name||x.title||'Набор')+'</b><small>Оптовая цена: '+(x.price_usd!=null?'$'+fazerEscape(x.price_usd):'уточняется')+'</small></div>').join('')+'</div>':'<div class="fazer-note">Поставщик пока не вернул наборы для этой категории.</div>';
-  area.innerHTML='<h3 style="margin:18px 0 8px">'+fazerEscape(data.name||category.name||'Free Fire')+'</h3>'+fieldHtml+offerHtml+'<div class="fazer-note">Каталог подключён в режиме просмотра. Заказы, списание баланса и оплата пока отключены — ничего не будет куплено случайно.</div>';
+  const offerHtml=offers.length?'<div class="fazer-offer-grid">'+offers.map(x=>'<div class="fazer-offer"><b>'+fazerEscape(fazerRussianName(x.name||x.title||'Набор'))+'</b><small>Оптовая цена: '+(x.price_usd!=null?'$'+fazerEscape(x.price_usd):'уточняется')+'</small></div>').join('')+'</div>':'<div class="fazer-note">Поставщик пока не вернул наборы для этой категории.</div>';
+  area.innerHTML='<h3 style="margin:18px 0 8px">'+fazerEscape(fazerRussianName(data.name||category.name||'Free Fire'))+'</h3>'+fieldHtml+offerHtml+'<div class="fazer-note">Каталог подключён в режиме просмотра. Заказы, списание баланса и оплата пока отключены — ничего не будет куплено случайно.</div>';
  }catch(error){
   area.innerHTML='<div class="fazer-note">Не удалось загрузить наборы: '+fazerEscape(error.message)+'</div><button class="action" onclick="loadFazerOffers('+index+')">Повторить</button>';
  }
