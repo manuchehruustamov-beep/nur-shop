@@ -769,20 +769,23 @@ async function fetchStorefrontSettings(){
  catch(e){storefrontSettings=mergeStorefrontSettings(null);renderHomeStorefront();}
 }
 function renderStorefrontAdmin(){
- const cardStyle=storefrontSettings.cardStyle||{};const shopSlider=document.getElementById('storeShopCardOpacity');const wheelSlider=document.getElementById('storeRouletteCardOpacity');if(shopSlider)shopSlider.value=Math.round(Number(cardStyle.shop_opacity??.82)*100);if(wheelSlider)wheelSlider.value=Math.round(Number(cardStyle.roulette_opacity??.82)*100);const shopVal=document.getElementById('storeShopCardOpacityValue');const wheelVal=document.getElementById('storeRouletteCardOpacityValue');if(shopVal)shopVal.textContent=(shopSlider?.value||82)+'%';if(wheelVal)wheelVal.textContent=(wheelSlider?.value||82)+'%';
- const bgs=storefrontSettings.backgrounds||{};['home','shop','roulette'].forEach(key=>{const bg=bgs[key]||{};const prefix={home:'Home',shop:'Shop',roulette:'Roulette'}[key];const enabled=document.getElementById('storeBg'+prefix+'Enabled');const image=document.getElementById('storeBg'+prefix+'ImageUrl');const overlay=document.getElementById('storeBg'+prefix+'Overlay');const value=document.getElementById('storeBg'+prefix+'OverlayValue');if(enabled)enabled.checked=bg.enabled===true;if(image)image.value=bg.image_url||'';if(overlay)overlay.value=Math.round(Number(bg.overlay??.58)*100);if(value)value.textContent=(overlay?.value||58)+'%';previewStorefrontImage('storeBg'+prefix+'Preview',bg.image_url||'');});
- const b=storefrontSettings.banner||{};
- document.getElementById('storeBannerEnabled').checked=b.enabled===true;
- document.getElementById('storeBannerTitle').value=b.title||'';
- document.getElementById('storeBannerSubtitle').value=b.subtitle||'';
- document.getElementById('storeBannerImageUrl').value=b.image_url||'';
- previewStorefrontImage('storeBannerPreview',b.image_url);
+ const cardStyle=storefrontSettings.cardStyle||{};
+ const shopSlider=document.getElementById('storeShopCardOpacity');
+ const wheelSlider=document.getElementById('storeRouletteCardOpacity');
+ if(shopSlider)shopSlider.value=Math.round(Number(cardStyle.shop_opacity??.82)*100);
+ if(wheelSlider)wheelSlider.value=Math.round(Number(cardStyle.roulette_opacity??.82)*100);
+ const shopVal=document.getElementById('storeShopCardOpacityValue');
+ const wheelVal=document.getElementById('storeRouletteCardOpacityValue');
+ if(shopVal)shopVal.textContent=(shopSlider?.value||82)+'%';
+ if(wheelVal)wheelVal.textContent=(wheelSlider?.value||82)+'%';
+ const bgs=storefrontSettings.backgrounds||{};
+ ['home','shop','roulette'].forEach(key=>{const bg=bgs[key]||{};const prefix={home:'Home',shop:'Shop',roulette:'Roulette'}[key];const enabled=document.getElementById('storeBg'+prefix+'Enabled');const image=document.getElementById('storeBg'+prefix+'ImageUrl');const overlay=document.getElementById('storeBg'+prefix+'Overlay');const value=document.getElementById('storeBg'+prefix+'OverlayValue');if(enabled)enabled.checked=bg.enabled===true;if(image)image.value=bg.image_url||'';if(overlay)overlay.value=Math.round(Number(bg.overlay??.58)*100);if(value)value.textContent=(overlay?.value||58)+'%';previewStorefrontImage('storeBg'+prefix+'Preview',bg.image_url||'');});
+ const banner=storefrontSettings.banner||{};document.getElementById('storeBannerEnabled').checked=banner.enabled===true;document.getElementById('storeBannerTitle').value=banner.title||'';document.getElementById('storeBannerSubtitle').value=banner.subtitle||'';document.getElementById('storeBannerImageUrl').value=banner.image_url||'';previewStorefrontImage('storeBannerPreview',banner.image_url);
  document.getElementById('storeDiamondTitle').value=storefrontSettings.diamond_tile.title||'Алмазы';document.getElementById('storeDiamondImageUrl').value=storefrontSettings.diamond_tile.image_url||'';previewStorefrontImage('storeDiamondPreview',storefrontSettings.diamond_tile.image_url||'');
  const groupHost=document.getElementById('storeGroupEditor');
- if(groupHost){const names=Object.keys(storefrontDefaults.groups);groupHost.innerHTML=names.map((name,pi)=>'<div style="margin:12px 0"><b>'+escapeWalletText(name)+'</b>'+((storefrontSettings.groups[name]||storefrontDefaults.groups[name]).map((item,ii)=>'<div class="storefront-tile-editor"><div>'+(item.image_url?'<img src="'+escapeWalletText(item.image_url)+'" alt="">':'<div style="width:60px;height:60px;border-radius:10px;background:#1c3424;display:grid;place-items:center;font-size:24px">🎁</div>')+'</div><div><label class="muted">Название</label><input class="admin-form" type="text" id="storeGroupTitle'+pi+'_'+ii+'" value="'+escapeWalletText(item.title)+'"><label class="muted">Ссылка на картинку</label><input class="admin-form" type="text" id="storeGroupImage'+pi+'_'+ii+'" value="'+escapeWalletText(item.image_url||'')+'"><label class="photo-input">📷 Загрузить изображение <input type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadStorefrontImage(this,\'group\','+pi+','+ii+')"></label></div></div>').join('')+'</div>').join('');}
-
+ if(groupHost){const names=Object.keys(storefrontDefaults.groups);groupHost.innerHTML=names.map((name,pi)=>{const items=storefrontSettings.groups[name]||storefrontDefaults.groups[name];const rows=items.map((item,ii)=>{const picture=item.image_url?'<img src="'+escapeWalletText(item.image_url)+'" alt="">':'<div style="width:60px;height:60px;border-radius:10px;background:#1c3424;display:grid;place-items:center;font-size:24px">🎁</div>';return '<div class="storefront-tile-editor"><div>'+picture+'</div><div><label class="muted">Название</label><input class="admin-form" type="text" id="storeGroupTitle'+pi+'_'+ii+'" value="'+escapeWalletText(item.title)+'"><label class="muted">Ссылка на картинку</label><input class="admin-form" type="text" id="storeGroupImage'+pi+'_'+ii+'" value="'+escapeWalletText(item.image_url||'')+'"><label class="photo-input">📷 Загрузить изображение <input type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadStorefrontImage(this,&#39;group&#39;,'+pi+','+ii+')"></label></div></div>';}).join('');return '<div style="margin:12px 0"><b>'+escapeWalletText(name)+'</b>'+rows+'</div>';}).join('');}
  const host=document.getElementById('storeHomeTileEditor');if(!host)return;
- host.innerHTML=(storefrontSettings.tiles||[]).map((x,i)=>'<div class="storefront-tile-editor"><div>'+(x.image_url?'<img src="'+escapeWalletText(x.image_url)+'" alt="">':'<div style="width:60px;height:60px;border-radius:10px;background:#1c3424;display:grid;place-items:center;font-size:28px">🎮</div>')+'</div><div><label class="muted">Название иконки</label><input class="admin-form" type="text" id="storeTileTitle'+i+'" value="'+escapeWalletText(x.title)+'"><label class="muted">Ссылка на картинку</label><input class="admin-form" type="text" id="storeTileImage'+i+'" value="'+escapeWalletText(x.image_url||'')+'" placeholder="URL картинки"><label class="photo-input">📷 Загрузить картинку <input type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadStorefrontImage(this,\'tile\','+i+')"></label><label class="muted"><input type="checkbox" id="storeTileEnabled'+i+'" '+(x.enabled!==false?'checked':'')+'> Показывать на главной</label><small class="muted">Открывает: '+escapeWalletText(x.target)+'</small></div></div>').join('');
+ host.innerHTML=(storefrontSettings.tiles||[]).map((item,index)=>{const picture=item.image_url?'<img src="'+escapeWalletText(item.image_url)+'" alt="">':'<div style="width:60px;height:60px;border-radius:10px;background:#1c3424;display:grid;place-items:center;font-size:28px">🎮</div>';return '<div class="storefront-tile-editor"><div>'+picture+'</div><div><label class="muted">Название иконки</label><input class="admin-form" type="text" id="storeTileTitle'+index+'" value="'+escapeWalletText(item.title)+'"><label class="muted">Ссылка на картинку</label><input class="admin-form" type="text" id="storeTileImage'+index+'" value="'+escapeWalletText(item.image_url||'')+'" placeholder="URL картинки"><label class="photo-input">📷 Загрузить картинку <input type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadStorefrontImage(this,&#39;tile&#39;,'+index+')"></label><label class="muted"><input type="checkbox" id="storeTileEnabled'+index+'" '+(item.enabled!==false?'checked':'')+'> Показывать на главной</label><small class="muted">Открывает: '+escapeWalletText(item.target)+'</small></div></div>';}).join('');
 }
 async function loadStorefrontAdmin(){
  const notice=document.getElementById('storefrontNotice');if(notice)notice.textContent='Загружаем оформление…';
@@ -1182,11 +1185,23 @@ async function paymentApi(action,extra={}){if(!tg?.initData)throw new Error('О�
 let selectedManualPayment=null;
 async function loadManualPaymentMethods(){const host=document.getElementById('manualPaymentMethods');if(!host)return;try{const data=await paymentApi('methods_get');const methods=data.methods||[];host.innerHTML=methods.length?methods.map(m=>'<button class="topup-option" style="width:100%;margin:5px 0;text-align:left" onclick="selectManualPayment(\''+escapeWalletText(m.id)+'\')">'+escapeWalletText(m.title)+'</button>').join(''):'<div class="empty">Пока нет доступных способов оплаты. Администратор скоро добавит реквизиты.</div>';window.manualPaymentMethods=methods;}catch(e){host.innerHTML='<div class="empty">'+escapeWalletText(e.message)+'</div>';}}
 function selectManualPayment(id){
- const m=(window.manualPaymentMethods||[]).find(x=>x.id===id);if(!m)return;selectedManualPayment=m;
- const d=m.details||{},rows=[['Банк',d.bank],['Номер карты',d.card_number],['Номер телефона',d.wallet_number],['Получатель',d.recipient]].filter(x=>x[1]);
+ const methods=window.manualPaymentMethods||[];
+ const method=methods.find(item=>item.id===id);
+ if(!method)return;
+ selectedManualPayment=method;
+ const details=method.details||{};
+ const rows=[['Банк',details.bank],['Номер карты',details.card_number],['Номер телефона',details.wallet_number],['Получатель',details.recipient]].filter(row=>row[1]);
  const host=document.getElementById('selectedPaymentDetails');
- host.innerHTML=rows.length?rows.map(([label,value])=>'<div class="payment-detail-row"><div class="payment-detail-main"><div class="payment-detail-label">'+escapeWalletText(label)+'</div><div class="payment-detail-value">'+escapeWalletText(value)+'</div></div><button type="button" class="payment-copy-btn" data-copy="'+encodeURIComponent(String(value))+'" onclick="copyPaymentDetail(this)">Копировать</button></div>').join('')+(m.instructions?'<div class="payment-detail-row"><div class="payment-detail-main"><div class="payment-detail-label">Инструкция</div><div class="payment-detail-value" style="font-size:14px;font-weight:600">'+escapeWalletText(m.instructions)+'</div></div><button type="button" class="payment-copy-btn" data-copy="'+encodeURIComponent(String(m.instructions))+'" onclick="copyPaymentDetail(this)">Копировать</button></div>'):'<div class="muted">Реквизиты пока не заполнены. Обратись к администратору.</div>';
- document.getElementById('selectedPaymentTitle').textContent=m.title;
+ let detailsHtml='';
+ rows.forEach(row=>{
+  const label=row[0],value=row[1];
+  detailsHtml+='<div class="payment-detail-row"><div class="payment-detail-main"><div class="payment-detail-label">'+escapeWalletText(label)+'</div><div class="payment-detail-value">'+escapeWalletText(value)+'</div></div><button type="button" class="payment-copy-btn" data-copy="'+encodeURIComponent(String(value))+'" onclick="copyPaymentDetail(this)">Копировать</button></div>';
+ });
+ if(method.instructions){
+  detailsHtml+='<div class="payment-detail-row"><div class="payment-detail-main"><div class="payment-detail-label">Инструкция</div><div class="payment-detail-value" style="font-size:14px;font-weight:600">'+escapeWalletText(method.instructions)+'</div></div><button type="button" class="payment-copy-btn" data-copy="'+encodeURIComponent(String(method.instructions))+'" onclick="copyPaymentDetail(this)">Копировать</button></div>';
+ }
+ host.innerHTML=detailsHtml||'<div class="muted">Реквизиты пока не заполнены. Обратись к администратору.</div>';
+ document.getElementById('selectedPaymentTitle').textContent=method.title;
  document.getElementById('manualPaymentForm').style.display='block';
  document.getElementById('manualTopupNotice').textContent='Переведи деньги по указанным реквизитам. После перевода отправь заявку.';
 }
