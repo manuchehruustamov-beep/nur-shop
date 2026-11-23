@@ -292,7 +292,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #54aa
 <h2 class="section-title" id="categoryTitle">Каталог</h2>
 <p class="muted" id="categoryDescription" style="text-align:center;margin:-10px 0 20px">Выбери нужный раздел</p>
 <div class="tiles" id="categoryTiles"></div>
-<div class="panel" id="categoryProducts" style="display:none"><h2 id="productsTitle">Товары</h2><div id="categoryProductList"></div></div>
+<div class="panel" id="categoryProducts" style="display:none"><h2 id="productsTitle">Товары</h2><div id="categoryProductList"></div></div><div class="panel" id="catalogOrderBox" style="display:none"><h2 id="catalogOrderTitle">Оформление заказа</h2><div id="catalogOrderProduct"></div><label class="muted" for="catalogGameId">Твой игровой ID Free Fire</label><input class="admin-form" id="catalogGameId" maxlength="40" inputmode="numeric" placeholder="Введи игровой ID"><button class="action" id="catalogOrderButton" onclick="submitCatalogOrder()">Отправить заказ</button><p class="muted" id="catalogOrderNotice" aria-live="polite"></p></div>
 <div class="panel" id="vpnPurchasePanel" style="display:none"><h2>Тарифы Happ VPN</h2><div class="vpn-grid" id="vpnGrid"></div><p class="muted">Для подключения используйте приложение Happ. <a href="https://apps.apple.com/us/app/happ-proxy-utility/id6504287215" style="color:#00e6b0" target="_blank">Открыть Happ в App Store</a>. Реальные VPN-серверы подключим отдельно.</p></div>
 <div class="panel" id="categoryCart"><h2>Корзина</h2><div id="cartItems" class="empty">Корзина пока пуста</div><div class="total"><span>Итого</span><b id="cartTotal">0 ₽</b></div><button class="action" onclick="checkout()">Сформировать заказ</button></div>
 </section>
@@ -320,7 +320,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #54aa
 
 <section class="page" id="adminPage">
 <div class="admin-head"><h2 class="section-title" style="margin:0;text-align:left">Админ-панель</h2><button onclick="adminLogout()">Выйти</button></div>
-<div class="panel"><div class="admin-head"><h2 style="margin:0">💳 Способы оплаты и реквизиты</h2><button class="admin-secondary" type="button" onclick="startNewPaymentMethod()">＋ Добавить способ</button></div><p class="muted">Добавляй новые способы оплаты и меняй реквизиты в любое время. Выключенные способы не показываются покупателям.</p><div id="paymentMethodEditor" style="display:none;margin-top:14px;padding:14px;border:1px solid #681326;border-radius:14px;background:#170a0e"><div class="admin-head"><b id="paymentMethodEditorTitle">Новый способ оплаты</b><button class="admin-secondary" type="button" onclick="closePaymentMethodEditor()">Закрыть</button></div><div class="admin-form-grid"><select class="admin-form" id="payMethodType"><option value="ru_card">Банковская карта РФ</option><option value="bank_transfer">Банковский перевод</option><option value="wallet">Электронный кошелёк</option></select><input class="admin-form" id="payMethodTitle" placeholder="Название способа оплаты"><input class="admin-form" id="payMethodBank" placeholder="Банк / платёжная система"><input class="admin-form" id="payMethodCard" placeholder="Номер карты"><input class="admin-form" id="payMethodWallet" placeholder="Номер кошелька / телефон"><input class="admin-form" id="payMethodRecipient" placeholder="Имя получателя"><textarea class="admin-form" id="payMethodInstructions" placeholder="Инструкция покупателю"></textarea><label class="muted"><input type="checkbox" id="payMethodEnabled"> Показывать покупателям</label><button class="action" onclick="savePaymentMethod()">Сохранить способ оплаты</button></div></div><div id="adminPaymentMethods" style="margin-top:14px"><div class="empty">Загружаем способы оплаты…</div></div><p class="muted" id="adminPaymentNotice" aria-live="polite"></p></div><div class="panel"><h2>🧾 Заявки на пополнение</h2><button class="admin-secondary" onclick="loadAdminTopups()">↻ Обновить заявки</button><div id="adminTopupRequests" style="margin-top:12px"><div class="empty">Загрузка заявок…</div></div><p class="muted" id="adminTopupNotice" aria-live="polite"></p></div><div class="panel"><h2>🎁 Настройки призов рулетки</h2><p class="muted">Для каждого из 12 призов можно изменить название и фотографию прямо здесь. Нажми «Фото приза» и выбери JPG, PNG или WebP до 2 МБ — фото сохранится сразу. Названия сохраняются отдельной кнопкой. Вероятности меняются отдельно; их общая сумма должна быть ровно 100%.</p><div id="adminPrizeEditor"></div><div class="info-card"><span>Сумма вероятностей</span><strong id="adminProbabilityTotal">100%</strong></div><button class="action" onclick="saveWheelPrizes()">Сохранить призы и вероятности</button><button class="action" style="margin-top:8px;background:linear-gradient(90deg,#173d66,#087fff);color:#fff" onclick="saveWheelPrizeLabels()">Сохранить только названия призов</button><p class="muted" id="adminPrizeNotice" aria-live="polite"></p></div>
+<div class="panel"><div class="admin-head"><h2 style="margin:0">💳 Способы оплаты и реквизиты</h2><button class="admin-secondary" type="button" onclick="startNewPaymentMethod()">＋ Добавить способ</button></div><p class="muted">Добавляй новые способы оплаты и меняй реквизиты в любое время. Выключенные способы не показываются покупателям.</p><div id="paymentMethodEditor" style="display:none;margin-top:14px;padding:14px;border:1px solid #681326;border-radius:14px;background:#170a0e"><div class="admin-head"><b id="paymentMethodEditorTitle">Новый способ оплаты</b><button class="admin-secondary" type="button" onclick="closePaymentMethodEditor()">Закрыть</button></div><div class="admin-form-grid"><select class="admin-form" id="payMethodType"><option value="ru_card">Банковская карта РФ</option><option value="bank_transfer">Банковский перевод</option><option value="wallet">Электронный кошелёк</option></select><input class="admin-form" id="payMethodTitle" placeholder="Название способа оплаты"><input class="admin-form" id="payMethodBank" placeholder="Банк / платёжная система"><input class="admin-form" id="payMethodCard" placeholder="Номер карты"><input class="admin-form" id="payMethodWallet" placeholder="Номер кошелька / телефон"><input class="admin-form" id="payMethodRecipient" placeholder="Имя получателя"><textarea class="admin-form" id="payMethodInstructions" placeholder="Инструкция покупателю"></textarea><label class="muted"><input type="checkbox" id="payMethodEnabled"> Показывать покупателям</label><button class="action" onclick="savePaymentMethod()">Сохранить способ оплаты</button></div></div><div id="adminPaymentMethods" style="margin-top:14px"><div class="empty">Загружаем способы оплаты…</div></div><p class="muted" id="adminPaymentNotice" aria-live="polite"></p></div><div class="panel" id="adminCatalogPanel"><div class="admin-head"><h2 style="margin:0">🎮 Каталог Free Fire</h2><button class="admin-secondary" onclick="loadAdminCatalog()">↻ Обновить</button></div><p class="muted">Добавляй наборы, эмоции и новые разделы. Покупатель отправит игровой ID, а ты увидишь заказ здесь и выдашь товар вручную.</p><div class="info-card"><b>＋ Добавить новый раздел / иконку</b><input class="admin-form" id="catalogNewCategoryTitle" placeholder="Название раздела, например Скины FF"><input class="admin-form" id="catalogNewCategoryIcon" placeholder="Иконка, например 🎮" value="🎮"><input class="admin-form" id="catalogNewCategoryImage" placeholder="Ссылка на картинку (необязательно)"><button class="admin-secondary" onclick="saveNewCatalogCategory()">Добавить иконку</button><p class="muted" id="catalogCategoryNotice"></p></div><div class="info-card"><b>＋ Добавить набор / эмоцию / товар</b><select class="admin-form" id="catalogProductCategory"></select><input class="admin-form" id="catalogProductTitle" placeholder="Название товара"><textarea class="admin-form" id="catalogProductDescription" placeholder="Описание товара (необязательно)"></textarea><input class="admin-form" id="catalogProductPrice" type="number" min="1" step="0.01" placeholder="Цена, ₽"><input class="admin-form" id="catalogProductImage" placeholder="Ссылка на изображение (необязательно)"><button class="action" onclick="saveCatalogProduct()">Сохранить товар</button><p class="muted" id="catalogProductNotice"></p></div><h3>Товары в каталоге</h3><div id="adminCatalogProducts"><div class="empty">Загрузка…</div></div><h3 style="margin-top:20px">📦 Заказы покупателей</h3><div id="adminCatalogOrders"><div class="empty">Загрузка…</div></div><p class="muted" id="adminCatalogOrderNotice"></p></div><div class="panel"><h2>🧾 Заявки на пополнение</h2><button class="admin-secondary" onclick="loadAdminTopups()">↻ Обновить заявки</button><div id="adminTopupRequests" style="margin-top:12px"><div class="empty">Загрузка заявок…</div></div><p class="muted" id="adminTopupNotice" aria-live="polite"></p></div><div class="panel"><h2>🎁 Настройки призов рулетки</h2><p class="muted">Для каждого из 12 призов можно изменить название и фотографию прямо здесь. Нажми «Фото приза» и выбери JPG, PNG или WebP до 2 МБ — фото сохранится сразу. Названия сохраняются отдельной кнопкой. Вероятности меняются отдельно; их общая сумма должна быть ровно 100%.</p><div id="adminPrizeEditor"></div><div class="info-card"><span>Сумма вероятностей</span><strong id="adminProbabilityTotal">100%</strong></div><button class="action" onclick="saveWheelPrizes()">Сохранить призы и вероятности</button><button class="action" style="margin-top:8px;background:linear-gradient(90deg,#173d66,#087fff);color:#fff" onclick="saveWheelPrizeLabels()">Сохранить только названия призов</button><p class="muted" id="adminPrizeNotice" aria-live="polite"></p></div>
 <div class="panel"><h2>🎯 Персональный приз</h2><p class="muted">Найди пользователя по Telegram ID или username и назначь ему приз на следующее вращение.</p><input class="admin-form" id="adminUserQuery" placeholder="Telegram ID или @username" autocomplete="off"><button class="action" onclick="searchWheelUser()">Найти пользователя</button><div id="adminUserSearchResult"></div><div style="margin-top:12px"><select class="admin-form" id="adminAssignedPrize"></select></div><button class="action" onclick="assignWheelPrize()">Назначить на следующее вращение</button><p class="muted" id="adminAssignmentNotice" aria-live="polite"></p><h2 style="margin-top:20px">Активные назначения</h2><div id="adminAssignments"><div class="empty">Загрузка…</div></div></div>
 <div class="panel"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><h2 style="margin:0">📡 Выигрыши в реальном времени</h2><span id="adminHistoryLive" style="font-size:10px;color:#65e6a3">● LIVE</span></div><p class="muted">Последние 100 вращений. Список автоматически обновляется каждые 5 секунд.</p><button class="admin-secondary" onclick="loadWheelWinHistory()">↻ Обновить сейчас</button><div id="adminWinHistory" style="margin-top:12px"><div class="empty">Загрузка выигрышей…</div></div><p class="muted" id="adminHistoryUpdated"></p></div>
 <div class="admin-note">Все изменения проверяются сервером. Персональный приз списывается автоматически после следующего успешного вращения.</div>
@@ -353,7 +353,7 @@ async function openAdminAuth(){
   if(data.is_admin!==true)throw new Error('Доступ запрещён.');
   adminUnlocked=true;adminAssignments=data.assignments||[];
   applyWheelPrizes(data.wheel_prizes||[]);
-  renderAdminPrizes();renderAdminAssignments();loadAdminPaymentMethods();loadAdminTopups();
+  renderAdminPrizes();renderAdminAssignments();loadAdminPaymentMethods();loadAdminTopups();loadAdminCatalog();
   closeAdminAuth();showPage('admin');
   await loadWheelWinHistory();
   if(adminHistoryTimer)clearInterval(adminHistoryTimer);
@@ -595,6 +595,13 @@ function freeFireCategoryArt(item){
  const art='<svg viewBox="0 0 220 140" role="img" aria-label="Реалистичный голубой бриллиант"><defs><linearGradient id="nurGemTop" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffffff"/><stop offset=".24" stop-color="#bff8ff"/><stop offset=".55" stop-color="#4ccfff"/><stop offset="1" stop-color="#1261c9"/></linearGradient><linearGradient id="nurGemLeft" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f4ffff"/><stop offset="1" stop-color="#43bfff"/></linearGradient><linearGradient id="nurGemRight" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#68eaff"/><stop offset="1" stop-color="#123caa"/></linearGradient><linearGradient id="nurGemFace" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#dfffff"/><stop offset=".42" stop-color="#49caff"/><stop offset="1" stop-color="#1647b9"/></linearGradient><filter id="nurGemGlow"><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><ellipse cx="110" cy="119" rx="57" ry="8" fill="#16aaff" opacity=".24"/><g filter="url(#nurGemGlow)"><path d="M54 28 82 12h56l28 16 18 28-74 72L36 56z" fill="url(#nurGemTop)" stroke="#e8ffff" stroke-width="2.5" stroke-linejoin="round"/><path d="m54 28 28-16-8 36-38 8z" fill="#d9ffff" stroke="#fff" stroke-width="1.5"/><path d="m82 12 28 36H74z" fill="#ffffff" opacity=".92"/><path d="m82 12 56 0-28 36z" fill="#8ceeff"/><path d="m138 12 28 16 18 28-38-8z" fill="#42bfff"/><path d="m74 48 36 0-74 8z" fill="#c9ffff"/><path d="m110 48 36 0 38 8-74 62z" fill="url(#nurGemRight)"/><path d="m74 48 36 0-74 8 74 62z" fill="url(#nurGemLeft)"/><path d="m36 56 74 62 0-70z" fill="#83eaff" opacity=".8"/><path d="m110 48 74 8-74 62z" fill="url(#nurGemFace)"/><path d="m74 48 36 0 36 0-36 70z" fill="#d5ffff" opacity=".42"/><path d="M54 28 82 12h56l28 16M36 56h148M74 48l36 70 36-70" fill="none" stroke="#fff" stroke-width="2" opacity=".95"/><path d="m83 17 20 0" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".9"/><path d="m28 20 4 10 10 4-10 4-4 10-4-10-10-4 10-4zM190 82l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" fill="#fff" opacity=".95"/></g></svg>';
  return art;
 }
+let manualCatalogData={categories:[],products:[]};
+let selectedManualCatalogProduct=null;
+async function loadManualCatalogData(){
+ const data=await paymentApi('catalog_get');
+ manualCatalogData={categories:data.categories||[],products:data.products||[]};
+ return manualCatalogData;
+}
 function openCategory(name){
  showPage('category');
  document.getElementById('categoryTitle').textContent=name;
@@ -603,11 +610,12 @@ function openCategory(name){
  const vpn=name==='Happ VPN';
  document.getElementById('vpnPurchasePanel').style.display=vpn?'block':'none';
  document.getElementById('categoryProducts').style.display='none';
- tiles.style.display=vpn?'none':'grid';
+ document.getElementById('catalogOrderBox').style.display='none';
  document.getElementById('categoryCart').style.display=vpn?'block':'none';
- if(vpn){desc.textContent='Выбери срок подписки Happ VPN';renderCart();return;}
+ if(vpn){desc.textContent='Выбери срок подписки Happ VPN';tiles.style.display='none';renderCart();return;}
+ tiles.style.display='grid';
+ if(name==='Free Fire'){desc.textContent='Выбери нужный раздел Free Fire';loadFreeFireCategoryTiles();return;}
  const groups={
- 'Free Fire':['Алмазы'],
  'PUBG Mobile':['UC','Ваучеры','Наборы и предметы'],
  'Mobile Legends':['Алмазы','Пропуски','Наборы и предметы'],
  'Steam':['Пополнение Steam','Подарочные карты'],
@@ -616,7 +624,56 @@ function openCategory(name){
  };
  const items=groups[name]||['Товары','Услуги'];
  desc.textContent='Выбери, что хочешь приобрести';
- tiles.innerHTML=items.map((item,i)=>'<button class="tile'+(name==='Free Fire'?' ff-wide':'')+'" style="border:0;background:transparent;padding:0;cursor:pointer" onclick="showCategoryProducts(\''+name+'\',\''+item+'\')"><div class="tile-image ff-art-wrap '+'ff-art-diamond ff-art-combo'+'">'+freeFireCategoryArt(item)+'</div><span class="tile-label">'+(name==='Free Fire'?'Алмазы и ваучер':item)+'</span></button>').join('');
+ tiles.innerHTML=items.map((item)=>'<button class="tile" style="border:0;background:transparent;padding:0;cursor:pointer" onclick="showCategoryProducts(\''+name+'\',\''+item+'\')"><div class="tile-image"><span style="font-size:42px">'+(item==='Алмазы'?'💎':'🎁')+'</span></div><span class="tile-label">'+item+'</span></button>').join('');
+}
+async function loadFreeFireCategoryTiles(){
+ const tiles=document.getElementById('categoryTiles');
+ tiles.innerHTML='<div class="empty">Загружаем разделы Free Fire…</div>';
+ try{
+  const data=await loadManualCatalogData();
+  const diamond='<button class="tile" style="border:0;background:transparent;padding:0;cursor:pointer" onclick="showCategoryProducts(\'Free Fire\',\'Алмазы\')"><div class="tile-image ff-art-wrap ff-art-diamond">'+freeFireCategoryArt('Алмазы')+'</div><span class="tile-label">Алмазы</span></button>';
+  const extra=data.categories.map(c=>'<button class="tile" style="border:0;background:transparent;padding:0;cursor:pointer" onclick="openManualCatalogCategory(\''+c.id+'\')"><div class="tile-image">'+(c.image_url?'<img src="'+fazerEscape(c.image_url)+'" alt="">':'<span style="font-size:42px">'+fazerEscape(c.icon||'🎮')+'</span>')+'</div><span class="tile-label">'+fazerEscape(c.title)+'</span></button>').join('');
+  tiles.innerHTML=diamond+extra;
+ }catch(e){tiles.innerHTML='<div class="empty">'+fazerEscape(e.message||'Не удалось загрузить разделы')+'</div>';}
+}
+async function openManualCatalogCategory(categoryId){
+ const category=manualCatalogData.categories.find(x=>x.id===categoryId);
+ if(!category)return;
+ document.getElementById('categoryTitle').textContent=category.title;
+ document.getElementById('categoryDescription').textContent='Выбери товар, чтобы посмотреть цену и оформить заказ';
+ document.getElementById('categoryTiles').style.display='none';
+ document.getElementById('categoryCart').style.display='none';
+ document.getElementById('catalogOrderBox').style.display='none';
+ const panel=document.getElementById('categoryProducts');
+ const host=document.getElementById('categoryProductList');
+ document.getElementById('productsTitle').textContent=category.title;
+ panel.style.display='block';
+ const products=manualCatalogData.products.filter(p=>p.category_id===categoryId);
+ host.innerHTML=products.length?products.map(p=>'<button class="history-row" style="width:100%;display:flex;align-items:center;gap:12px;text-align:left;color:inherit" onclick="selectManualCatalogProduct(\''+p.id+'\')">'+(p.image_url?'<img src="'+fazerEscape(p.image_url)+'" alt="" style="width:66px;height:66px;object-fit:cover;border-radius:10px">':'<span style="font-size:32px">'+fazerEscape(category.icon||'🎁')+'</span>')+'<span style="flex:1"><b>'+fazerEscape(p.title)+'</b><small>'+fazerEscape(p.description||'')+'</small></span><b>'+formatRuble(p.price_rub)+'</b></button>').join(''):'<div class="empty">Пока товаров нет. Скоро добавим!</div>';
+ panel.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function selectManualCatalogProduct(productId){
+ const product=manualCatalogData.products.find(p=>p.id===productId);
+ if(!product)return;
+ selectedManualCatalogProduct=product;
+ document.getElementById('catalogOrderTitle').textContent='Оформление заказа';
+ document.getElementById('catalogOrderProduct').innerHTML='<div class="info-card"><b>'+fazerEscape(product.title)+'</b><strong style="display:block;margin-top:8px">'+formatRuble(product.price_rub)+'</strong><p class="muted">'+fazerEscape(product.description||'')+'</p></div>';
+ document.getElementById('catalogGameId').value='';
+ document.getElementById('catalogOrderNotice').textContent='Укажи игровой ID Free Fire. После отправки заказ появится у администратора.';
+ document.getElementById('catalogOrderBox').style.display='block';
+ document.getElementById('catalogOrderBox').scrollIntoView({behavior:'smooth',block:'center'});
+}
+async function submitCatalogOrder(){
+ const button=document.getElementById('catalogOrderButton'),notice=document.getElementById('catalogOrderNotice');
+ const playerId=document.getElementById('catalogGameId').value.trim();
+ if(!selectedManualCatalogProduct){notice.textContent='Сначала выбери товар.';return;}
+ if(playerId.length<3){notice.textContent='Введи корректный игровой ID.';return;}
+ button.disabled=true;button.textContent='Отправляем заказ…';
+ try{
+  const data=await paymentApi('catalog_order_create',{productId:selectedManualCatalogProduct.id,playerId});
+  notice.textContent='Заказ отправлен! Номер: '+data.order.id+'. Ожидай обработки.';
+  button.textContent='Заказ отправлен';
+ }catch(e){notice.textContent=e.message||'Не удалось отправить заказ.';button.disabled=false;button.textContent='Отправить заказ';}
 }
 
 const FAZER_CATALOG_URL='https://dfonsybvktrgwryovmua.supabase.co/functions/v1/fazercards-catalog';
@@ -795,6 +852,7 @@ async function loadFazerOffers(index){
 function showCategoryProducts(category,item){
  const panel=document.getElementById('categoryProducts');
  document.getElementById('productsTitle').textContent=item;
+ document.getElementById('catalogOrderBox').style.display='none';
  if(category==='Free Fire'&&(item==='Алмазы'||item==='Ваучеры')){
   panel.style.display='block';
   fazerSelectedSection=item;
