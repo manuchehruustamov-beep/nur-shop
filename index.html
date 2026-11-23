@@ -106,7 +106,7 @@
 <p class="wheel-subtitle" id="wheelSpinInfo">Открывай призы NUR SHOP: лента остановится на карточке с выигрышем.</p>
 <div class="wheel-strip-stage"><div class="wheel-strip-marker"><span>▼</span></div><div class="wheel-strip-viewport" id="wheelStripViewport"><div class="wheel-strip-track" id="wheelStripTrack"></div></div><div class="wheel-strip-caption"><span>← ЛЕНТА ПРИЗОВ →</span><span>ОСТАНОВКА ПО ЦЕНТРУ</span></div></div>
 <button class="action wheel-spin" id="wheelSpinButton" style="display:none" onclick="spinWheel()">✦ КРУТИТЬ РУЛЕТКУ</button>
-<div class="wheel-result" id="wheelResult" aria-live="polite">Проверяем права администратора…<small>Бесплатная прокрутка доступна только администраторам.</small></div>
+<div class="wheel-result" id="wheelResult" aria-live="polite">Проверяем права администратора…<small>Каждый пользователь может использовать бесплатную попытку раз в день.</small></div>
 </div>
 <div class="panel wheel-prize-panel"><h2>Призы в ленте</h2><p class="muted">В каждой карточке предусмотрено отдельное место для фотографии и названия приза. Сами призы и результат вращения пока остаются под управлением текущего сервера.</p><div class="wheel-prize-list" id="wheelPrizeList"></div></div>
 </section>
@@ -408,13 +408,13 @@ function updateWalletUI(snapshot,isAdmin=false,prizes=null){
  if(!snapshot)return;walletSnapshot=snapshot;
  const spinButton=document.getElementById('wheelSpinButton');
  const wheelResult=document.getElementById('wheelResult');
- if(spinButton)spinButton.style.display=isAdmin?'':'none';
- if(wheelResult&&!isAdmin)wheelResult.innerHTML='🔒 Бесплатная прокрутка доступна только администраторам.';
+ if(spinButton)spinButton.style.display='';
+ if(wheelResult&&!isAdmin)wheelResult.innerHTML='🎁 Твоя попытка доступна!<small>Одна бесплатная попытка в день. Дополнительные попытки появятся после специальных призов.</small>';
 
  const value=formatRuble(snapshot.balance||0);
  ['balanceAmount','headerBalance','profileBalanceAmount'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=value;});
  const info=document.getElementById('wheelSpinInfo');
- if(info)info.textContent='Баланс: '+value+' · Дополнительных попыток: '+(snapshot.bonus_spins||0)+(isAdmin?' · Администратор: бесплатные прокрутки без лимита':' · Рулетка доступна администраторам');
+ if(info)info.textContent='Баланс: '+value+' · Дополнительных попыток: '+(snapshot.bonus_spins||0)+(isAdmin?' · Администратор: бесплатные прокрутки без лимита':' · Одна бесплатная попытка в день');
  renderBalanceHistory();
 }
 async function loadWallet(){
