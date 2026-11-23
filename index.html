@@ -725,7 +725,8 @@ const storefrontDefaults={
   {key:'telegram',title:'Telegram',image_url:'https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/9f/7b/e2/9f7be203-d819-9ca9-b0ca-28591f0741c3/AppIcon-0-0-85-220-0-0-4-0-2x-sRGB.png/1200x630bb.png',target:'Telegram',enabled:true},
   {key:'stars',title:'Звёзды Telegram',image_url:'./assets/telegram-stars.svg',target:'Звёзды Telegram',enabled:true},
   {key:'happ',title:'Happ VPN',image_url:'',target:'Happ VPN',enabled:true},
-  {key:'community',title:'Баннер TT',image_url:'',target:'https://t.me/+no2Tl-ysru84YzRi',enabled:true}
+  {key:'community',title:'Сообщество NUR SHOP',image_url:'',target:'https://t.me/+no2Tl-ysru84YzRi',enabled:true},
+  {key:'tiktok_banner',title:'Баннер в TikTok',image_url:'',target:'Баннер в TikTok',enabled:true}
  ],
  groups:{
   'PUBG Mobile':[{key:'UC',title:'UC',image_url:''},{key:'Ваучеры',title:'Ваучеры',image_url:''},{key:'Наборы и предметы',title:'Наборы и предметы',image_url:''}],
@@ -758,7 +759,7 @@ function renderHomeStorefront(){
  if(host){host.style.display=banner.enabled&&banner.image_url?'block':'none';document.getElementById('homeBannerTitle').textContent=banner.title||'';document.getElementById('homeBannerSubtitle').textContent=banner.subtitle||'';document.getElementById('homeBannerImage').src=banner.image_url||'';}
  const tiles=document.getElementById('homeTiles');if(!tiles)return;
  const visibleTiles=(Array.isArray(storefrontSettings.tiles)&&storefrontSettings.tiles.length?storefrontSettings.tiles:storefrontDefaults.tiles);tiles.innerHTML=visibleTiles.filter(x=>x.enabled!==false).map(x=>{
-  const img=x.image_url?'<img src="'+escapeWalletText(x.image_url)+'" alt="" loading="lazy">':'<span style="font-size:42px">'+(x.key==='happ'?'🛡️':x.key==='community'?'🎨':x.key==='stars'?'⭐':x.key==='telegram'?'✈️':x.key==='pubg'?'🎯':'🔥')+'</span>';
+  const img=x.image_url?'<img src="'+escapeWalletText(x.image_url)+'" alt="" loading="lazy">':'<span style="font-size:42px">'+(x.key==='happ'?'🛡️':x.key==='tiktok_banner'?'🖼️':x.key==='community'?'💬':x.key==='stars'?'⭐':x.key==='telegram'?'✈️':x.key==='pubg'?'🎯':'🔥')+'</span>';
   const inner='<div class="tile-image">'+img+'</div><span class="tile-label">'+escapeWalletText(x.title)+'</span>';
   return /^https:\/\//i.test(x.target||'')?'<a class="tile" href="'+escapeWalletText(x.target)+'" target="_blank" rel="noopener">'+inner+'</a>':'<button class="tile" type="button" style="border:0;background:transparent;padding:0;cursor:pointer" onclick="openCategory('+escapeWalletText(JSON.stringify(x.target||x.title))+')">'+inner+'</button>';
  }).join('');
