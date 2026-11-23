@@ -565,6 +565,8 @@ function openCategory(name){
 }
 
 const FAZER_CATALOG_URL='https://dfonsybvktrgwryovmua.supabase.co/functions/v1/fazercards-catalog';
+const FAZER_USD_TO_RUB=82;
+function fazerFormatRubles(usd){const value=Number(usd);return Number.isFinite(value)?Math.ceil(value*FAZER_USD_TO_RUB).toLocaleString('ru-RU')+' ₽':'уточняется';}
 let fazerCategoriesCache=null;
 let fazerSelectedCategory=null;
 function fazerEscape(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
@@ -657,7 +659,7 @@ async function loadFazerOffers(index){
   const offers=Array.isArray(data.offers)?data.offers:[];
   const fields=Array.isArray(data.fields)?data.fields:[];
   const fieldHtml=fields.length?'<div class="fazer-fields">'+fields.map((field,i)=>'<label>'+fazerEscape(field.label||field.key||('Поле '+(i+1)))+'<input type="'+(field.type==='number'?'number':'text')+'" autocomplete="off" placeholder="'+fazerEscape(field.placeholder||field.label||'Введи данные игрока')+'" data-fazer-field="'+fazerEscape(field.key||'')+'"></label>').join('')+'</div>':'';
-  const offerHtml=offers.length?'<div class="fazer-offer-grid">'+offers.map(x=>'<div class="fazer-offer"><b>'+fazerEscape(fazerRussianName(x.name||x.title||'Набор'))+'</b><small>Оптовая цена: '+(x.price_usd!=null?'$'+fazerEscape(x.price_usd):'уточняется')+'</small></div>').join('')+'</div>':'<div class="fazer-note">Поставщик пока не вернул наборы для этой категории.</div>';
+  const offerHtml=offers.length?'<div class="fazer-offer-grid">'+offers.map(x=>'<div class="fazer-offer"><b>'+fazerEscape(fazerRussianName(x.name||x.title||'Набор'))+'</b><small>Оптовая цена: '+fazerFormatRubles(x.price_usd)+'</small></div>').join('')+'</div>':'<div class="fazer-note">Поставщик пока не вернул наборы для этой категории.</div>';
   area.innerHTML='<h3 style="margin:18px 0 8px">'+fazerEscape(fazerRussianName(data.name||category.name||'Free Fire'))+'</h3>'+fieldHtml+offerHtml+'<div class="fazer-note">Каталог подключён в режиме просмотра. Заказы, списание баланса и оплата пока отключены — ничего не будет куплено случайно.</div>';
  }catch(error){
   area.innerHTML='<div class="fazer-note">Не удалось загрузить наборы: '+fazerEscape(error.message)+'</div><button class="action" onclick="loadFazerOffers('+index+')">Повторить</button>';
