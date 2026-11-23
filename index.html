@@ -721,7 +721,6 @@ function applyPageBackground(page){
  target.style.backgroundImage=bg.enabled&&url?'linear-gradient(rgba(5,9,20,'+shade+'),rgba(5,9,20,'+shade+')),url("'+url+'")':'';
  target.style.backgroundSize='cover';target.style.backgroundPosition='center';target.style.backgroundAttachment='fixed';target.style.backgroundRepeat='no-repeat';
 }
-}
 function renderHomeStorefront(){
  applyPageBackground('home');
  const banner=storefrontSettings.banner||{},host=document.getElementById('homeBanner');
