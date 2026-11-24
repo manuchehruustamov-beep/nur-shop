@@ -362,6 +362,11 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #54aa
 #wheelPage .roulette-orb{border-radius:50%;overflow:visible}
 #wheelPage .roulette-orb img{display:block;width:82%;height:82%;flex:none;aspect-ratio:1/1;object-fit:cover;border-radius:50%;overflow:hidden;background:radial-gradient(circle,#332b20,#08090f);border:1px solid #c6a45d;box-shadow:0 0 9px #e8c46b55;clip-path:circle(50% at 50% 50%)}
 #wheelPage .roulette-orb .orb-fallback{width:82%;height:82%;border-radius:50%;display:grid;place-items:center;border:1px solid #c6a45d;background:radial-gradient(circle,#332b20,#08090f)}
+/* Fill the existing gold prize ring with the full circular image */
+#wheelPage .roulette-orb{isolation:isolate;border:1.5px solid #c6a45d;background:radial-gradient(circle,#332b20,#08090f);overflow:visible}
+#wheelPage .roulette-orb img{position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;aspect-ratio:1/1;object-fit:cover;object-position:center;border:0;border-radius:50%;box-shadow:none;clip-path:circle(50% at 50% 50%);filter:none;z-index:0}
+#wheelPage .roulette-orb .orb-fallback{position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:50%;display:grid;place-items:center;z-index:0}
+#wheelPage .roulette-orb small{z-index:1}
 /* Paid roulette prize icons: larger images and labels below each circle */
 #wheelPage .roulette-board{margin-bottom:32px}
 #wheelPage .roulette-orb{overflow:visible;justify-content:flex-start;gap:0}
