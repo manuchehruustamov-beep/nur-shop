@@ -813,8 +813,13 @@ async function animateFreeWheelStrip(winnerIndex){
  const item=track.querySelector('[data-free-strip-index="'+winningPosition+'"]');
  if(!item)throw new Error('Не удалось подготовить бесплатную ленту.');
  const itemRect=item.getBoundingClientRect(),viewportRect=viewport.getBoundingClientRect();
- const distance=itemRect.left+itemRect.width/2-(viewportRect.left+viewport.clientWidth/2);
- if(!Number.isFinite(distance)||distance<100)throw new Error('Не удалось рассчитать движение бесплатной рулетки.');
+ let distance=itemRect.left+itemRect.width/2-(viewportRect.left+viewport.clientWidth/2);
+ if(!Number.isFinite(distance)||distance<=0){
+  const trackRect=track.getBoundingClientRect();
+  distance=item.offsetLeft+item.offsetWidth/2-(viewport.clientWidth/2);
+  if(!Number.isFinite(distance)||distance<=0)distance=track.scrollWidth-viewport.clientWidth-8;
+ }
+ if(!Number.isFinite(distance)||distance<=0)throw new Error('Не удалось подготовить движение бесплатной рулетки.');
  await new Promise(resolve=>{
   let finished=false;
   const finish=()=>{if(finished)return;finished=true;track.removeEventListener('transitionend',onEnd);item.classList.add('winning');resolve();};
@@ -845,7 +850,8 @@ async function freeSpinWheel(){
  }catch(error){
   result.innerHTML='⚠️ '+escapeWalletText(error.message||'Бесплатная попытка сейчас недоступна.')+'<small>Бесплатная рулетка не списывает деньги.</small>';
  }finally{
-  freeWheelBusy=false;btn.disabled=false;btn.textContent='🎁 КРУТИТЬ БЕСПЛАТНО';
+  freeWheelBusy=false;
+  renderFreeWheelCooldown();
  }
 }
 function renderWheelPrizes(){
@@ -1507,13 +1513,27 @@ async function walletApi(action,extra={}){
  return data;
 }
 let wheelCooldownInterval=null;
-function renderWheelCooldown(){
- const button=document.getElementById('wheelSpinButton'),info=document.getElementById('wheelSpinInfo');
+let freeWheelCooldownInterval=null;
+function renderFreeWheelCooldown(){
+ const button=document.getElementById('freeWheelSpinButton'),info=document.getElementById('freeWheelInfo');
  if(!button||!walletSnapshot)return;
- const price=Number(wheelConfig.spin_price||199),balance=Number(walletSnapshot.balance||0);
- button.disabled=!walletIsAdmin&&balance<price;
- if(info)info.textContent='Твой баланс: '+formatRuble(balance)+' · '+(walletIsAdmin?'Для администратора тестовый запуск бесплатный.':balance>=price?'Нажми кнопку — стоимость попытки будет списана с баланса.':'Недостаточно средств. Пополни баланс на '+formatRuble(price-balance)+'.');
- renderWheelPurchaseButton();
+ if(walletIsAdmin){
+  button.disabled=false;
+  if(info)info.textContent='Для администратора все бесплатные прокрутки доступны без ожидания.';
+  return;
+ }
+ const until=walletSnapshot.next_spin_at?new Date(walletSnapshot.next_spin_at).getTime():0;
+ const left=Math.max(0,until-Date.now());
+ if(left>0){
+  const hours=Math.floor(left/3600000),minutes=Math.floor((left%3600000)/60000),seconds=Math.floor((left%60000)/1000);
+  button.disabled=true;
+  button.textContent='⏳ ДОСТУПНО ЧЕРЕЗ '+String(hours).padStart(2,'0')+':'+String(minutes).padStart(2,'0')+':'+String(seconds).padStart(2,'0');
+  if(info)info.textContent='Ты уже использовал бесплатную попытку. Следующая станет доступна через '+String(hours).padStart(2,'0')+':'+String(minutes).padStart(2,'0')+':'+String(seconds).padStart(2,'0')+'.';
+ }else{
+  button.disabled=false;
+  button.textContent='🎁 КРУТИТЬ БЕСПЛАТНО';
+  if(info)info.textContent='Одна бесплатная попытка каждые 24 часа. Результат определяется сервером.';
+ }
 }
 function updateWalletUI(snapshot,isAdmin=false,prizes=null,config=null){
  if(prizes)applyWheelPrizes(prizes);
@@ -1524,8 +1544,11 @@ function updateWalletUI(snapshot,isAdmin=false,prizes=null,config=null){
  const value=formatRuble(snapshot.balance||0);
  ['balanceAmount','headerBalance','profileBalanceAmount'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=value;});
  renderWheelCooldown();
+ renderFreeWheelCooldown();
  if(wheelCooldownInterval)clearInterval(wheelCooldownInterval);
  wheelCooldownInterval=setInterval(renderWheelCooldown,1000);
+ if(freeWheelCooldownInterval)clearInterval(freeWheelCooldownInterval);
+ freeWheelCooldownInterval=setInterval(renderFreeWheelCooldown,1000);
  renderBalanceHistory();
 }
 async function loadWallet(){
