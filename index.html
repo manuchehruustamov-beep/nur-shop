@@ -376,14 +376,14 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #54aa
 <div class="wheel-kicker">✦ NUR SHOP / PREMIUM LUCKY WHEEL ✦</div>
 <h3 style="margin:8px 0;color:#f4d8ff">ПЛАТНАЯ РУЛЕТКА</h3>
 <p class="wheel-subtitle" id="wheelSpinInfo">Открывай призы NUR SHOP: лента остановится на карточке с выигрышем.</p>
-<div class="roulette-price">Одна попытка — <strong id="wheelPriceLabel">111 ₽</strong></div>
+<div class="roulette-price">Одна попытка — <strong id="wheelPriceLabel">199 ₽</strong></div>
 <div class="roulette-board" id="rouletteBoard" aria-label="Призы рулетки">
  <div class="roulette-center">
   <div class="roulette-account" id="wheelAccount1"><div class="account-placeholder">＋</div><span>АККАУНТ 1</span></div>
   <div class="roulette-account" id="wheelAccount2"><div class="account-placeholder">＋</div><span>АККАУНТ 2</span></div>
  </div>
 </div>
-<button class="action wheel-spin" id="wheelSpinButton" style="display:none" onclick="spinWheel()">✦ КРУТИТЬ ЗА 111 ₽</button>
+<button class="action wheel-spin" id="wheelSpinButton" style="display:none" onclick="spinWheel()">✦ КРУТИТЬ ЗА 199 ₽</button>
 <button type="button" class="roulette-details-trigger" id="rouletteDetailsToggle" onclick="toggleRouletteDetails()" aria-expanded="false"><span class="trigger-icon">🎁</span><span>ПРИЗЫ И ИНФОРМАЦИЯ</span><span id="rouletteDetailsChevron">⌄</span></button>
 <div class="roulette-details-panel" id="rouletteDetailsPanel" aria-hidden="true">
  <h3>🎁 Все призы рулетки</h3>
@@ -391,7 +391,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #54aa
  <h3 style="margin-top:18px">👤 Аккаунты в центре рулетки</h3>
  <div id="rouletteAccountDetails"></div>
 </div>
-<div class="wheel-result" id="wheelResult" aria-live="polite">Проверяем права администратора…<small>Стоимость попытки — 111 ₽ с внутреннего баланса.</small></div>
+<div class="wheel-result" id="wheelResult" aria-live="polite">Проверяем права администратора…<small>Стоимость попытки — 199 ₽ с внутреннего баланса.</small></div>
 </div>
 <div class="panel wheel-prize-panel"><h2>Призы рулетки</h2><p class="muted">Эти призы отображаются маленькими значками по кругу. Настрой изображения, названия и шансы ниже.</p><div class="wheel-prize-list" id="wheelPrizeList"></div></div>
 </section>
@@ -748,8 +748,8 @@ function renderRouletteBoard(){
 }
 function applyWheelConfig(config){
  if(!config)return;wheelConfig={...wheelConfig,...config};
- const price=document.getElementById('wheelPriceLabel');if(price)price.textContent=Number(wheelConfig.spin_price||111).toLocaleString('ru-RU')+' ₽';
- const input=document.getElementById('wheelSpinPrice');if(input)input.value=Number(wheelConfig.spin_price||111);
+ const price=document.getElementById('wheelPriceLabel');if(price)price.textContent=Number(wheelConfig.spin_price||199).toLocaleString('ru-RU')+' ₽';
+ const input=document.getElementById('wheelSpinPrice');if(input)input.value=Number(wheelConfig.spin_price||199);
  [1,2].forEach(slot=>{
   const url=wheelConfig['account_'+slot+'_image_url'];
   const target=document.getElementById('wheelAccount'+slot);
@@ -850,7 +850,7 @@ function renderWheelPrizes(){
 }
 function renderWheelPurchaseButton(){
  const button=document.getElementById('wheelSpinButton');if(!button)return;
- button.textContent=walletIsAdmin?'👑 ТЕСТОВОЕ ВРАЩЕНИЕ (АДМИН)':'✦ КРУТИТЬ ЗА '+Number(wheelConfig.spin_price||111).toLocaleString('ru-RU')+' ₽';
+ button.textContent=walletIsAdmin?'👑 ТЕСТОВОЕ ВРАЩЕНИЕ (АДМИН)':'✦ КРУТИТЬ ЗА '+Number(wheelConfig.spin_price||199).toLocaleString('ru-RU')+' ₽';
 }
 async function animatePrizeGlow(winnerIndex){
  const nodes=[...document.querySelectorAll('.roulette-orb')];
@@ -1505,7 +1505,7 @@ let wheelCooldownInterval=null;
 function renderWheelCooldown(){
  const button=document.getElementById('wheelSpinButton'),info=document.getElementById('wheelSpinInfo');
  if(!button||!walletSnapshot)return;
- const price=Number(wheelConfig.spin_price||111),balance=Number(walletSnapshot.balance||0);
+ const price=Number(wheelConfig.spin_price||199),balance=Number(walletSnapshot.balance||0);
  button.disabled=!walletIsAdmin&&balance<price;
  if(info)info.textContent='Твой баланс: '+formatRuble(balance)+' · '+(walletIsAdmin?'Для администратора тестовый запуск бесплатный.':balance>=price?'Нажми кнопку — стоимость попытки будет списана с баланса.':'Недостаточно средств. Пополни баланс на '+formatRuble(price-balance)+'.');
  renderWheelPurchaseButton();
