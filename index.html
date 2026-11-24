@@ -296,6 +296,11 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #54aa
 #wheelPage .wheel-subtitle{color:#d8c6e8}
 .roulette-price{display:flex;justify-content:center;align-items:center;gap:8px;margin:12px auto 14px;color:#fff;font-weight:900;font-size:18px}
 .roulette-price strong{font-size:24px;color:#ffd66e;text-shadow:0 0 14px #ffbd42}
+.wheel-card.paid-wheel-card{position:relative;overflow:hidden;border:1px solid #a855f7;background:radial-gradient(ellipse at 50% 0%,#7130a8 0%,#40146b 42%,#1b0b31 100%);box-shadow:0 0 18px #a855f766,0 0 38px #7e22ce44,inset 0 0 34px #c084fc22}
+.wheel-card.paid-wheel-card:before{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:linear-gradient(135deg,#d8b4fe12,transparent 42%,#a855f722);z-index:0}
+.wheel-card.paid-wheel-card>*{position:relative;z-index:1}
+.wheel-card.paid-wheel-card .roulette-price{color:#ead7ff}
+.wheel-card.paid-wheel-card .roulette-price strong{color:#f0abfc;text-shadow:0 0 12px #d946ef99}
 .roulette-board{position:relative;width:min(100%,390px);aspect-ratio:1;margin:0 auto 14px;border-radius:50%;background:radial-gradient(circle,#21132f 0 31%,#100b1d 32% 56%,#211333 57% 59%,#090711 60%);border:1px solid #8c55b4;box-shadow:0 0 28px #a84dff38,inset 0 0 32px #b94cff20}
 .roulette-board:before,.roulette-board:after{content:"";position:absolute;inset:5%;border-radius:50%;border:1px dashed #b77bdb66;pointer-events:none}
 .roulette-board:after{inset:16%;border-style:solid;border-color:#8b4ab255}
