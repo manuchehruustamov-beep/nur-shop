@@ -1287,30 +1287,24 @@ async function fazerTestOrderApi(extra={}){
  if(!response.ok||data.ok===false)throw new Error(data.error||'Не удалось создать тестовый заказ.');
  return data;
 }
-async function createFazerTestOrder(index){
- const offers=window.fazerCurrentOffers||[];
- const offer=offers[index];
- const area=document.getElementById('fazerOffersArea');
- if(!offer||!area)return;
- const fields={};
- area.querySelectorAll('[data-fazer-field]').forEach(input=>{fields[input.dataset.fazerField]=String(input.value||'').trim();});
- if(Object.values(fields).some(v=>!v)){alert('Заполни все поля игрока перед тестированием.');return;}
- const button=area.querySelector('[data-test-order="'+index+'"]');
- if(button){button.disabled=true;button.textContent='Проверяем…';}
+async function saveFazerRetailPrice(index){
+ const offer=(window.fazerCurrentOffers||[])[index];if(!offer)return;
+ const value=Number(document.getElementById('fazerRetailPrice'+index)?.value);
+ if(!Number.isFinite(value)||value<=0){alert('Укажи цену продажи больше нуля.');return;}
+ try{await fazerOrdersApi('set_offer_price',{category_id:String(fazerSelectedCategory.category_id),offer_id:String(offer.offer_id||offer.id||''),retail_price_rub:value});await loadFazerOffers((window.fazerVisibleCategories||[]).indexOf(fazerSelectedCategory));}
+ catch(e){alert(e.message||'Не удалось сохранить цену.');}
+}
+async function createFazerLiveOrder(index){
+ const offer=(window.fazerCurrentOffers||[])[index],area=document.getElementById('fazerOffersArea');if(!offer||!area)return;
+ const fields={};area.querySelectorAll('[data-fazer-field]').forEach(input=>{fields[input.dataset.fazerField]=String(input.value||'').trim();});
+ if(Object.values(fields).some(v=>!v)){alert('Заполни все поля игрока.');return;}
+ const button=area.querySelector('[data-live-order="'+index+'"]');if(button){button.disabled=true;button.textContent='Оформляем…';}
  try{
-  const result=await fazerTestOrderApi({category_id:fazerSelectedCategory.category_id,offer_id:String(offer.offer_id||offer.id||''),fields,request_id:crypto.randomUUID()});
-  const order=result.order||{};
-  area.querySelectorAll('[data-test-order]').forEach(b=>{b.disabled=true;if(b===button)b.textContent='✓ Тест создан';});
-  const notice=document.createElement('div');
-  notice.className='fazer-note';
-  notice.innerHTML='<b>✓ Тестовый заказ создан: '+fazerEscape(order.test_order_number||'')+'</b><br>'+fazerEscape(order.offer_name||'Free Fire')+'<br>Статус: '+fazerEscape(order.status||'test_created')+'<br>Оптовая цена (расчёт): '+(order.supplier_price_rub==null?'уточняется':fazerEscape(formatRuble(order.supplier_price_rub)))+'<br><b>Деньги не списаны. Поставщику заказ не отправлялся.</b>';
-  area.prepend(notice);
-  notice.scrollIntoView({behavior:'smooth',block:'center'});
-  loadFazerTestOrderHistory();
- }catch(error){
-  if(button){button.disabled=false;button.textContent='Создать тестовый заказ';}
-  const notice=document.createElement('div');notice.className='fazer-note';notice.textContent=error.message||'Ошибка тестового заказа.';area.appendChild(notice);
- }
+  const result=await fazerOrdersApi('create_order',{category_id:String(fazerSelectedCategory.category_id),offer_id:String(offer.offer_id||offer.id||''),fields,request_id:crypto.randomUUID()});
+  const order=result.order||{};const note=document.createElement('div');note.className='fazer-note';
+  note.textContent=result.message||('Заказ NUR SHOP: '+(order.order_number||result.order_id||'принят')+'. Статус: '+(order.status||result.status||'processing'));
+  area.prepend(note);if(button){button.textContent='Заказ принят';button.disabled=true;}if(typeof loadWallet==='function')loadWallet();
+ }catch(e){if(button){button.disabled=false;button.textContent='Купить';}const note=document.createElement('div');note.className='fazer-note';note.textContent=e.message||'Не удалось оформить заказ.';area.prepend(note);}
 }
 async function loadFazerFreeFireCatalog(){
  const box=document.getElementById('categoryProductList');
@@ -1354,11 +1348,14 @@ async function loadFazerOffers(index){
   // Не фильтруем по названию: у поставщика названия SKU могут отличаться.
   const offers=Array.isArray(data.offers)?data.offers:[];
   const fields=Array.isArray(data.fields)?data.fields:[];
+  const priceData=await fazerOrdersApi('offer_prices',{category_id:String(category.category_id)});
+  const retailPrices=Object.fromEntries((priceData.prices||[]).map(p=>[String(p.offer_id),Number(p.retail_price_rub)]));
   window.fazerCurrentOffers=offers;
   window.fazerCurrentFields=fields;
+  window.fazerRetailPrices=retailPrices;
   const fieldHtml=fields.length?'<div class="fazer-fields">'+fields.map((field,i)=>'<label>'+fazerEscape(field.label||field.key||('Поле '+(i+1)))+'<input type="'+(field.type==='number'?'number':'text')+'" autocomplete="off" placeholder="'+fazerEscape(field.placeholder||field.label||'Введи данные игрока')+'" data-fazer-field="'+fazerEscape(field.key||'')+'"></label>').join('')+'</div>':'';
-  const offerHtml=offers.length?'<div class="fazer-offer-grid">'+offers.map((x,i)=>'<div class="fazer-offer"><b>'+fazerEscape(fazerRussianName(x.name||x.title||'Набор'))+'</b><small>Цена: '+fazerOfferPrice(x)+'</small><button class="action" data-test-order="'+i+'" onclick="createFazerTestOrder('+i+')">Создать тестовый заказ</button></div>').join('')+'</div>':'<div class="fazer-note">Поставщик пока не вернул наборы для этой категории.</div>';
-  area.innerHTML=fieldHtml+offerHtml+'<div class="fazer-note"><b>ТЕСТОВЫЙ РЕЖИМ.</b> Кнопка создаёт только тестовую запись в NUR SHOP. Реальный заказ FazerCards не отправляется, баланс покупателя и поставщика не списывается.</div>';
+  const offerHtml=offers.length?'<div class="fazer-offer-grid">'+offers.map((x,i)=>{const oid=String(x.offer_id||x.id||''),retail=retailPrices[oid],admin=walletIsAdmin===true;return '<div class="fazer-offer"><b>'+fazerEscape(fazerRussianName(x.name||x.title||'Набор'))+'</b><small>Закупка: '+fazerOfferPrice(x)+'</small>'+(retail?'<strong style="display:block;margin:6px 0;color:#00e6b0">Цена продажи: '+formatRuble(retail)+'</strong>':'<small style="color:#ffbd69">Цена продажи не настроена</small>')+(admin?'<input type="number" min="1" step="1" id="fazerRetailPrice'+i+'" placeholder="Цена продажи, ₽" value="'+(retail||'')+'" style="width:100%;margin:8px 0"><button class="action" onclick="saveFazerRetailPrice('+i+')">Сохранить цену</button>':'<button class="action" data-live-order="'+i+'" '+(!retail?'disabled':'')+' onclick="createFazerLiveOrder('+i+')">'+(retail?'Купить':'Скоро доступно')+'</button>')+'</div>';}).join('')+'</div>':'<div class="fazer-note">Поставщик пока не вернул наборы для этой категории.</div>';
+  area.innerHTML=fieldHtml+offerHtml;
  }catch(error){
   area.innerHTML='<div class="fazer-note">Не удалось загрузить наборы: '+fazerEscape(error.message)+'</div><button class="action" onclick="loadFazerOffers('+index+')">Повторить</button>';
  }
