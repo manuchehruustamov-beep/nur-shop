@@ -364,17 +364,26 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #54aa
 </section>
 <section class="page" id="wheelPage">
 <h2 class="section-title">Рулетка удачи</h2>
-<div class="wheel-card">
-<div class="wheel-kicker">✦ NUR SHOP / LUCKY WHEEL ✦</div>
+<div class="wheel-card free-wheel-card" id="freeWheelCard">
+ <div class="wheel-kicker">✦ NUR SHOP / FREE WHEEL ✦</div>
+ <h3 style="margin:8px 0;color:#f4d8ff">БЕСПЛАТНАЯ РУЛЕТКА</h3>
+ <p class="wheel-subtitle" id="freeWheelInfo">Одна бесплатная попытка каждые 24 часа. Результат определяется сервером.</p>
+ <div class="wheel-strip-stage"><div class="wheel-strip-marker"><span>▼</span></div><div class="wheel-strip-viewport" id="freeWheelStripViewport"><div class="wheel-strip-track" id="freeWheelStripTrack"></div></div><div class="wheel-strip-caption"><span>← БЕСПЛАТНЫЕ ПРИЗЫ →</span><span>ОСТАНОВКА ПО ЦЕНТРУ</span></div></div>
+ <button class="action wheel-spin" id="freeWheelSpinButton" onclick="freeSpinWheel()">🎁 КРУТИТЬ БЕСПЛАТНО</button>
+ <div class="wheel-result" id="freeWheelResult" aria-live="polite">Твоя бесплатная попытка ждёт тебя!<small>После использования следующая будет доступна через 24 часа.</small></div>
+</div>
+<div class="wheel-card paid-wheel-card">
+<div class="wheel-kicker">✦ NUR SHOP / PREMIUM LUCKY WHEEL ✦</div>
+<h3 style="margin:8px 0;color:#f4d8ff">ПЛАТНАЯ РУЛЕТКА</h3>
 <p class="wheel-subtitle" id="wheelSpinInfo">Открывай призы NUR SHOP: лента остановится на карточке с выигрышем.</p>
-<div class="roulette-price">Одна попытка — <strong id="wheelPriceLabel">199 ₽</strong></div>
+<div class="roulette-price">Одна попытка — <strong id="wheelPriceLabel">111 ₽</strong></div>
 <div class="roulette-board" id="rouletteBoard" aria-label="Призы рулетки">
  <div class="roulette-center">
   <div class="roulette-account" id="wheelAccount1"><div class="account-placeholder">＋</div><span>АККАУНТ 1</span></div>
   <div class="roulette-account" id="wheelAccount2"><div class="account-placeholder">＋</div><span>АККАУНТ 2</span></div>
  </div>
 </div>
-<button class="action wheel-spin" id="wheelSpinButton" style="display:none" onclick="spinWheel()">✦ КРУТИТЬ ЗА 199 ₽</button>
+<button class="action wheel-spin" id="wheelSpinButton" style="display:none" onclick="spinWheel()">✦ КРУТИТЬ ЗА 111 ₽</button>
 <button type="button" class="roulette-details-trigger" id="rouletteDetailsToggle" onclick="toggleRouletteDetails()" aria-expanded="false"><span class="trigger-icon">🎁</span><span>ПРИЗЫ И ИНФОРМАЦИЯ</span><span id="rouletteDetailsChevron">⌄</span></button>
 <div class="roulette-details-panel" id="rouletteDetailsPanel" aria-hidden="true">
  <h3>🎁 Все призы рулетки</h3>
@@ -382,7 +391,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #54aa
  <h3 style="margin-top:18px">👤 Аккаунты в центре рулетки</h3>
  <div id="rouletteAccountDetails"></div>
 </div>
-<div class="wheel-result" id="wheelResult" aria-live="polite">Проверяем права администратора…<small>Стоимость попытки — 199 ₽ с внутреннего баланса.</small></div>
+<div class="wheel-result" id="wheelResult" aria-live="polite">Проверяем права администратора…<small>Стоимость попытки — 111 ₽ с внутреннего баланса.</small></div>
 </div>
 <div class="panel wheel-prize-panel"><h2>Призы рулетки</h2><p class="muted">Эти призы отображаются маленькими значками по кругу. Настрой изображения, названия и шансы ниже.</p><div class="wheel-prize-list" id="wheelPrizeList"></div></div>
 </section>
@@ -499,7 +508,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #54aa
 <div class="info-card">
  <b>⚙️ Основные настройки рулетки</b>
  <label class="muted" for="wheelSpinPrice" style="display:block;margin-top:10px">Цена одной попытки, ₽</label>
- <input class="admin-form" id="wheelSpinPrice" type="number" min="1" max="100000" step="1" value="199">
+ <input class="admin-form" id="wheelSpinPrice" type="number" min="1" max="100000" step="1" value="111">
  <div class="admin-wheel-account"><div id="wheelAccount1AdminPreview" class="account-preview-empty">АККАУНТ 1</div><div class="admin-account-copy"><b>Аккаунт 1 — фото и информация</b><input id="wheelAccount1Title" maxlength="80" placeholder="Название аккаунта 1"><textarea id="wheelAccount1Description" maxlength="2000" placeholder="Информация об аккаунте 1: что входит, особенности, условия получения"></textarea><label class="photo-input">📷 Загрузить фото <input type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadWheelCenterImage(1,this)"></label></div></div>
  <div class="admin-wheel-account"><div id="wheelAccount2AdminPreview" class="account-preview-empty">АККАУНТ 2</div><div class="admin-account-copy"><b>Аккаунт 2 — фото и информация</b><input id="wheelAccount2Title" maxlength="80" placeholder="Название аккаунта 2"><textarea id="wheelAccount2Description" maxlength="2000" placeholder="Информация об аккаунте 2: что входит, особенности, условия получения"></textarea><label class="photo-input">📷 Загрузить фото <input type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadWheelCenterImage(2,this)"></label></div></div>
  <button class="action" onclick="saveWheelConfig()">Сохранить настройки рулетки</button>
@@ -725,7 +734,7 @@ const wheelPrizes=[
 ];
 let wheelBusy=false;
 const wheelIcons=['💰','💎','🎟️','🔹','🏷️','✨','🔐','🎁','⭐','🎊','🔥','🍀'];
-let wheelConfig={spin_price:199,account_1_image_path:null,account_2_image_path:null,account_1_image_url:null,account_2_image_url:null};
+let wheelConfig={spin_price:111,account_1_image_path:null,account_2_image_path:null,account_1_image_url:null,account_2_image_url:null};
 function renderRouletteBoard(){
  const board=document.getElementById('rouletteBoard');if(!board)return;
  board.querySelectorAll('.roulette-orb').forEach(x=>x.remove());
@@ -739,7 +748,7 @@ function renderRouletteBoard(){
 }
 function applyWheelConfig(config){
  if(!config)return;wheelConfig={...wheelConfig,...config};
- const price=document.getElementById('wheelPriceLabel');if(price)price.textContent=Number(wheelConfig.spin_price||199).toLocaleString('ru-RU')+' ₽';
+ const price=document.getElementById('wheelPriceLabel');if(price)price.textContent=Number(wheelConfig.spin_price||111).toLocaleString('ru-RU')+' ₽';
  const input=document.getElementById('wheelSpinPrice');if(input)input.value=Number(wheelConfig.spin_price||199);
  [1,2].forEach(slot=>{
   const url=wheelConfig['account_'+slot+'_image_url'];
@@ -775,6 +784,60 @@ function renderRouletteDetails(){
   const url=wheelConfig['account_'+slot+'_image_url'];
   return '<div class="roulette-detail-card account-detail">'+(url?'<img src="'+escapeWalletText(url)+'" alt="'+escapeWalletText(title)+'">':'<div class="roulette-details-empty">Фото не добавлено</div>')+'<div><b>'+escapeWalletText(title)+'</b><p>'+escapeWalletText(description)+'</p></div></div>';
  }).join('');
+}
+let freeWheelBusy=false;
+function renderFreeWheelStrip(winnerIndex){
+ const track=document.getElementById('freeWheelStripTrack');
+ const viewport=document.getElementById('freeWheelStripViewport');
+ if(!track||!viewport)throw new Error('Не удалось открыть бесплатную ленту рулетки.');
+ const winningPosition=30,total=winningPosition+8,items=[];
+ for(let i=0;i<total;i++){
+  const prizeIndex=i===winningPosition?winnerIndex:Math.floor(Math.random()*wheelPrizes.length);
+  items.push(wheelPrizes[prizeIndex]);
+ }
+ track.style.transition='none';track.style.transform='translateX(0px)';
+ track.innerHTML=items.map((prize,i)=>'<div class="wheel-strip-item" data-free-strip-index="'+i+'"><div class="strip-art">'+(prize.image_url?'<img class="strip-prize-photo" src="'+escapeWalletText(prize.image_url)+'" alt="">':'<span class="strip-photo-placeholder"><i>＋</i><small>ФОТО ПРИЗА</small></span>')+'</div><span class="strip-label">'+escapeWalletText(prize.label)+'</span></div>').join('');
+ void track.offsetWidth;return {track,viewport,winningPosition};
+}
+async function animateFreeWheelStrip(winnerIndex){
+ const {track,viewport,winningPosition}=renderFreeWheelStrip(winnerIndex);
+ await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+ const item=track.querySelector('[data-free-strip-index="'+winningPosition+'"]');
+ if(!item)throw new Error('Не удалось подготовить бесплатную ленту.');
+ const itemRect=item.getBoundingClientRect(),viewportRect=viewport.getBoundingClientRect();
+ const distance=itemRect.left+itemRect.width/2-(viewportRect.left+viewport.clientWidth/2);
+ track.style.transition='transform 6.2s cubic-bezier(.08,.72,.08,1)';
+ await new Promise(resolve=>{
+  let finished=false;
+  const finish=()=>{if(finished)return;finished=true;track.removeEventListener('transitionend',onEnd);item.classList.add('winning');resolve();};
+  const onEnd=e=>{if(e.propertyName==='transform')finish();};
+  track.addEventListener('transitionend',onEnd);track.style.transform='translateX(-'+distance+'px)';
+  setTimeout(finish,6800);
+ });
+}
+async function freeSpinWheel(){
+ if(freeWheelBusy)return;
+ const btn=document.getElementById('freeWheelSpinButton'),result=document.getElementById('freeWheelResult'),info=document.getElementById('freeWheelInfo');
+ freeWheelBusy=true;btn.disabled=true;btn.textContent='ПРОВЕРЯЕМ БЕСПЛАТНУЮ ПОПЫТКУ…';
+ result.innerHTML='Сервер проверяет доступность бесплатной попытки…<small>Деньги с баланса не списываются.</small>';
+ try{
+  const response=await walletApi('free_spin');
+  if(!response.prize)throw new Error('Сервер не вернул результат бесплатной рулетки.');
+  const winner=Number(response.prize.prize_index);
+  if(!Number.isInteger(winner)||winner<0||winner>=wheelPrizes.length)throw new Error('Получен некорректный результат.');
+  updateWalletUI(response.wallet,response.is_admin===true,response.wheel_prizes,response.wheel_config);
+  result.innerHTML='🎁 Бесплатная лента вращается!<small>Ожидай остановки на призе.</small>';
+  await animateFreeWheelStrip(winner);
+  const label=response.prize.prize_label;
+  const note=response.prize.prize_type==='cash'?'Денежный приз зачислен на баланс!':response.prize.prize_type==='non_cash'?'Выигрыш сохранён в истории. Для выдачи потребуется подтверждение магазина.':'Выигрыш сохранён в истории NUR SHOP.';
+  result.innerHTML='🎉 ТВОЙ БЕСПЛАТНЫЙ ПРИЗ: '+escapeWalletText(label)+'<small>'+note+'</small>';
+  if(info)info.textContent='Бесплатная попытка использована. Следующая будет доступна через 24 часа.';
+  renderBalanceHistory();
+ }catch(error){
+  result.innerHTML='⚠️ '+escapeWalletText(error.message||'Бесплатная попытка сейчас недоступна.')+'<small>Бесплатная рулетка не списывает деньги.</small>';
+ }finally{
+  freeWheelBusy=false;btn.disabled=false;btn.textContent='🎁 КРУТИТЬ БЕСПЛАТНО';
+ }
 }
 function renderWheelPrizes(){
  const el=document.getElementById('wheelPrizeList');
@@ -1438,7 +1501,7 @@ let wheelCooldownInterval=null;
 function renderWheelCooldown(){
  const button=document.getElementById('wheelSpinButton'),info=document.getElementById('wheelSpinInfo');
  if(!button||!walletSnapshot)return;
- const price=Number(wheelConfig.spin_price||199),balance=Number(walletSnapshot.balance||0);
+ const price=Number(wheelConfig.spin_price||111),balance=Number(walletSnapshot.balance||0);
  button.disabled=!walletIsAdmin&&balance<price;
  if(info)info.textContent='Твой баланс: '+formatRuble(balance)+' · '+(walletIsAdmin?'Для администратора тестовый запуск бесплатный.':balance>=price?'Нажми кнопку — стоимость попытки будет списана с баланса.':'Недостаточно средств. Пополни баланс на '+formatRuble(price-balance)+'.');
  renderWheelPurchaseButton();
