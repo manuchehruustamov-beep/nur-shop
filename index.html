@@ -17,6 +17,20 @@
 .home-banner img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.58}
 .home-banner-copy{position:relative;z-index:1;display:flex;min-height:130px;flex-direction:column;justify-content:flex-end;gap:5px;padding:18px;background:linear-gradient(0deg,#07111be8,transparent 80%)}
 .home-banner-copy b{font-size:21px;color:#fff}.home-banner-copy span{font-size:13px;color:#d8eaff}
+.home-banner.nur-neon{min-height:188px;margin:17px 0 22px;border:1px solid #6d42ff;border-radius:22px;background:radial-gradient(ellipse at 82% 45%,#243bff 0%,#38118c 25%,transparent 58%),linear-gradient(115deg,#080b1d 0%,#11103a 52%,#080b1d 100%);box-shadow:0 0 0 1px #8b5cff55,0 0 24px #693cff66,0 14px 32px #0009,inset 0 0 28px #4a2bff44}
+.home-banner.nur-neon:before{content:"";position:absolute;inset:0;background:linear-gradient(110deg,#050817 0%,#080b20dd 42%,#130b38aa 100%);z-index:0}
+.home-banner.nur-neon:after{content:"";position:absolute;inset:8px;border:1px solid #a78bfa55;border-radius:16px;pointer-events:none;z-index:2}
+.home-banner.nur-neon img{z-index:0;opacity:.32;mix-blend-mode:screen}
+.home-banner.nur-neon .home-banner-copy{min-height:188px;justify-content:center;gap:8px;padding:22px 20px;background:linear-gradient(90deg,#07091df5 0%,#08091dcc 48%,transparent 100%);max-width:78%}
+.home-banner.nur-neon .home-banner-copy b{font-size:clamp(22px,6vw,29px);font-weight:1000;line-height:1.05;letter-spacing:.3px;text-shadow:0 0 18px #8b5cf6aa}
+.home-banner.nur-neon .home-banner-copy span{font-size:12px;line-height:1.4;color:#d9d4ff}
+.home-banner-art{position:absolute;z-index:1;right:13px;top:50%;transform:translateY(-50%);width:36%;height:145px;display:grid;place-items:center;pointer-events:none}
+.home-banner-art:before,.home-banner-art:after{content:"";position:absolute;width:118px;height:118px;border:1px solid #8b5cf6aa;border-radius:50%;box-shadow:0 0 22px #6d42ff66,inset 0 0 20px #6d42ff44}
+.home-banner-art:after{width:145px;height:145px;border-style:dashed;border-color:#4cc9ff66;animation:nurOrbit 18s linear infinite}
+.home-banner-gem{position:relative;font-size:82px;line-height:1;filter:drop-shadow(0 0 12px #27c8ff) drop-shadow(0 0 28px #693cff);transform:rotate(-9deg)}
+.home-banner-cta{position:relative;z-index:3;display:inline-flex;align-items:center;gap:8px;width:max-content;margin-top:7px;padding:10px 15px;border:1px solid #a78bfa;border-radius:11px;background:linear-gradient(100deg,#5424d8,#1369d8);color:#fff;font-size:11px;font-weight:950;box-shadow:0 0 18px #693cff88}
+@keyframes nurOrbit{to{transform:rotate(360deg)}}
+@media(max-width:380px){.home-banner.nur-neon .home-banner-copy{max-width:82%;padding:18px 15px}.home-banner-art{right:2px;width:34%}.home-banner-gem{font-size:66px}}
 .storefront-preview{min-height:12px;margin-top:8px}.storefront-preview img{display:block;max-width:100%;max-height:130px;object-fit:contain;border-radius:12px;border:1px solid #35543b}
 .storefront-tile-editor{display:grid;grid-template-columns:60px 1fr;gap:9px;padding:10px 0;border-bottom:1px solid #35543b}
 .storefront-tile-editor img{width:60px;height:60px;object-fit:cover;border-radius:10px}
@@ -354,7 +368,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #54aa
 <section class="page active" id="homePage">
 <div class="benefit-strip"><div><b>✦</b><span>Цифровые товары</span></div><div><b>⌁</b><span>Удобный заказ</span></div><div><b>◈</b><span>Поддержка в Telegram</span></div></div>
 <div class="catalog-heading"><div><span>ВЫБИРАЙ СВОЁ</span><h2 id="catalog">Каталог магазина</h2></div><small>NUR SHOP / 01</small></div>
-<div id="homeBanner" class="home-banner" style="display:none"><img id="homeBannerImage" alt=""><div class="home-banner-copy"><b id="homeBannerTitle"></b><span id="homeBannerSubtitle"></span></div></div>
+<div id="homeBanner" class="home-banner nur-neon"><img id="homeBannerImage" alt="" style="display:none"><div class="home-banner-art" aria-hidden="true"><span class="home-banner-gem">💎</span></div><div class="home-banner-copy"><b id="homeBannerTitle">АЛМАЗЫ FREE FIRE</b><span id="homeBannerSubtitle">Пополняй быстро • удобно • безопасно</span><button class="home-banner-cta" type="button" onclick="openCategory('Free Fire')">Купить алмазы <span>↗</span></button></div></div>
 <div class="tiles" id="homeTiles"></div>
 </section>
 <section class="page" id="categoryPage">
@@ -951,7 +965,7 @@ function applyPageBackground(page){
 function renderHomeStorefront(){
  applyPageBackground('home');
  const banner=storefrontSettings.banner||{},host=document.getElementById('homeBanner');
- if(host){host.style.display=banner.enabled&&banner.image_url?'block':'none';document.getElementById('homeBannerTitle').textContent=banner.title||'';document.getElementById('homeBannerSubtitle').textContent=banner.subtitle||'';document.getElementById('homeBannerImage').src=banner.image_url||'';}
+ if(host){host.style.display='block';document.getElementById('homeBannerTitle').textContent=banner.title||'АЛМАЗЫ FREE FIRE';document.getElementById('homeBannerSubtitle').textContent=banner.subtitle||'Пополняй быстро • удобно • безопасно';const bannerImage=document.getElementById('homeBannerImage');bannerImage.src=banner.enabled&&banner.image_url?banner.image_url:'';bannerImage.style.display=banner.enabled&&banner.image_url?'block':'none';}
  const tiles=document.getElementById('homeTiles');if(!tiles)return;
  const visibleTiles=(Array.isArray(storefrontSettings.tiles)&&storefrontSettings.tiles.length?storefrontSettings.tiles:storefrontDefaults.tiles);tiles.innerHTML=visibleTiles.filter(x=>['ff','happ','tiktok_banner'].includes(x.key)).map(x=>{
   const img=x.image_url?'<img src="'+escapeWalletText(x.image_url)+'" alt="" loading="lazy">':'<span style="font-size:42px">'+(x.key==='happ'?'🛡️':x.key==='tiktok_banner'?'🖼️':x.key==='community'?'💬':x.key==='stars'?'⭐':x.key==='telegram'?'✈️':x.key==='pubg'?'🎯':'🔥')+'</span>';
