@@ -1537,6 +1537,8 @@ function renderFreeWheelCooldown(){
   if(info)info.textContent='Одна бесплатная попытка каждые 24 часа. Результат определяется сервером.';
  }
 }
+// Совместимость со старыми вызовами обновления обеих рулеток.
+function renderWheelCooldown(){return renderFreeWheelCooldown();}
 function updateWalletUI(snapshot,isAdmin=false,prizes=null,config=null){
  if(prizes)applyWheelPrizes(prizes);
  if(config)applyWheelConfig(config);
