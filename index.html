@@ -800,7 +800,7 @@ function renderFreeWheelStrip(winnerIndex){
   const prizeIndex=i===winningPosition?winnerIndex:Math.floor(Math.random()*wheelPrizes.length);
   items.push(wheelPrizes[prizeIndex]);
  }
- track.style.transition='none';track.style.transform='translateX(0px)';
+ track.style.direction='ltr';viewport.style.direction='ltr';track.style.flexDirection='row';track.style.transition='none';track.style.transform='translateX(0px)';
  track.innerHTML=items.map((prize,i)=>'<div class="wheel-strip-item" data-free-strip-index="'+i+'"><div class="strip-art">'+(prize.image_url?'<img class="strip-prize-photo" src="'+escapeWalletText(prize.image_url)+'" alt="">':'<span class="strip-photo-placeholder"><i>＋</i><small>ФОТО ПРИЗА</small></span>')+'</div><span class="strip-label">'+escapeWalletText(prize.label)+'</span></div>').join('');
  void track.offsetWidth;return {track,viewport,winningPosition};
 }
@@ -813,11 +813,14 @@ async function animateFreeWheelStrip(winnerIndex){
  const item=track.querySelector('[data-free-strip-index="'+winningPosition+'"]');
  if(!item)throw new Error('Не удалось подготовить бесплатную ленту.');
  const itemRect=item.getBoundingClientRect(),viewportRect=viewport.getBoundingClientRect();
- let distance=itemRect.left+itemRect.width/2-(viewportRect.left+viewport.clientWidth/2);
+ const trackStyle=getComputedStyle(track);
+ const itemCenterInTrack=item.offsetLeft+item.offsetWidth/2;
+ let distance=itemCenterInTrack-viewport.clientWidth/2;
+ if(!Number.isFinite(distance)||distance<=0||trackStyle.direction!=='ltr'){
+  distance=itemRect.left+itemRect.width/2-(viewportRect.left+viewport.clientWidth/2);
+ }
  if(!Number.isFinite(distance)||distance<=0){
-  const trackRect=track.getBoundingClientRect();
-  distance=item.offsetLeft+item.offsetWidth/2-(viewport.clientWidth/2);
-  if(!Number.isFinite(distance)||distance<=0)distance=track.scrollWidth-viewport.clientWidth-8;
+  distance=Math.max(1,Math.min(track.scrollWidth-viewport.clientWidth-8,winningPosition*(112+9)+8+56-viewport.clientWidth/2));
  }
  if(!Number.isFinite(distance)||distance<=0)throw new Error('Не удалось подготовить движение бесплатной рулетки.');
  await new Promise(resolve=>{
