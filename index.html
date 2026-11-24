@@ -319,6 +319,25 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #54aa
 .admin-wheel-account .account-preview-empty{width:76px;height:96px;border:1px dashed #8757a7;border-radius:10px;display:grid;place-items:center;color:#c8a7db;font-size:11px}
 @media(max-width:360px){.roulette-board{width:100%}.roulette-center{width:51%}.roulette-orb{width:18%;height:18%}}
 
+
+/* Details drawer under the static roulette */
+.roulette-details-trigger{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;max-width:340px;margin:12px auto 0;padding:13px 16px;border:1px solid #a85de0;border-radius:14px;background:linear-gradient(100deg,#21112f,#35164b);color:#f7eaff;font-weight:900;box-shadow:0 0 18px #9b4bd633}
+.roulette-details-trigger .trigger-icon{font-size:22px}
+.roulette-details-panel{display:none;margin:14px 0 0;padding:14px;border:1px solid #70408b;border-radius:16px;background:linear-gradient(150deg,#1b1028,#0b0912);box-shadow:inset 0 0 28px #a34cff12}
+.roulette-details-panel.open{display:block}
+.roulette-details-panel h3{margin:4px 0 12px;color:#f1d7ff;font-size:17px}
+.roulette-detail-card{display:grid;grid-template-columns:86px minmax(0,1fr);gap:12px;padding:12px 0;border-bottom:1px solid #57376a;align-items:start}
+.roulette-detail-card:last-child{border-bottom:0}
+.roulette-detail-card img{width:86px;height:86px;object-fit:contain;border-radius:12px;border:1px solid #8f5ca9;background:#100b18}
+.roulette-detail-card.account-detail img{height:116px;object-fit:cover}
+.roulette-detail-card b{display:block;color:#ffe5a4;margin:2px 0 5px}
+.roulette-detail-card p{margin:0;color:#e0d2e9;font-size:13px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere}
+.roulette-details-empty{color:#a995b5;font-size:12px}
+.admin-prize-fields textarea{width:100%;min-height:64px;resize:vertical;border:1px solid #65417a;border-radius:10px;background:#0c0912;color:#fff;padding:10px;font:inherit}
+.admin-account-copy{display:grid;gap:6px;min-width:0}
+.admin-account-copy input,.admin-account-copy textarea{width:100%;box-sizing:border-box;border:1px solid #65417a;border-radius:9px;background:#0c0912;color:#fff;padding:9px;font:inherit}
+.admin-account-copy textarea{min-height:70px;resize:vertical}
+
 </style>
 <style id="ff-art-polish">.tile.ff-wide{grid-column:1/-1;justify-self:center;width:112px;max-width:112px}.tile.ff-wide .ff-art-wrap{width:112px;height:112px;min-height:112px;aspect-ratio:1/1}.tile.ff-wide .tile-label{display:block;width:100%;text-align:center}.ff-art-wrap{position:relative;display:grid!important;place-items:center;overflow:hidden;height:58px;min-height:58px;border:1px solid rgba(105,190,255,.3);border-radius:15px;background:radial-gradient(ellipse at 50% 42%,rgba(24,125,255,.25),rgba(8,14,34,.95) 72%);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 8px 24px rgba(0,0,0,.3)}.ff-art-wrap:before{content:"";position:absolute;inset:4px;border:1px solid rgba(170,225,255,.14);border-radius:11px;transform:skewY(-5deg)}.ff-art-wrap:after{content:"";position:absolute;width:48px;height:48px;border-radius:50%;filter:blur(18px);opacity:.6}.ff-art-wrap svg{position:relative;z-index:1;width:min(100%,220px);height:75px;overflow:visible;filter:drop-shadow(0 3px 7px rgba(0,0,0,.45));transition:transform .25s ease}.ff-art-wrap svg>g:nth-of-type(2){display:none}.ff-art-wrap img.ff-real-hero{position:absolute;z-index:2;left:53%;bottom:-5px;width:34%;height:86px;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 2px 5px #000b)}.ff-art-wrap img.ff-real-pet{position:absolute;z-index:3;left:82%;bottom:0;width:16%;height:53px;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 2px 4px #000b)}.tile:active .ff-art-wrap svg{transform:scale(1.06) rotate(-2deg)}.ff-art-diamond:after{background:#19bfff}.ff-art-voucher{border-color:rgba(255,173,80,.35);background:radial-gradient(ellipse at 50% 42%,rgba(255,111,48,.23),rgba(20,13,31,.96) 72%)}.ff-art-voucher:after{background:#ff783d}.ff-art-voucher:before{border-color:rgba(255,205,120,.18)}</style></head>
 <body>
@@ -356,7 +375,14 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #54aa
  </div>
 </div>
 <button class="action wheel-spin" id="wheelSpinButton" style="display:none" onclick="spinWheel()">✦ КРУТИТЬ ЗА 199 ₽</button>
-<div class="wheel-result" id="wheelResult" aria-live="polite">Проверяем права администратора…<small>Каждый пользователь получает одну бесплатную попытку раз в 24 часа.</small></div>
+<button type="button" class="roulette-details-trigger" id="rouletteDetailsToggle" onclick="toggleRouletteDetails()" aria-expanded="false"><span class="trigger-icon">🎁</span><span>ПРИЗЫ И ИНФОРМАЦИЯ</span><span id="rouletteDetailsChevron">⌄</span></button>
+<div class="roulette-details-panel" id="rouletteDetailsPanel" aria-hidden="true">
+ <h3>🎁 Все призы рулетки</h3>
+ <div id="roulettePrizeDetails"></div>
+ <h3 style="margin-top:18px">👤 Аккаунты в центре рулетки</h3>
+ <div id="rouletteAccountDetails"></div>
+</div>
+<div class="wheel-result" id="wheelResult" aria-live="polite">Проверяем права администратора…<small>Стоимость попытки — 199 ₽ с внутреннего баланса.</small></div>
 </div>
 <div class="panel wheel-prize-panel"><h2>Призы рулетки</h2><p class="muted">Эти призы отображаются маленькими значками по кругу. Настрой изображения, названия и шансы ниже.</p><div class="wheel-prize-list" id="wheelPrizeList"></div></div>
 </section>
@@ -474,8 +500,8 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #54aa
  <b>⚙️ Основные настройки рулетки</b>
  <label class="muted" for="wheelSpinPrice" style="display:block;margin-top:10px">Цена одной попытки, ₽</label>
  <input class="admin-form" id="wheelSpinPrice" type="number" min="1" max="100000" step="1" value="199">
- <div class="admin-wheel-account"><div id="wheelAccount1AdminPreview" class="account-preview-empty">АККАУНТ 1</div><div><b>Фото персонажа / аккаунта 1</b><label class="photo-input">📷 Загрузить фото <input type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadWheelCenterImage(1,this)"></label></div></div>
- <div class="admin-wheel-account"><div id="wheelAccount2AdminPreview" class="account-preview-empty">АККАУНТ 2</div><div><b>Фото персонажа / аккаунта 2</b><label class="photo-input">📷 Загрузить фото <input type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadWheelCenterImage(2,this)"></label></div></div>
+ <div class="admin-wheel-account"><div id="wheelAccount1AdminPreview" class="account-preview-empty">АККАУНТ 1</div><div class="admin-account-copy"><b>Аккаунт 1 — фото и информация</b><input id="wheelAccount1Title" maxlength="80" placeholder="Название аккаунта 1"><textarea id="wheelAccount1Description" maxlength="2000" placeholder="Информация об аккаунте 1: что входит, особенности, условия получения"></textarea><label class="photo-input">📷 Загрузить фото <input type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadWheelCenterImage(1,this)"></label></div></div>
+ <div class="admin-wheel-account"><div id="wheelAccount2AdminPreview" class="account-preview-empty">АККАУНТ 2</div><div class="admin-account-copy"><b>Аккаунт 2 — фото и информация</b><input id="wheelAccount2Title" maxlength="80" placeholder="Название аккаунта 2"><textarea id="wheelAccount2Description" maxlength="2000" placeholder="Информация об аккаунте 2: что входит, особенности, условия получения"></textarea><label class="photo-input">📷 Загрузить фото <input type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadWheelCenterImage(2,this)"></label></div></div>
  <button class="action" onclick="saveWheelConfig()">Сохранить настройки рулетки</button>
  <p class="muted" id="wheelConfigNotice" aria-live="polite"></p>
 </div><div id="adminPrizeEditor"></div><div class="info-card"><span>Сумма вероятностей</span><strong id="adminProbabilityTotal">100%</strong></div><button class="action" onclick="saveWheelPrizes()">Сохранить призы и вероятности</button><button class="action" style="margin-top:8px;background:linear-gradient(90deg,#173d66,#087fff);color:#fff" onclick="saveWheelPrizeLabels()">Сохранить только названия призов</button><p class="muted" id="adminPrizeNotice" aria-live="polite"></p></div>
@@ -524,14 +550,14 @@ function applyWheelPrizes(items){
  if(!Array.isArray(items)||items.length!==12)return;
  items.forEach(item=>{
   const p=wheelPrizes[Number(item.prize_index)];if(!p)return;
-  p.label=String(item.label||p.label);p.weight=Number(item.weight)||0;
+  p.label=String(item.label||p.label);p.description=String(item.description||'');p.weight=Number(item.weight)||0;
   p.image_url=item.image_url||null;p.image_path=item.image_path||null;
  });
  renderWheelPrizes();
 }
 function renderAdminPrizes(){
  const host=document.getElementById('adminPrizeEditor');if(!host)return;
- host.innerHTML=wheelPrizes.map((p,i)=>'<div class="admin-prize-row"><div class="admin-prize-photo" id="adminPrizePhoto'+i+'">'+(p.image_url?'<img src="'+escapeWalletText(p.image_url)+'" alt="">':'ФОТО')+'</div><div class="admin-prize-fields"><input type="text" maxlength="80" value="'+escapeWalletText(p.label)+'" aria-label="Название приза" data-prize-label="'+i+'"><input type="number" min="0" max="100" step="0.1" value="'+Number(p.weight||0)+'" aria-label="Вероятность в процентах" data-prize-weight="'+i+'"><label class="photo-input">📷 Выбрать изображение · JPG/PNG/WebP до 2 МБ <input type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadWheelPrizeImage('+i+',this)"></label></div></div>').join('');
+ host.innerHTML=wheelPrizes.map((p,i)=>'<div class="admin-prize-row"><div class="admin-prize-photo" id="adminPrizePhoto'+i+'">'+(p.image_url?'<img src="'+escapeWalletText(p.image_url)+'" alt="">':'ФОТО')+'</div><div class="admin-prize-fields"><input type="text" maxlength="80" value="'+escapeWalletText(p.label)+'" aria-label="Название приза" data-prize-label="'+i+'"><textarea maxlength="1000" placeholder="Подробная информация о призе" aria-label="Описание приза" data-prize-description="'+i+'">'+escapeWalletText(p.description||'')+'</textarea><input type="number" min="0" max="100" step="0.1" value="'+Number(p.weight||0)+'" aria-label="Вероятность в процентах" data-prize-weight="'+i+'"><label class="photo-input">📷 Выбрать изображение · JPG/PNG/WebP до 2 МБ <input type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadWheelPrizeImage('+i+',this)"></label></div></div>').join('');
  updateAdminProbabilityTotal();
  const select=document.getElementById('adminAssignedPrize');
  if(select)select.innerHTML=wheelPrizes.map((p,i)=>'<option value="'+i+'">'+escapeWalletText(p.label)+'</option>').join('');
@@ -547,7 +573,7 @@ async function saveWheelConfig(){
   const price=Number(document.getElementById('wheelSpinPrice').value);
   if(!Number.isFinite(price)||price<=0||price>100000)throw new Error('Укажи цену от 0.01 до 100000 ₽.');
   notice.textContent='Сохраняем настройки…';
-  const data=await walletApi('admin_wheel_config_save',{spinPrice:price,account1ImagePath:wheelConfig.account_1_image_path||'',account2ImagePath:wheelConfig.account_2_image_path||''});
+  const data=await walletApi('admin_wheel_config_save',{spinPrice:price,account1ImagePath:wheelConfig.account_1_image_path||'',account2ImagePath:wheelConfig.account_2_image_path||'',account1Title:document.getElementById('wheelAccount1Title')?.value||'Аккаунт 1',account1Description:document.getElementById('wheelAccount1Description')?.value||'',account2Title:document.getElementById('wheelAccount2Title')?.value||'Аккаунт 2',account2Description:document.getElementById('wheelAccount2Description')?.value||''});
   applyWheelConfig(data.wheel_config);notice.textContent='Настройки рулетки сохранены.';
  }catch(e){notice.textContent=e.message||'Не удалось сохранить настройки.';}
 }
@@ -571,7 +597,7 @@ async function saveWheelPrizes(){
    const label=document.querySelector('[data-prize-label="'+i+'"]');
    const weight=document.querySelector('[data-prize-weight="'+i+'"]');
    if(!label||!weight)throw new Error('Не найдены настройки приза №'+(i+1)+'. Открой панель заново.');
-   return {prize_index:i,label:label.value.trim(),weight:Number(weight.value)};
+   return {prize_index:i,label:label.value.trim(),description:document.querySelector('[data-prize-description="'+i+'"]')?.value||'',weight:Number(weight.value)};
   });
   const total=prizes.reduce((s,p)=>s+p.weight,0);
   if(prizes.length!==12||prizes.some(p=>!p.label||p.label.length>80||!Number.isFinite(p.weight)||p.weight<0||p.weight>100))throw new Error('Проверь названия и вероятности всех 12 призов.');
@@ -586,7 +612,7 @@ async function saveWheelPrizes(){
 async function saveWheelPrizeLabels(){
  const notice=document.getElementById('adminPrizeNotice');
  try{
-  const labels=wheelPrizes.map((p,i)=>({prize_index:i,label:document.querySelector('[data-prize-label="'+i+'"]')?.value?.trim()||''}));
+  const labels=wheelPrizes.map((p,i)=>({prize_index:i,label:document.querySelector('[data-prize-label="'+i+'"]')?.value?.trim()||'',description:document.querySelector('[data-prize-description="'+i+'"]')?.value||''}));
   if(labels.some(p=>!p.label||p.label.length>80))throw new Error('Каждое название должно содержать от 1 до 80 символов.');
   notice.textContent='Сохраняем названия призов…';
   const data=await walletApi('admin_wheel_labels_save',{labels});
@@ -606,6 +632,7 @@ async function uploadWheelPrizeImage(index,input){
   // Сохраняем несохранённые поля, чтобы загрузка фото не стирала введённые названия и проценты.
   const draft=wheelPrizes.map((p,i)=>({
    label:document.querySelector('[data-prize-label="'+i+'"]')?.value??p.label,
+   description:document.querySelector('[data-prize-description="'+i+'"]')?.value??p.description,
    weight:document.querySelector('[data-prize-weight="'+i+'"]')?.value??p.weight
   }));
   notice.textContent='Загружаем фотографию приза №'+(index+1)+'…';
@@ -617,6 +644,8 @@ async function uploadWheelPrizeImage(index,input){
    const label=document.querySelector('[data-prize-label="'+i+'"]');
    const weight=document.querySelector('[data-prize-weight="'+i+'"]');
    if(label)label.value=item.label;
+   const description=document.querySelector('[data-prize-description="'+i+'"]');
+   if(description)description.value=item.description;
    if(weight)weight.value=item.weight;
   });
   updateAdminProbabilityTotal();
@@ -716,11 +745,36 @@ function applyWheelConfig(config){
   const url=wheelConfig['account_'+slot+'_image_url'];
   const target=document.getElementById('wheelAccount'+slot);
   const preview=document.getElementById('wheelAccount'+slot+'AdminPreview');
-  const content=url?'<img src="'+escapeWalletText(url)+'" alt="Аккаунт '+slot+'">':'<div class="account-placeholder">＋</div>';
-  if(target)target.innerHTML=content+'<span>АККАУНТ '+slot+'</span>';
-  if(preview)preview.innerHTML=url?'<img src="'+escapeWalletText(url)+'" alt="Предпросмотр аккаунта '+slot+'">':'АККАУНТ '+slot;
+  const title=wheelConfig['account_'+slot+'_title']||'Аккаунт '+slot;
+  const description=wheelConfig['account_'+slot+'_description']||'';
+  const content=url?'<img src="'+escapeWalletText(url)+'" alt="'+escapeWalletText(title)+'">':'<div class="account-placeholder">＋</div>';
+  if(target)target.innerHTML=content+'<span>'+escapeWalletText(title.toUpperCase())+'</span>';
+  if(preview)preview.innerHTML=url?'<img src="'+escapeWalletText(url)+'" alt="Предпросмотр '+escapeWalletText(title)+'">':escapeWalletText(title);
+  const titleInput=document.getElementById('wheelAccount'+slot+'Title');
+  const descInput=document.getElementById('wheelAccount'+slot+'Description');
+  if(titleInput)titleInput.value=title;
+  if(descInput)descInput.value=description;
  });
- renderRouletteBoard();renderWheelPurchaseButton();
+ renderRouletteBoard();renderWheelPurchaseButton();renderRouletteDetails();
+}
+function toggleRouletteDetails(){
+ const panel=document.getElementById('rouletteDetailsPanel'),button=document.getElementById('rouletteDetailsToggle'),chevron=document.getElementById('rouletteDetailsChevron');
+ if(!panel)return;
+ const open=!panel.classList.contains('open');
+ panel.classList.toggle('open',open);panel.setAttribute('aria-hidden',String(!open));
+ if(button)button.setAttribute('aria-expanded',String(open));
+ if(chevron)chevron.textContent=open?'⌃':'⌄';
+ if(open)renderRouletteDetails();
+}
+function renderRouletteDetails(){
+ const prizes=document.getElementById('roulettePrizeDetails'),accounts=document.getElementById('rouletteAccountDetails');
+ if(prizes)prizes.innerHTML=wheelPrizes.map((p,i)=>'<div class="roulette-detail-card">'+(p.image_url?'<img src="'+escapeWalletText(p.image_url)+'" alt="">':'<div class="roulette-details-empty">Фото не добавлено</div>')+'<div><b>'+(i+1)+'. '+escapeWalletText(p.label)+'</b><p>'+escapeWalletText(p.description||'Описание пока не добавлено.')+'</p></div></div>').join('');
+ if(accounts)accounts.innerHTML=[1,2].map(slot=>{
+  const title=wheelConfig['account_'+slot+'_title']||'Аккаунт '+slot;
+  const description=wheelConfig['account_'+slot+'_description']||'Информация пока не добавлена.';
+  const url=wheelConfig['account_'+slot+'_image_url'];
+  return '<div class="roulette-detail-card account-detail">'+(url?'<img src="'+escapeWalletText(url)+'" alt="'+escapeWalletText(title)+'">':'<div class="roulette-details-empty">Фото не добавлено</div>')+'<div><b>'+escapeWalletText(title)+'</b><p>'+escapeWalletText(description)+'</p></div></div>';
+ }).join('');
 }
 function renderWheelPrizes(){
  const el=document.getElementById('wheelPrizeList');
