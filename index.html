@@ -633,16 +633,16 @@ function applyWheelPrizes(items){
 }
 function renderAdminPrizes(){
  const host=document.getElementById('adminPrizeEditor');if(!host)return;
- host.innerHTML=wheelPrizes.map((p,i)=>'<div class="admin-prize-row"><div class="admin-prize-photo" id="adminPrizePhoto'+i+'">'+(p.image_url?'<img src="'+escapeWalletText(p.image_url)+'" alt="">':'ФОТО')+'</div><div class="admin-prize-fields"><label class="admin-prize-name">Приз №'+(i+1)+'<input type="text" maxlength="80" value="'+escapeWalletText(p.label)+'" aria-label="Название приза" data-prize-label="'+i+'"></label><label class="admin-prize-description">Описание<textarea maxlength="1000" placeholder="Что получает победитель" aria-label="Описание приза" data-prize-description="'+i+'">'+escapeWalletText(p.description||'')+'</textarea></label><label class="admin-prize-chance">Шанс выпадения<input type="number" min="0" max="100" step="0.1" value="'+Number(p.weight||0)+'" aria-label="Вероятность в процентах" data-prize-weight="'+i+'"><span>%</span></label><label class="photo-input">📷 Выбрать изображение · JPG/PNG/WebP до 2 МБ <input type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadWheelPrizeImage('+i+',this)"></label></div></div>').join('');
+ host.innerHTML=wheelPrizes.map((p,i)=>'<div class="admin-prize-row"><div class="admin-prize-photo" id="adminPrizePhoto'+i+'">'+(p.image_url?'<img src="'+escapeWalletText(p.image_url)+'" alt="">':'ФОТО')+'</div><div class="admin-prize-fields"><label class="admin-prize-name">Приз №'+(i+1)+'<input type="text" maxlength="80" value="'+escapeWalletText(p.label)+'" aria-label="Название приза" data-prize-label="'+i+'"></label><label class="admin-prize-description">Описание<textarea maxlength="1000" placeholder="Что получает победитель" aria-label="Описание приза" data-prize-description="'+i+'">'+escapeWalletText(p.description||'')+'</textarea></label><label class="admin-prize-chance">Шанс выпадения<input type="number" min="0" max="100" step="0.01" value="'+Number(p.weight||0)+'" aria-label="Вероятность в процентах" data-prize-weight="'+i+'"><span>%</span></label><label class="photo-input">📷 Выбрать изображение · JPG/PNG/WebP до 2 МБ <input type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadWheelPrizeImage('+i+',this)"></label></div></div>').join('');
  updateAdminProbabilityTotal();
  const select=document.getElementById('adminAssignedPrize');
  if(select)select.innerHTML=wheelPrizes.map((p,i)=>'<option value="'+i+'">'+escapeWalletText(p.label)+'</option>').join('');
 }
 function updateAdminProbabilityTotal(){
  const total=[...document.querySelectorAll('[data-prize-weight]')].reduce((s,e)=>s+Number(e.value||0),0);
- const rounded=Math.round(total*10)/10,remaining=Math.round((100-rounded)*10)/10,valid=Math.abs(total-100)<0.0001;
- const el=document.getElementById('adminProbabilityTotal');if(el)el.textContent=rounded.toFixed(1)+'%';
- const remain=document.getElementById('adminProbabilityRemaining');if(remain)remain.textContent=valid?'Сумма верная — можно сохранять':(remaining>=0?'Осталось распределить: '+remaining.toFixed(1)+'%':'Перебор: '+Math.abs(remaining).toFixed(1)+'%');
+ const rounded=Math.round(total*100)/100,remaining=Math.round((100-rounded)*100)/100,valid=Math.abs(total-100)<0.0001;
+ const el=document.getElementById('adminProbabilityTotal');if(el)el.textContent=rounded.toFixed(2)+'%';
+ const remain=document.getElementById('adminProbabilityRemaining');if(remain)remain.textContent=valid?'Сумма верная — можно сохранять':(remaining>=0?'Осталось распределить: '+remaining.toFixed(2)+'%':'Перебор: '+Math.abs(remaining).toFixed(2)+'%');
  const bar=document.getElementById('adminProbabilityBar');if(bar){bar.style.width=Math.max(0,Math.min(100,rounded))+'%';bar.style.background=valid?'#22c55e':(rounded>100?'#ef4444':'#1687ff');}
  const totalBox=document.getElementById('adminProbabilityBox');if(totalBox)totalBox.style.borderColor=valid?'#22c55e':(rounded>100?'#ef4444':'#2675bd');
 }
