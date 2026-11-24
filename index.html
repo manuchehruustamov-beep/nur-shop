@@ -696,7 +696,7 @@ async function saveWheelPrizeLabels(){
   if(labels.some(p=>!p.label||p.label.length>80))throw new Error('Каждое название должно содержать от 1 до 80 символов.');
   notice.textContent='Сохраняем названия призов…';
   const data=await walletApi('admin_wheel_labels_save',{labels});
-  if(!Array.isArray(data.wheel_prizes)||data.wheel_prizes.length!==12)throw new Error('Сервер не подтвердил сохранение всех призов.');
+  if(!Array.isArray(data.wheel_prizes)||data.wheel_prizes.length!==14)throw new Error('Сервер не подтвердил сохранение всех призов.');
   applyWheelPrizes(data.wheel_prizes);
   renderAdminPrizes();
   notice.textContent='Названия всех призов сохранены! Они обновлены для рулетки.';
@@ -718,7 +718,7 @@ async function uploadWheelPrizeImage(index,input){
   notice.textContent='Загружаем фотографию приза №'+(index+1)+'…';
   const base64=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(',')[1]||'');reader.onerror=()=>reject(new Error('Не удалось прочитать фотографию.'));reader.readAsDataURL(file);});
   const data=await walletApi('admin_prize_image',{prizeIndex:index,mime:file.type,imageBase64:base64});
-  if(!Array.isArray(data.wheel_prizes)||data.wheel_prizes.length!==12)throw new Error('Сервер не подтвердил загрузку фотографии.');
+  if(!Array.isArray(data.wheel_prizes)||data.wheel_prizes.length!==14)throw new Error('Сервер не подтвердил загрузку фотографии.');
   applyWheelPrizes(data.wheel_prizes);renderAdminPrizes();
   draft.forEach((item,i)=>{
    const label=document.querySelector('[data-prize-label="'+i+'"]');
