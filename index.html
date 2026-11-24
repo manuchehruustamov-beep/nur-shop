@@ -1294,6 +1294,11 @@ async function saveFazerRetailPrice(index){
  try{await fazerOrdersApi('set_offer_price',{category_id:String(fazerSelectedCategory.category_id),offer_id:String(offer.offer_id||offer.id||''),retail_price_rub:value});await loadFazerOffers((window.fazerVisibleCategories||[]).indexOf(fazerSelectedCategory));}
  catch(e){alert(e.message||'Не удалось сохранить цену.');}
 }
+async function checkFazerLiveOrder(orderId,note){
+ try{const data=await fazerOrdersApi('check_order',{order_id:orderId});const o=data.order||{};note.firstChild.textContent=data.message||('Статус заказа: '+(o.status||'неизвестно')+(o.status==='refunded'?' · деньги возвращены':o.status==='completed'?' · алмазы отправлены':''));
+ if(o.status==='completed'||o.status==='refunded'){const b=note.querySelector('button');if(b)b.remove();}if(typeof loadWallet==='function')loadWallet();
+ }catch(e){note.firstChild.textContent=e.message||'Не удалось проверить статус.';}
+}
 async function createFazerLiveOrder(index){
  const offer=(window.fazerCurrentOffers||[])[index],area=document.getElementById('fazerOffersArea');if(!offer||!area)return;
  const fields={};area.querySelectorAll('[data-fazer-field]').forEach(input=>{fields[input.dataset.fazerField]=String(input.value||'').trim();});
@@ -1301,8 +1306,9 @@ async function createFazerLiveOrder(index){
  const button=area.querySelector('[data-live-order="'+index+'"]');if(button){button.disabled=true;button.textContent='Оформляем…';}
  try{
   const result=await fazerOrdersApi('create_order',{category_id:String(fazerSelectedCategory.category_id),offer_id:String(offer.offer_id||offer.id||''),fields,request_id:crypto.randomUUID()});
-  const order=result.order||{};const note=document.createElement('div');note.className='fazer-note';
-  note.textContent=result.message||('Заказ NUR SHOP: '+(order.order_number||result.order_id||'принят')+'. Статус: '+(order.status||result.status||'processing'));
+  const order=result.order||{};const orderId=order.id||result.order_id;const note=document.createElement('div');note.className='fazer-note';
+  note.textContent=result.message||('Заказ NUR SHOP: '+(order.order_number||orderId||'принят')+'. Статус: '+(order.status||result.status||'processing'));
+  if(orderId&&['processing','needs_review','submitting'].includes(order.status||result.status)){const check=document.createElement('button');check.className='action';check.textContent='Проверить статус заказа';check.onclick=()=>checkFazerLiveOrder(orderId,note);note.appendChild(document.createElement('br'));note.appendChild(check);}
   area.prepend(note);if(button){button.textContent='Заказ принят';button.disabled=true;}if(typeof loadWallet==='function')loadWallet();
  }catch(e){if(button){button.disabled=false;button.textContent='Купить';}const note=document.createElement('div');note.className='fazer-note';note.textContent=e.message||'Не удалось оформить заказ.';area.prepend(note);}
 }
