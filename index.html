@@ -478,6 +478,12 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #54aa
 
 <section class="page" id="adminPage">
 <div class="admin-head"><h2 class="section-title" style="margin:0;text-align:left">Админ-панель</h2><button onclick="adminLogout()">Выйти</button></div>
+<div class="panel" id="fazerSupplierBalancePanel">
+ <div class="admin-head"><h2 style="margin:0">💰 Баланс FazerCards</h2><button type="button" onclick="loadFazerSupplierBalance()">↻ Обновить</button></div>
+ <p class="muted">Деньги на твоём аккаунте поставщика. Видно только администратору.</p>
+ <div id="fazerSupplierBalanceValue" class="info-card" style="margin-top:10px"><span>Баланс поставщика</span><strong>Нажми «Обновить»</strong></div>
+ <p class="muted" id="fazerSupplierBalanceNotice" aria-live="polite">Баланс ещё не запрашивался.</p>
+</div>
 <div class="panel"><div class="admin-head"><h2 style="margin:0">💳 Способы оплаты и реквизиты</h2><button class="admin-secondary" type="button" onclick="startNewPaymentMethod()">＋ Добавить способ</button></div><p class="muted">Добавляй новые способы оплаты и меняй реквизиты в любое время. Выключенные способы не показываются покупателям.</p><div id="paymentMethodEditor" style="display:none;margin-top:14px;padding:14px;border:1px solid #681326;border-radius:14px;background:#170a0e"><div class="admin-head"><b id="paymentMethodEditorTitle">Новый способ оплаты</b><button class="admin-secondary" type="button" onclick="closePaymentMethodEditor()">Закрыть</button></div><div class="admin-form-grid"><select class="admin-form" id="payMethodType"><option value="ru_card">Банковская карта РФ</option><option value="bank_transfer">Банковский перевод</option><option value="wallet">Электронный кошелёк</option></select><input class="admin-form" id="payMethodTitle" placeholder="Название способа оплаты"><input class="admin-form" id="payMethodBank" placeholder="Банк / платёжная система"><input class="admin-form" id="payMethodCard" placeholder="Номер карты"><input class="admin-form" id="payMethodWallet" placeholder="Номер кошелька / телефон"><input class="admin-form" id="payMethodRecipient" placeholder="Имя получателя"><textarea class="admin-form" id="payMethodInstructions" placeholder="Инструкция покупателю"></textarea><label class="muted"><input type="checkbox" id="payMethodEnabled"> Показывать покупателям</label><button class="action" onclick="savePaymentMethod()">Сохранить способ оплаты</button></div></div><div id="adminPaymentMethods" style="margin-top:14px"><div class="empty">Загружаем способы оплаты…</div></div><p class="muted" id="adminPaymentNotice" aria-live="polite"></p></div><div class="panel" id="adminStorefrontPanel">
 <div class="admin-head"><h2 style="margin:0">🎨 Оформление магазина</h2><button class="admin-secondary" onclick="loadStorefrontAdmin()">↻ Обновить</button></div>
 <p class="muted">Меняй баннер, названия и картинки главного экрана, разделов и товаров прямо здесь. Изображения загружаются с телефона.</p>
@@ -613,7 +619,7 @@ async function openAdminAuth(){
   adminUnlocked=true;adminAssignments=data.assignments||[];
   applyWheelPrizes(data.wheel_prizes||[]);
   applyWheelConfig(data.wheel_config||{});
-  renderAdminPrizes();renderAdminAssignments();loadAdminPaymentMethods();loadAdminTopups();loadAdminPromoCodes();loadAdminCatalog();loadStorefrontAdmin();
+  renderAdminPrizes();renderAdminAssignments();loadFazerSupplierBalance();loadAdminPaymentMethods();loadAdminTopups();loadAdminPromoCodes();loadAdminCatalog();loadStorefrontAdmin();
   closeAdminAuth();showPage('admin');
   await loadWheelWinHistory();
   if(adminHistoryTimer)clearInterval(adminHistoryTimer);
@@ -1262,6 +1268,36 @@ async function fazerOrdersApi(action,extra={}){
  const data=await response.json().catch(()=>({}));
  if(!response.ok||data.ok===false)throw new Error(data.error||'Не удалось загрузить историю заказов.');
  return data;
+}
+async function loadFazerSupplierBalance(){
+ const value=document.getElementById('fazerSupplierBalanceValue');
+ const notice=document.getElementById('fazerSupplierBalanceNotice');
+ if(!value||!notice)return;
+ value.innerHTML='<span>Баланс поставщика</span><strong>Загружаем…</strong>';
+ notice.textContent='Запрашиваем актуальный баланс FazerCards…';
+ try{
+  const result=await fazerOrdersApi('supplier_balance');
+  const data=result.data??result;
+  const findValue=(obj,keys)=>{
+   if(!obj||typeof obj!=='object')return null;
+   for(const key of keys){if(obj[key]!==undefined&&obj[key]!==null&&typeof obj[key]!=='object')return obj[key];}
+   for(const key of ['data','balance','account','result']){if(obj[key]&&typeof obj[key]==='object'){const v=findValue(obj[key],keys);if(v!==null)return v;}}
+   return null;
+  };
+  const amount=findValue(data,['balance','available_balance','amount','funds','остаток']);
+  const currency=findValue(data,['currency','currency_code','code'])||'USD';
+  if(amount!==null){
+   const n=Number(amount);
+   const shown=Number.isFinite(n)?n.toLocaleString('ru-RU',{maximumFractionDigits:4}):String(amount);
+   value.innerHTML='<span>Текущий баланс поставщика</span><strong>'+fazerEscape(shown)+' '+fazerEscape(currency)+'</strong>';
+  }else{
+   value.innerHTML='<span>Ответ FazerCards</span><pre style="white-space:pre-wrap;overflow-wrap:anywhere;color:#e5f6e8;font-size:12px">'+fazerEscape(JSON.stringify(data,null,2))+'</pre>';
+  }
+  notice.textContent='Последняя проверка: '+new Date().toLocaleString('ru-RU');
+ }catch(error){
+  value.innerHTML='<span>Баланс поставщика</span><strong style="font-size:16px;color:#ffb3b3">Не удалось загрузить</strong>';
+  notice.textContent=error.message||'Ошибка запроса баланса.';
+ }
 }
 async function loadFazerTestOrderHistory(){
  const box=document.getElementById('fazerTestOrderHistory');
