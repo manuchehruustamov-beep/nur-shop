@@ -403,6 +403,8 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #54aa
 /* Final sizing: small prize pictures fill their gold circular frames */
 #wheelPage .roulette-board .roulette-orb img{position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;min-width:0;min-height:0;object-fit:cover;object-position:center;border:0;border-radius:50%;padding:0;clip-path:circle(50% at 50% 50%);box-shadow:none}
 #wheelPage .roulette-board .roulette-orb .orb-fallback{position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:50%;padding:0}
+
+#wheelPage .roulette-account.winner img{border-color:#fff5a6;box-shadow:0 0 18px #fff,0 0 38px #ffc94d,0 0 62px #ff9f31;filter:brightness(1.25)}
 </style></head>
 <body>
 <header class="profile-bar">
@@ -620,7 +622,7 @@ async function openAdminAuth(){
 }
 function adminLogout(){adminUnlocked=false;adminFoundUser=null;walletIsAdmin=false;const adminEntry=document.getElementById("adminEntryButton");if(adminEntry)adminEntry.style.display="none";if(adminHistoryTimer)clearInterval(adminHistoryTimer);adminHistoryTimer=null;showPage('profile');}
 function applyWheelPrizes(items){
- if(!Array.isArray(items)||items.length!==12)return;
+ if(!Array.isArray(items)||items.length!==14)return;
  items.forEach(item=>{
   const p=wheelPrizes[Number(item.prize_index)];if(!p)return;
   p.label=String(item.label||p.label);p.description=String(item.description||'');p.weight=Number(item.weight)||0;
@@ -678,13 +680,13 @@ async function saveWheelPrizes(){
    return {prize_index:i,label:label.value.trim(),description:document.querySelector('[data-prize-description="'+i+'"]')?.value||'',weight:Number(weight.value)};
   });
   const total=prizes.reduce((s,p)=>s+p.weight,0);
-  if(prizes.length!==12||prizes.some(p=>!p.label||p.label.length>80||!Number.isFinite(p.weight)||p.weight<0||p.weight>100))throw new Error('Проверь названия и вероятности всех 12 призов.');
+  if(prizes.length!==14||prizes.some(p=>!p.label||p.label.length>80||!Number.isFinite(p.weight)||p.weight<0||p.weight>100))throw new Error('Проверь названия и вероятности всех 14 призов.');
   if(Math.abs(total-100)>0.0001)throw new Error('Сумма вероятностей должна быть ровно 100%. Сейчас: '+(Math.round(total*1000)/1000)+'%.');
   notice.textContent='Сохраняем названия и вероятности всех призов…';
   const data=await walletApi('admin_wheel_save',{prizes});
-  if(!Array.isArray(data.wheel_prizes)||data.wheel_prizes.length!==12)throw new Error('Сервер не подтвердил сохранение всех 12 призов.');
+  if(!Array.isArray(data.wheel_prizes)||data.wheel_prizes.length!==14)throw new Error('Сервер не подтвердил сохранение всех 12 призов.');
   applyWheelPrizes(data.wheel_prizes);renderAdminPrizes();
-  notice.textContent='Все 12 призов сохранены. Новые названия и вероятности действуют для следующих вращений.';
+  notice.textContent='Все 14 призов сохранены. Новые названия и вероятности действуют для следующих вращений.';
  }catch(error){notice.textContent=error.message||'Не удалось сохранить настройки.';}
 }
 async function saveWheelPrizeLabels(){
@@ -799,16 +801,18 @@ const wheelPrizes=[
  {label:'Бонус 5 ₽',color:'#163b69',text:'#ffffff'},
  {label:'Сюрприз',color:'#00a98c',text:'#06111b'},
  {label:'Приз Free Fire',color:'#1456a0',text:'#ffffff'},
- {label:'Не повезло',color:'#26364d',text:'#ffffff'}
+ {label:'Не повезло',color:'#26364d',text:'#ffffff'},
+ {label:'Аккаунт 1',color:'#8a43d6',text:'#ffffff'},
+ {label:'Аккаунт 2',color:'#d22fba',text:'#ffffff'}
 ];
 let wheelBusy=false;
-const wheelIcons=['💰','💎','🎟️','🔹','🏷️','✨','🔐','🎁','⭐','🎊','🔥','🍀'];
+const wheelIcons=['💰','💎','🎟️','🔹','🏷️','✨','🔐','🎁','⭐','🎊','🔥','🍀','👑','👑'];
 let wheelConfig={spin_price:111,account_1_image_path:null,account_2_image_path:null,account_1_image_url:null,account_2_image_url:null};
 function renderRouletteBoard(){
  const board=document.getElementById('rouletteBoard');if(!board)return;
  board.querySelectorAll('.roulette-orb').forEach(x=>x.remove());
- wheelPrizes.forEach((p,i)=>{
-  const angle=(Math.PI*2*i/wheelPrizes.length)-Math.PI/2;
+ wheelPrizes.slice(0,12).forEach((p,i)=>{
+  const angle=(Math.PI*2*i/12)-Math.PI/2;
   const node=document.createElement('div');node.className='roulette-orb';node.dataset.prizeIndex=String(i);
   node.style.left=(50+41*Math.cos(angle))+'%';node.style.top=(50+41*Math.sin(angle))+'%';node.style.transform='translate(-50%,-50%)';
   node.innerHTML=(p.image_url?'<img src="'+escapeWalletText(p.image_url)+'" alt="">':'<span class="orb-fallback">✦</span>')+'<small>'+escapeWalletText(p.label)+'</small>';
@@ -934,6 +938,7 @@ function renderWheelPurchaseButton(){
 async function animatePrizeGlow(winnerIndex){
  const nodes=[...document.querySelectorAll('.roulette-orb')];
  if(nodes.length!==12)throw new Error('Не удалось подготовить призы рулетки.');
+ document.querySelectorAll('.roulette-account').forEach(n=>n.classList.remove('winner'));
  nodes.forEach(n=>n.classList.remove('glowing','winner'));
  const order=Array.from({length:nodes.length},(_,i)=>i).sort(()=>Math.random()-.5);
  let step=0;
@@ -945,8 +950,9 @@ async function animatePrizeGlow(winnerIndex){
   step++;
  }
  nodes.forEach(n=>n.classList.remove('glowing'));
- nodes[winnerIndex].classList.add('winner');
- await new Promise(resolve=>setTimeout(resolve,900));
+ if(winnerIndex>=12){const account=document.getElementById('wheelAccount'+(winnerIndex-11));if(!account)throw new Error('Не найден главный приз аккаунта.');account.classList.add('winner');}
+ else nodes[winnerIndex].classList.add('winner');
+ await new Promise(resolve=>setTimeout(resolve,1200));
 }
 async function spinWheel(){
  if(wheelBusy)return;
