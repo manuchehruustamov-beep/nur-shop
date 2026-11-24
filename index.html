@@ -1515,7 +1515,6 @@ async function walletApi(action,extra={}){
  if(!response.ok)throw new Error(data.error||'Сервер временно недоступен.');
  return data;
 }
-let wheelCooldownInterval=null;
 let freeWheelCooldownInterval=null;
 function renderFreeWheelCooldown(){
  const button=document.getElementById('freeWheelSpinButton'),info=document.getElementById('freeWheelInfo');
@@ -1546,10 +1545,7 @@ function updateWalletUI(snapshot,isAdmin=false,prizes=null,config=null){
  if(spinButton)spinButton.style.display='';
  const value=formatRuble(snapshot.balance||0);
  ['balanceAmount','headerBalance','profileBalanceAmount'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=value;});
- renderWheelCooldown();
  renderFreeWheelCooldown();
- if(wheelCooldownInterval)clearInterval(wheelCooldownInterval);
- wheelCooldownInterval=setInterval(renderWheelCooldown,1000);
  if(freeWheelCooldownInterval)clearInterval(freeWheelCooldownInterval);
  freeWheelCooldownInterval=setInterval(renderFreeWheelCooldown,1000);
  renderBalanceHistory();
