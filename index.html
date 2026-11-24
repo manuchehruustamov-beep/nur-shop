@@ -1423,7 +1423,10 @@ async function loadAdminPromoCodes(){
   const data=await paymentApi('admin_promos_get');adminPromoCodes=data.codes||[];
   host.innerHTML=adminPromoCodes.length?adminPromoCodes.map((p,i)=>{
    const r=p.redemption||{};
-   const details=p.status==='redeemed'?'Игровой ID: '+escapeWalletText(p.player_id||r.player_id||'—')+' · Telegram: '+escapeWalletText(p.redeemed_by_telegram_id||r.telegram_user_id||'—'):p.status==='processing'?'Пополнение ожидает подтверждения FazerCards':'Можно выдать подписчику';
+   const telegramName=r.telegram_username?'@'+r.telegram_username:[r.telegram_first_name,r.telegram_last_name].filter(Boolean).join(' ')||'Имя не указано';
+   const telegramId=p.redeemed_by_telegram_id||r.telegram_user_id||'—';
+   const playerId=p.player_id||r.player_id||'—';
+   const details=(p.status==='redeemed'||p.status==='processing')?'Покупатель: '+escapeWalletText(telegramName)+' · Telegram ID: '+escapeWalletText(telegramId)+' · Игровой ID: '+escapeWalletText(playerId):'Можно выдать подписчику';
    return '<div class="history-row"><b>'+(i+1)+'. <code>'+escapeWalletText(p.code)+'</code> · '+escapeWalletText(promoAdminStatus(p.status))+'</b><small>110 алмазов · '+details+(p.supplier_order_id?' · Заказ: '+escapeWalletText(p.supplier_order_id):'')+'</small><button class="admin-secondary" onclick="copyPromoAdminCode(\''+escapeWalletText(p.code)+'\')">Копировать код</button></div>';
   }).join(''):'<div class="empty">Промокодов пока нет.</div>';
  }catch(error){host.innerHTML='<div class="empty">'+escapeWalletText(error.message)+'</div>';}
