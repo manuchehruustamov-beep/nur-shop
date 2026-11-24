@@ -521,7 +521,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #54aa
  <h3 style="margin-top:20px">📦 Заказы покупателей</h3><div id="adminCatalogOrders"><div class="empty">Загрузка…</div></div>
  <p class="muted" id="adminCatalogOrderNotice"></p>
 </div>
-<div class="panel" id="adminPromoPanel"><div class="admin-head"><h2 style="margin:0">🎟️ Промокоды на 110 алмазов</h2><button class="admin-secondary" onclick="loadAdminPromoCodes()">↻ Обновить</button></div><p class="muted">10 одноразовых промокодов. После успешного пополнения статус станет «Использован».</p><div id="adminPromoCodes"><div class="empty">Загрузка промокодов…</div></div></div>
+<div class="panel" id="adminPromoPanel"><div class="admin-head"><h2 style="margin:0">🎟️ Промокоды на 110 алмазов</h2><button class="admin-secondary" onclick="loadAdminPromoCodes()">↻ Обновить</button></div><p class="muted">Свободные коды остаются в верхнем списке. После активации код исчезает оттуда и появляется в истории ниже.</p><h3>🟢 Доступные промокоды</h3><div id="adminPromoCodes"><div class="empty">Загрузка промокодов…</div></div><h3 style="margin-top:20px">📋 История активаций</h3><div id="adminPromoRedemptions"><div class="empty">Загрузка истории активаций…</div></div></div>
 <div class="panel"><h2>🧾 Заявки на пополнение</h2><button class="admin-secondary" onclick="loadAdminTopups()">↻ Обновить заявки</button><div id="adminTopupRequests" style="margin-top:12px"><div class="empty">Загрузка заявок…</div></div><p class="muted" id="adminTopupNotice" aria-live="polite"></p></div><div class="panel"><h2>🎁 Настройки призов рулетки</h2><p class="muted">Настрой цену попытки, две центральные фотографии аккаунтов и все 12 небольших призов вокруг них. Рулетка не вращается: после оплаты призы подсвечиваются в случайном порядке, а выигрыш выбирает сервер.</p>
 <div class="info-card">
  <b>⚙️ Основные настройки рулетки</b>
@@ -1417,19 +1417,34 @@ let adminCatalogSnapshot={categories:[],products:[],orders:[]};
 let adminPromoCodes=[];
 function promoAdminStatus(status){return ({available:'Свободен',processing:'Обрабатывается',redeemed:'Использован',disabled:'Отключён'})[status]||status;}
 async function loadAdminPromoCodes(){
- const host=document.getElementById('adminPromoCodes');if(!host)return;
+ const host=document.getElementById('adminPromoCodes');
+ const historyHost=document.getElementById('adminPromoRedemptions');
+ if(!host)return;
  host.innerHTML='<div class="empty">Загружаем промокоды…</div>';
+ if(historyHost)historyHost.innerHTML='<div class="empty">Загружаем историю активаций…</div>';
  try{
   const data=await paymentApi('admin_promos_get');adminPromoCodes=data.codes||[];
-  host.innerHTML=adminPromoCodes.length?adminPromoCodes.map((p,i)=>{
-   const r=p.redemption||{};
-   const telegramName=r.telegram_username?'@'+r.telegram_username:[r.telegram_first_name,r.telegram_last_name].filter(Boolean).join(' ')||'Имя не указано';
-   const telegramId=p.redeemed_by_telegram_id||r.telegram_user_id||'—';
-   const playerId=p.player_id||r.player_id||'—';
-   const details=(p.status==='redeemed'||p.status==='processing')?'Покупатель: '+escapeWalletText(telegramName)+' · Telegram ID: '+escapeWalletText(telegramId)+' · Игровой ID: '+escapeWalletText(playerId):'Можно выдать подписчику';
-   return '<div class="history-row"><b>'+(i+1)+'. <code>'+escapeWalletText(p.code)+'</code> · '+escapeWalletText(promoAdminStatus(p.status))+'</b><small>110 алмазов · '+details+(p.supplier_order_id?' · Заказ: '+escapeWalletText(p.supplier_order_id):'')+'</small><button class="admin-secondary" onclick="copyPromoAdminCode(\''+escapeWalletText(p.code)+'\')">Копировать код</button></div>';
-  }).join(''):'<div class="empty">Промокодов пока нет.</div>';
- }catch(error){host.innerHTML='<div class="empty">'+escapeWalletText(error.message)+'</div>';}
+  const available=adminPromoCodes.filter(p=>p.is_active&&p.status==='available');
+  const history=adminPromoCodes.filter(p=>p.redemption||p.status==='processing'||p.status==='redeemed')
+   .sort((a,b)=>new Date(b.redemption?.created_at||b.redeemed_at||b.created_at||0)-new Date(a.redemption?.created_at||a.redeemed_at||a.created_at||0));
+  host.innerHTML=available.length?available.map((p,i)=>
+   '<div class="history-row"><b>'+(i+1)+'. <code>'+escapeWalletText(p.code)+'</code> · Свободен</b><small>'+Number(p.reward_diamonds||110)+' алмазов · Можно выдать подписчику</small><button class="admin-secondary" onclick="copyPromoAdminCode(\''+escapeWalletText(p.code)+'\')">Копировать код</button></div>'
+  ).join(''):'<div class="empty">Свободных промокодов нет.</div>';
+  if(historyHost){
+   historyHost.innerHTML=history.length?history.map((p,i)=>{
+    const r=p.redemption||{};
+    const telegramName=r.telegram_username?'@'+r.telegram_username:[r.telegram_first_name,r.telegram_last_name].filter(Boolean).join(' ')||'Имя не указано';
+    const telegramId=p.redeemed_by_telegram_id||r.telegram_user_id||'—';
+    const playerId=p.player_id||r.player_id||'—';
+    const status=r.status==='completed'||p.status==='redeemed'?'Успешно выдано':r.status==='processing'||p.status==='processing'?'Заказ обрабатывается':r.status==='failed'?'Ошибка выдачи':'Статус неизвестен';
+    const date=r.created_at?new Date(r.created_at).toLocaleString('ru-RU'):'';
+    return '<div class="history-row"><b>'+(i+1)+'. <code>'+escapeWalletText(p.code)+'</code> · '+escapeWalletText(status)+'</b><small>Покупатель: '+escapeWalletText(telegramName)+' · Telegram ID: '+escapeWalletText(telegramId)+' · Free Fire ID: '+escapeWalletText(playerId)+' · '+Number(p.reward_diamonds||r.reward_diamonds||110)+' алмазов'+(r.supplier_order_id?' · Заказ: '+escapeWalletText(r.supplier_order_id):p.supplier_order_id?' · Заказ: '+escapeWalletText(p.supplier_order_id):'')+(date?' · '+escapeWalletText(date):'')+(r.error_message?' · Ошибка: '+escapeWalletText(r.error_message):'')+'</small></div>';
+   }).join(''):'<div class="empty">Пока никто не активировал промокоды.</div>';
+  }
+ }catch(error){
+  host.innerHTML='<div class="empty">'+escapeWalletText(error.message)+'</div>';
+  if(historyHost)historyHost.innerHTML='<div class="empty">Не удалось загрузить историю активаций.</div>';
+ }
 }
 function copyPromoAdminCode(code){if(navigator.clipboard?.writeText)navigator.clipboard.writeText(code).then(()=>alert('Промокод скопирован')).catch(()=>alert(code));else alert(code);}
 function catalogStatusLabel(status){return ({pending:'Новый',processing:'В обработке',completed:'Выдан',cancelled:'Отменён'})[status]||status;}
