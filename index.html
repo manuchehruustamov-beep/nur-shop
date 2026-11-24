@@ -288,6 +288,37 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #54aa
 #categoryPage{--nur-shop-card-opacity:.82}#wheelPage{--nur-roulette-card-opacity:.82}
 #categoryPage .tile-image,#categoryPage .vpn-card,#categoryPage .panel,#categoryPage .info-card,#categoryPage .product-card{background:rgba(12,22,36,var(--nur-shop-card-opacity,.82));backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 #wheelPage .wheel-card,#wheelPage .wheel-strip-stage,#wheelPage .wheel-strip-item,#wheelPage .wheel-prize-card{background:rgba(12,18,34,var(--nur-roulette-card-opacity,.82));backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+
+/* NUR SHOP — premium static prize ring */
+#wheelPage .wheel-strip-stage{display:none!important}
+#wheelPage .wheel-card{border:1px solid #59366e;background:radial-gradient(circle at 50% 38%,#25143c 0%,#100b1d 58%,#080711 100%);box-shadow:0 0 32px #8b3cff30,inset 0 0 40px #a64cff18;padding:18px 12px}
+#wheelPage .wheel-kicker{color:#e5a6ff;text-shadow:0 0 16px #b34dff}
+#wheelPage .wheel-subtitle{color:#d8c6e8}
+.roulette-price{display:flex;justify-content:center;align-items:center;gap:8px;margin:12px auto 14px;color:#fff;font-weight:900;font-size:18px}
+.roulette-price strong{font-size:24px;color:#ffd66e;text-shadow:0 0 14px #ffbd42}
+.roulette-board{position:relative;width:min(100%,390px);aspect-ratio:1;margin:0 auto 14px;border-radius:50%;background:radial-gradient(circle,#21132f 0 31%,#100b1d 32% 56%,#211333 57% 59%,#090711 60%);border:1px solid #8c55b4;box-shadow:0 0 28px #a84dff38,inset 0 0 32px #b94cff20}
+.roulette-board:before,.roulette-board:after{content:"";position:absolute;inset:5%;border-radius:50%;border:1px dashed #b77bdb66;pointer-events:none}
+.roulette-board:after{inset:16%;border-style:solid;border-color:#8b4ab255}
+.roulette-orb{position:absolute;width:17%;height:17%;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;overflow:hidden;border:1px solid #a78b54;background:radial-gradient(circle at 40% 25%,#332b20,#08090f 72%);box-shadow:0 0 12px #e8c46b33,inset 0 0 10px #fff2;transition:box-shadow .16s,border-color .16s,filter .16s;z-index:2}
+.roulette-orb img{width:62%;height:62%;object-fit:contain;filter:drop-shadow(0 0 5px #e8c46b88)}
+.roulette-orb .orb-fallback{font-size:clamp(16px,5vw,25px);color:#ffdc76;text-shadow:0 0 9px #ffb72e}
+.roulette-orb small{max-width:96%;font-size:clamp(7px,2vw,10px);font-weight:900;line-height:1;color:#fff;text-shadow:0 1px 4px #000;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.roulette-orb.glowing{border:2px solid #fff3a1;filter:brightness(1.6);box-shadow:0 0 10px #fff,0 0 24px #ffcc45,0 0 42px #ff9e32,inset 0 0 18px #ffe69a;transform:translate(-50%,-50%) scale(1.13);z-index:4}
+.roulette-orb.winner{border:2px solid #fff5a6;box-shadow:0 0 16px #fff,0 0 35px #ffc94d,0 0 58px #ff9f31,inset 0 0 22px #ffe69a;filter:brightness(1.8);z-index:5}
+.roulette-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:53%;display:flex;align-items:center;justify-content:center;gap:5%;z-index:3}
+.roulette-account{width:47%;min-width:0;text-align:center;color:#f6eaff;font-size:clamp(8px,2.5vw,11px);font-weight:900;letter-spacing:.5px;text-shadow:0 1px 5px #000}
+.roulette-account img,.roulette-account .account-placeholder{display:block;width:100%;height:auto;aspect-ratio:3/4;object-fit:cover;border-radius:15px;border:1px solid #a65ce4;background:linear-gradient(145deg,#24143a,#0b0b14);box-shadow:0 0 16px #ad50ff55}
+.roulette-account .account-placeholder{display:grid;place-items:center;color:#c6a4dd;font-size:22px}
+.roulette-account span{display:block;margin-top:5px}
+#wheelPage .wheel-spin{width:100%;max-width:340px;margin:0 auto;background:linear-gradient(100deg,#8a43d6,#d22fba);color:#fff;box-shadow:0 0 22px #b14cff77,0 0 38px #d22fba44}
+#wheelPage .wheel-result{margin-top:12px;border-color:#8746ad;background:linear-gradient(145deg,#21122d,#0e0917);color:#ffeaff}
+#wheelPage .wheel-prize-panel{border-color:#59366e;background:linear-gradient(145deg,#1b1128,#0b0912)}
+#wheelPage .wheel-prize-card{border-color:#56316c;background:linear-gradient(145deg,#241431,#100a18)}
+.admin-wheel-account{display:grid;grid-template-columns:76px minmax(0,1fr);gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid #55356c}
+.admin-wheel-account img{width:76px;height:96px;object-fit:cover;border-radius:10px;border:1px solid #a65ce4}
+.admin-wheel-account .account-preview-empty{width:76px;height:96px;border:1px dashed #8757a7;border-radius:10px;display:grid;place-items:center;color:#c8a7db;font-size:11px}
+@media(max-width:360px){.roulette-board{width:100%}.roulette-center{width:51%}.roulette-orb{width:18%;height:18%}}
+
 </style>
 <style id="ff-art-polish">.tile.ff-wide{grid-column:1/-1;justify-self:center;width:112px;max-width:112px}.tile.ff-wide .ff-art-wrap{width:112px;height:112px;min-height:112px;aspect-ratio:1/1}.tile.ff-wide .tile-label{display:block;width:100%;text-align:center}.ff-art-wrap{position:relative;display:grid!important;place-items:center;overflow:hidden;height:58px;min-height:58px;border:1px solid rgba(105,190,255,.3);border-radius:15px;background:radial-gradient(ellipse at 50% 42%,rgba(24,125,255,.25),rgba(8,14,34,.95) 72%);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 8px 24px rgba(0,0,0,.3)}.ff-art-wrap:before{content:"";position:absolute;inset:4px;border:1px solid rgba(170,225,255,.14);border-radius:11px;transform:skewY(-5deg)}.ff-art-wrap:after{content:"";position:absolute;width:48px;height:48px;border-radius:50%;filter:blur(18px);opacity:.6}.ff-art-wrap svg{position:relative;z-index:1;width:min(100%,220px);height:75px;overflow:visible;filter:drop-shadow(0 3px 7px rgba(0,0,0,.45));transition:transform .25s ease}.ff-art-wrap svg>g:nth-of-type(2){display:none}.ff-art-wrap img.ff-real-hero{position:absolute;z-index:2;left:53%;bottom:-5px;width:34%;height:86px;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 2px 5px #000b)}.ff-art-wrap img.ff-real-pet{position:absolute;z-index:3;left:82%;bottom:0;width:16%;height:53px;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 2px 4px #000b)}.tile:active .ff-art-wrap svg{transform:scale(1.06) rotate(-2deg)}.ff-art-diamond:after{background:#19bfff}.ff-art-voucher{border-color:rgba(255,173,80,.35);background:radial-gradient(ellipse at 50% 42%,rgba(255,111,48,.23),rgba(20,13,31,.96) 72%)}.ff-art-voucher:after{background:#ff783d}.ff-art-voucher:before{border-color:rgba(255,205,120,.18)}</style></head>
 <body>
@@ -317,11 +348,17 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #54aa
 <div class="wheel-card">
 <div class="wheel-kicker">✦ NUR SHOP / LUCKY WHEEL ✦</div>
 <p class="wheel-subtitle" id="wheelSpinInfo">Открывай призы NUR SHOP: лента остановится на карточке с выигрышем.</p>
-<div class="wheel-strip-stage"><div class="wheel-strip-marker"><span>▼</span></div><div class="wheel-strip-viewport" id="wheelStripViewport"><div class="wheel-strip-track" id="wheelStripTrack"></div></div><div class="wheel-strip-caption"><span>← ЛЕНТА ПРИЗОВ →</span><span>ОСТАНОВКА ПО ЦЕНТРУ</span></div></div>
-<button class="action wheel-spin" id="wheelSpinButton" style="display:none" onclick="spinWheel()">✦ КРУТИТЬ РУЛЕТКУ</button>
+<div class="roulette-price">Одна попытка — <strong id="wheelPriceLabel">199 ₽</strong></div>
+<div class="roulette-board" id="rouletteBoard" aria-label="Призы рулетки">
+ <div class="roulette-center">
+  <div class="roulette-account" id="wheelAccount1"><div class="account-placeholder">＋</div><span>АККАУНТ 1</span></div>
+  <div class="roulette-account" id="wheelAccount2"><div class="account-placeholder">＋</div><span>АККАУНТ 2</span></div>
+ </div>
+</div>
+<button class="action wheel-spin" id="wheelSpinButton" style="display:none" onclick="spinWheel()">✦ КРУТИТЬ ЗА 199 ₽</button>
 <div class="wheel-result" id="wheelResult" aria-live="polite">Проверяем права администратора…<small>Каждый пользователь получает одну бесплатную попытку раз в 24 часа.</small></div>
 </div>
-<div class="panel wheel-prize-panel"><h2>Призы в ленте</h2><p class="muted">В каждой карточке предусмотрено отдельное место для фотографии и названия приза. Сами призы и результат вращения пока остаются под управлением текущего сервера.</p><div class="wheel-prize-list" id="wheelPrizeList"></div></div>
+<div class="panel wheel-prize-panel"><h2>Призы рулетки</h2><p class="muted">Эти призы отображаются маленькими значками по кругу. Настрой изображения, названия и шансы ниже.</p><div class="wheel-prize-list" id="wheelPrizeList"></div></div>
 </section>
 <section class="page" id="balancePage"><h2 class="section-title">Мой баланс</h2><div class="info-card"><span>Доступный баланс</span><strong id="balanceAmount">0 ₽</strong></div><button class="action topup-main" onclick="openTopup()">＋ ПОПОЛНИТЬ БАЛАНС</button><p class="muted">Баланс отображается в российских рублях. Ручные переводы зачисляются только после проверки администратором.</p><div class="panel"><h2>💳 Пополнение банковским переводом</h2><p class="muted">Выбери удобный способ. Реквизиты публикует администратор. После перевода отправь заявку — баланс будет пополнен после проверки.</p><div id="manualPaymentMethods"><div class="empty">Загружаем способы оплаты…</div></div><div id="manualPaymentForm" style="display:none;margin-top:14px"><div class="info-card"><b id="selectedPaymentTitle">Способ оплаты</b><div id="selectedPaymentDetails" class="payment-details" style="margin-top:10px"></div></div><label class="muted" for="manualTopupAmount">Сумма пополнения, ₽</label><input class="admin-form" id="manualTopupAmount" type="number" min="10" max="100000" step="0.01" inputmode="decimal" placeholder="Например, 500"><button type="button" class="payment-copy-btn" style="margin-top:8px;width:100%" id="copyTopupAmountBtn" onclick="copyTopupAmount()">Копировать сумму</button><label class="muted" for="manualTopupNote">Комментарий или номер операции перевода</label><input class="admin-form" id="manualTopupNote" maxlength="500" placeholder="Укажи номер операции или комментарий"><button class="action" id="manualTopupSubmit" onclick="submitManualTopup()">Я перевёл деньги — отправить заявку</button><p class="muted" id="manualTopupNotice" aria-live="polite"></p></div></div><div class="panel"><h2>⭐ Оплата Telegram Stars</h2><p class="muted">1 ⭐ = 2 ₽. Введи количество звёзд (от 10 до 10 000).</p><div class="promo-input-row"><input id="topupStarsAmount" type="number" min="10" max="10000" step="1" value="50" inputmode="numeric" oninput="updateTopupPreview()" placeholder="Количество ⭐"></div><div class="info-card" style="margin-top:12px"><span>Будет зачислено на баланс</span><strong id="topupRublePreview">100 ₽</strong></div><button class="action" id="topupPayButton" onclick="startTopup()">Оплатить ⭐ в Telegram</button><p class="muted" id="topupNotice">Счёт откроется в Telegram. Рубли будут зачислены только после подтверждения платежа сервером.</p></div></section>
 <section class="page" id="historyPage"><h2 class="section-title">История операций</h2><div class="panel"><h2>Пополнения и списания</h2><p class="history-caption">Все суммы указаны в российских рублях (₽).</p><div id="balanceHistory"><div class="empty">Операций пока нет</div></div></div><div class="panel"><h2>Выигрыши рулетки</h2><div id="wheelHistory" class="empty">Выигрышей пока нет</div></div><div class="panel"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><h2 style="margin:0">История заказов</h2><button class="admin-secondary" onclick="loadFazerTestOrderHistory()">↻ Обновить</button></div><div id="fazerTestOrderHistory" style="margin-top:12px"><div class="empty">Загрузка заказов…</div></div></div></section>
@@ -432,7 +469,16 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #54aa
  <p class="muted" id="adminCatalogOrderNotice"></p>
 </div>
 <div class="panel" id="adminPromoPanel"><div class="admin-head"><h2 style="margin:0">🎟️ Промокоды на 110 алмазов</h2><button class="admin-secondary" onclick="loadAdminPromoCodes()">↻ Обновить</button></div><p class="muted">10 одноразовых промокодов. После успешного пополнения статус станет «Использован».</p><div id="adminPromoCodes"><div class="empty">Загрузка промокодов…</div></div></div>
-<div class="panel"><h2>🧾 Заявки на пополнение</h2><button class="admin-secondary" onclick="loadAdminTopups()">↻ Обновить заявки</button><div id="adminTopupRequests" style="margin-top:12px"><div class="empty">Загрузка заявок…</div></div><p class="muted" id="adminTopupNotice" aria-live="polite"></p></div><div class="panel"><h2>🎁 Настройки призов рулетки</h2><p class="muted">Для каждого из 12 призов можно изменить название и фотографию прямо здесь. Нажми «Фото приза» и выбери JPG, PNG или WebP до 2 МБ — фото сохранится сразу. Названия сохраняются отдельной кнопкой. Вероятности меняются отдельно; их общая сумма должна быть ровно 100%.</p><div id="adminPrizeEditor"></div><div class="info-card"><span>Сумма вероятностей</span><strong id="adminProbabilityTotal">100%</strong></div><button class="action" onclick="saveWheelPrizes()">Сохранить призы и вероятности</button><button class="action" style="margin-top:8px;background:linear-gradient(90deg,#173d66,#087fff);color:#fff" onclick="saveWheelPrizeLabels()">Сохранить только названия призов</button><p class="muted" id="adminPrizeNotice" aria-live="polite"></p></div>
+<div class="panel"><h2>🧾 Заявки на пополнение</h2><button class="admin-secondary" onclick="loadAdminTopups()">↻ Обновить заявки</button><div id="adminTopupRequests" style="margin-top:12px"><div class="empty">Загрузка заявок…</div></div><p class="muted" id="adminTopupNotice" aria-live="polite"></p></div><div class="panel"><h2>🎁 Настройки призов рулетки</h2><p class="muted">Настрой цену попытки, две центральные фотографии аккаунтов и все 12 небольших призов вокруг них. Рулетка не вращается: после оплаты призы подсвечиваются в случайном порядке, а выигрыш выбирает сервер.</p>
+<div class="info-card">
+ <b>⚙️ Основные настройки рулетки</b>
+ <label class="muted" for="wheelSpinPrice" style="display:block;margin-top:10px">Цена одной попытки, ₽</label>
+ <input class="admin-form" id="wheelSpinPrice" type="number" min="1" max="100000" step="1" value="199">
+ <div class="admin-wheel-account"><div id="wheelAccount1AdminPreview" class="account-preview-empty">АККАУНТ 1</div><div><b>Фото персонажа / аккаунта 1</b><label class="photo-input">📷 Загрузить фото <input type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadWheelCenterImage(1,this)"></label></div></div>
+ <div class="admin-wheel-account"><div id="wheelAccount2AdminPreview" class="account-preview-empty">АККАУНТ 2</div><div><b>Фото персонажа / аккаунта 2</b><label class="photo-input">📷 Загрузить фото <input type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadWheelCenterImage(2,this)"></label></div></div>
+ <button class="action" onclick="saveWheelConfig()">Сохранить настройки рулетки</button>
+ <p class="muted" id="wheelConfigNotice" aria-live="polite"></p>
+</div><div id="adminPrizeEditor"></div><div class="info-card"><span>Сумма вероятностей</span><strong id="adminProbabilityTotal">100%</strong></div><button class="action" onclick="saveWheelPrizes()">Сохранить призы и вероятности</button><button class="action" style="margin-top:8px;background:linear-gradient(90deg,#173d66,#087fff);color:#fff" onclick="saveWheelPrizeLabels()">Сохранить только названия призов</button><p class="muted" id="adminPrizeNotice" aria-live="polite"></p></div>
 <div class="panel"><h2>🎯 Персональный приз</h2><p class="muted">Найди пользователя по Telegram ID или username и назначь ему приз на следующее вращение.</p><input class="admin-form" id="adminUserQuery" placeholder="Telegram ID или @username" autocomplete="off"><button class="action" onclick="searchWheelUser()">Найти пользователя</button><div id="adminUserSearchResult"></div><div style="margin-top:12px"><select class="admin-form" id="adminAssignedPrize"></select></div><button class="action" onclick="assignWheelPrize()">Назначить на следующее вращение</button><p class="muted" id="adminAssignmentNotice" aria-live="polite"></p><h2 style="margin-top:20px">Активные назначения</h2><div id="adminAssignments"><div class="empty">Загрузка…</div></div></div>
 <div class="panel"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><h2 style="margin:0">📡 Выигрыши в реальном времени</h2><span id="adminHistoryLive" style="font-size:10px;color:#65e6a3">● LIVE</span></div><p class="muted">Последние 100 вращений. Список автоматически обновляется каждые 5 секунд.</p><button class="admin-secondary" onclick="loadWheelWinHistory()">↻ Обновить сейчас</button><div id="adminWinHistory" style="margin-top:12px"><div class="empty">Загрузка выигрышей…</div></div><p class="muted" id="adminHistoryUpdated"></p></div>
 <div class="admin-note">Все изменения проверяются сервером. Персональный приз списывается автоматически после следующего успешного вращения.</div>
@@ -465,6 +511,7 @@ async function openAdminAuth(){
   if(data.is_admin!==true)throw new Error('Доступ запрещён.');
   adminUnlocked=true;adminAssignments=data.assignments||[];
   applyWheelPrizes(data.wheel_prizes||[]);
+  applyWheelConfig(data.wheel_config||{});
   renderAdminPrizes();renderAdminAssignments();loadAdminPaymentMethods();loadAdminTopups();loadAdminPromoCodes();loadAdminCatalog();loadStorefrontAdmin();
   closeAdminAuth();showPage('admin');
   await loadWheelWinHistory();
@@ -494,6 +541,28 @@ function updateAdminProbabilityTotal(){
  const el=document.getElementById('adminProbabilityTotal');if(el)el.textContent=(Math.round(total*10)/10)+'%';
 }
 document.addEventListener('input',e=>{if(e.target?.matches?.('[data-prize-weight]'))updateAdminProbabilityTotal();});
+async function saveWheelConfig(){
+ const notice=document.getElementById('wheelConfigNotice');
+ try{
+  const price=Number(document.getElementById('wheelSpinPrice').value);
+  if(!Number.isFinite(price)||price<=0||price>100000)throw new Error('Укажи цену от 0.01 до 100000 ₽.');
+  notice.textContent='Сохраняем настройки…';
+  const data=await walletApi('admin_wheel_config_save',{spinPrice:price,account1ImagePath:wheelConfig.account_1_image_path||'',account2ImagePath:wheelConfig.account_2_image_path||''});
+  applyWheelConfig(data.wheel_config);notice.textContent='Настройки рулетки сохранены.';
+ }catch(e){notice.textContent=e.message||'Не удалось сохранить настройки.';}
+}
+async function uploadWheelCenterImage(slot,input){
+ const file=input.files?.[0];if(!file)return;
+ const notice=document.getElementById('wheelConfigNotice');
+ try{
+  if(file.size>5*1024*1024)throw new Error('Максимальный размер фото — 5 МБ.');
+  if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw new Error('Выбери JPG, PNG или WebP.');
+  notice.textContent='Загружаем фото аккаунта '+slot+'…';
+  const base64=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(',')[1]||'');reader.onerror=()=>reject(new Error('Не удалось прочитать фотографию.'));reader.readAsDataURL(file);});
+  const data=await walletApi('admin_wheel_center_image',{slot,mime:file.type,imageBase64:base64});
+  applyWheelConfig(data.wheel_config);notice.textContent='Фото аккаунта '+slot+' сохранено.';
+ }catch(e){notice.textContent=e.message||'Не удалось загрузить фото.';input.value='';}
+}
 async function saveWheelPrizes(){
  const notice=document.getElementById('adminPrizeNotice');
  try{
@@ -627,78 +696,79 @@ const wheelPrizes=[
 ];
 let wheelBusy=false;
 const wheelIcons=['💰','💎','🎟️','🔹','🏷️','✨','🔐','🎁','⭐','🎊','🔥','🍀'];
+let wheelConfig={spin_price:199,account_1_image_path:null,account_2_image_path:null,account_1_image_url:null,account_2_image_url:null};
+function renderRouletteBoard(){
+ const board=document.getElementById('rouletteBoard');if(!board)return;
+ board.querySelectorAll('.roulette-orb').forEach(x=>x.remove());
+ wheelPrizes.forEach((p,i)=>{
+  const angle=(Math.PI*2*i/wheelPrizes.length)-Math.PI/2;
+  const node=document.createElement('div');node.className='roulette-orb';node.dataset.prizeIndex=String(i);
+  node.style.left=(50+41*Math.cos(angle))+'%';node.style.top=(50+41*Math.sin(angle))+'%';node.style.transform='translate(-50%,-50%)';
+  node.innerHTML=(p.image_url?'<img src="'+escapeWalletText(p.image_url)+'" alt="">':'<span class="orb-fallback">✦</span>')+'<small>'+escapeWalletText(p.label)+'</small>';
+  board.appendChild(node);
+ });
+}
+function applyWheelConfig(config){
+ if(!config)return;wheelConfig={...wheelConfig,...config};
+ const price=document.getElementById('wheelPriceLabel');if(price)price.textContent=Number(wheelConfig.spin_price||199).toLocaleString('ru-RU')+' ₽';
+ const input=document.getElementById('wheelSpinPrice');if(input)input.value=Number(wheelConfig.spin_price||199);
+ [1,2].forEach(slot=>{
+  const url=wheelConfig['account_'+slot+'_image_url'];
+  const target=document.getElementById('wheelAccount'+slot);
+  const preview=document.getElementById('wheelAccount'+slot+'AdminPreview');
+  const content=url?'<img src="'+escapeWalletText(url)+'" alt="Аккаунт '+slot+'">':'<div class="account-placeholder">＋</div>';
+  if(target)target.innerHTML=content+'<span>АККАУНТ '+slot+'</span>';
+  if(preview)preview.innerHTML=url?'<img src="'+escapeWalletText(url)+'" alt="Предпросмотр аккаунта '+slot+'">':'АККАУНТ '+slot;
+ });
+ renderRouletteBoard();renderWheelPurchaseButton();
+}
 function renderWheelPrizes(){
  const el=document.getElementById('wheelPrizeList');
  if(el)el.innerHTML=wheelPrizes.map((p,i)=>'<div class="wheel-prize-card">'+(p.image_url?'<img src="'+escapeWalletText(p.image_url)+'" alt="">':'<span class="wheel-prize-placeholder">'+wheelIcons[i]+'</span>')+'<span class="wheel-prize-name">'+(i+1)+'. '+escapeWalletText(p.label)+'</span></div>').join('');
+ renderRouletteBoard();
 }
-function renderWheelStrip(winnerIndex){
- const track=document.getElementById('wheelStripTrack');
- const viewport=document.getElementById('wheelStripViewport');
- if(!track||!viewport)throw new Error('Не удалось открыть ленту рулетки.');
- const winningPosition=30,total=winningPosition+8;
- const items=[];
- for(let i=0;i<total;i++){
-  const prizeIndex=i===winningPosition?winnerIndex:Math.floor(Math.random()*wheelPrizes.length);
-  items.push({prize:wheelPrizes[prizeIndex],winner:i===winningPosition});
+function renderWheelPurchaseButton(){
+ const button=document.getElementById('wheelSpinButton');if(!button)return;
+ button.textContent=walletIsAdmin?'👑 ТЕСТОВОЕ ВРАЩЕНИЕ (АДМИН)':'✦ КРУТИТЬ ЗА '+Number(wheelConfig.spin_price||199).toLocaleString('ru-RU')+' ₽';
+}
+async function animatePrizeGlow(winnerIndex){
+ const nodes=[...document.querySelectorAll('.roulette-orb')];
+ if(nodes.length!==12)throw new Error('Не удалось подготовить призы рулетки.');
+ nodes.forEach(n=>n.classList.remove('glowing','winner'));
+ const order=Array.from({length:nodes.length},(_,i)=>i).sort(()=>Math.random()-.5);
+ let step=0;
+ for(let i=0;i<34;i++){
+  nodes.forEach(n=>n.classList.remove('glowing'));
+  const index=order[step%order.length];nodes[index].classList.add('glowing');
+  const delay=65+Math.floor(i*3.1);
+  await new Promise(resolve=>setTimeout(resolve,delay));
+  step++;
  }
- track.style.transition='none';
- track.style.transform='translateX(0px)';
-  track.innerHTML=items.map((item,i)=>'<div class="wheel-strip-item" data-strip-index="'+i+'"><div class="strip-art">'+(item.prize.image_url?'<img class="strip-prize-photo" src="'+escapeWalletText(item.prize.image_url)+'" alt="">':'<span class="strip-photo-placeholder"><i>＋</i><small>ФОТО ПРИЗА</small></span>')+'</div><span class="strip-label">'+escapeWalletText(item.prize.label)+'</span></div>').join('');
- void track.offsetWidth;
- return {track,viewport,winningPosition};
-}
-async function animateWheelStrip(winnerIndex){
- const {track,viewport,winningPosition}=renderWheelStrip(winnerIndex);
- await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
- const item=track.querySelector('[data-strip-index="'+winningPosition+'"]');
- if(!item)throw new Error('Не удалось подготовить призовую карточку.');
- // Считаем расстояние по реальным координатам карточки и центра стрелки.
- const itemRect=item.getBoundingClientRect();
- const viewportRect=viewport.getBoundingClientRect();
- const itemCenter=itemRect.left+itemRect.width/2;
- const pointerCenter=viewportRect.left+viewport.clientWidth/2;
- const distance=itemCenter-pointerCenter;
- track.style.transition='transform 6.2s cubic-bezier(.08,.72,.08,1)';
- // Подсветка появляется только после фактической остановки под стрелкой.
- await new Promise(resolve=>{
-  let finished=false;
-  const finish=()=>{
-   if(finished)return;
-   finished=true;
-   track.removeEventListener('transitionend',onEnd);
-   item.classList.add('winning');
-   resolve();
-  };
-  const onEnd=e=>{if(e.propertyName==='transform')finish();};
-  track.addEventListener('transitionend',onEnd);
-  track.style.transform='translateX(-'+distance+'px)';
-  setTimeout(finish,6800);
- });
+ nodes.forEach(n=>n.classList.remove('glowing'));
+ nodes[winnerIndex].classList.add('winner');
+ await new Promise(resolve=>setTimeout(resolve,900));
 }
 async function spinWheel(){
  if(wheelBusy)return;
  const btn=document.getElementById('wheelSpinButton'),result=document.getElementById('wheelResult');
- wheelBusy=true;btn.disabled=true;btn.textContent='ПРОВЕРЯЕМ ПОПЫТКУ…';
- result.innerHTML='Подключаемся к серверу NUR SHOP…<small>Результат выбирается на сервере.</small>';
+ wheelBusy=true;btn.disabled=true;btn.textContent='ПОДТВЕРЖДАЕМ ПОКУПКУ…';
+ result.innerHTML='Проверяем баланс и определяем приз на сервере…<small>Списываем стоимость одной попытки только при успешном сохранении выигрыша.</small>';
  try{
   const response=await walletApi('spin');
   if(!response.prize)throw new Error('Сервер не вернул результат рулетки.');
   const winner=Number(response.prize.prize_index);
   if(!Number.isInteger(winner)||winner<0||winner>=wheelPrizes.length)throw new Error('Получен некорректный результат.');
-  updateWalletUI(response.wallet,response.is_admin===true,response.wheel_prizes);
-  btn.textContent='ЛЕНТА ВРАЩАЕТСЯ…';
-  result.innerHTML='Лента набирает скорость!<small>Ожидай остановки на выигрышной карточке.</small>';
-  await animateWheelStrip(winner);
-  btn.textContent='✦ КРУТИТЬ ЕЩЁ РАЗ';
+  updateWalletUI(response.wallet,response.is_admin===true,response.wheel_prizes,response.wheel_config);
+  result.innerHTML='✨ Призы загораются один за другим…<small>Рулетка остаётся неподвижной.</small>';
+  await animatePrizeGlow(winner);
   const label=response.prize.prize_label;
-  const note=response.prize.prize_type==='cash'?'Приз зачислен на твой баланс!':response.prize.prize_type==='bonus_spin'?'Бесплатная следующая попытка будет доступна через 24 часа.':response.prize.prize_type==='non_cash'?'Выигрыш сохранён в истории. Для выдачи этого приза потребуется подтверждение магазина.':'Попробуй удачу завтра!';
-  result.innerHTML='🎉 Выпало: '+escapeWalletText(label)+'<small>'+note+'</small>';
+  const note=response.prize.prize_type==='cash'?'Денежный приз зачислен на баланс!':response.prize.prize_type==='non_cash'?'Выигрыш сохранён в истории. Для выдачи приза потребуется подтверждение магазина.':'Выигрыш сохранён в истории NUR SHOP.';
+  result.innerHTML='🎉 ТВОЙ ПРИЗ: '+escapeWalletText(label)+'<small>'+(response.is_admin?'Тестовый запуск администратора.':'Списано '+Number(response.prize.charged_amount||response.wheel_config?.spin_price||wheelConfig.spin_price).toLocaleString('ru-RU')+' ₽. ')+note+'</small>';
   renderBalanceHistory();
  }catch(error){
-  result.innerHTML='⚠️ '+escapeWalletText(error.message||'Не удалось выполнить вращение.')+'<small>Если сервер уже зафиксировал приз, проверь историю баланса перед повторной попыткой.</small>';
+  result.innerHTML='⚠️ '+escapeWalletText(error.message||'Не удалось выполнить покупку.')+'<small>Если деньги списались, проверь историю баланса и историю выигрышей перед повторной попыткой.</small>';
  }finally{
-  wheelBusy=false;btn.disabled=false;
-  if(btn.textContent==='ПРОВЕРЯЕМ ПОПЫТКУ…'||btn.textContent==='ЛЕНТА ВРАЩАЕТСЯ…')btn.textContent='✦ КРУТИТЬ РУЛЕТКУ';
+  wheelBusy=false;btn.disabled=false;renderWheelPurchaseButton();
  }
 }
 renderWheelPrizes();
@@ -1312,24 +1382,16 @@ async function walletApi(action,extra={}){
 }
 let wheelCooldownInterval=null;
 function renderWheelCooldown(){
- const button=document.getElementById('wheelSpinButton');
- const info=document.getElementById('wheelSpinInfo');
+ const button=document.getElementById('wheelSpinButton'),info=document.getElementById('wheelSpinInfo');
  if(!button||!walletSnapshot)return;
- const nextAt=walletIsAdmin?0:(walletSnapshot.next_spin_at?new Date(walletSnapshot.next_spin_at).getTime():0);
- const left=nextAt-Date.now();
- if(left>0){
-  button.disabled=true;
-  button.textContent='⏳ СЛЕДУЮЩАЯ ПОПЫТКА ЧЕРЕЗ 24 ЧАСА';
-  const hours=Math.floor(left/3600000),minutes=Math.floor((left%3600000)/60000),seconds=Math.floor((left%60000)/1000);
-  if(info)info.textContent='Баланс: '+formatRuble(walletSnapshot.balance||0)+' · Следующая бесплатная попытка через '+hours+' ч '+minutes+' мин '+seconds+' сек';
- }else{
-  button.disabled=false;
-  button.textContent='✦ КРУТИТЬ РУЛЕТКУ';
-  if(info)info.textContent='Баланс: '+formatRuble(walletSnapshot.balance||0)+' · Бесплатное вращение доступно!';
- }
+ const price=Number(wheelConfig.spin_price||199),balance=Number(walletSnapshot.balance||0);
+ button.disabled=!walletIsAdmin&&balance<price;
+ if(info)info.textContent='Твой баланс: '+formatRuble(balance)+' · '+(walletIsAdmin?'Для администратора тестовый запуск бесплатный.':balance>=price?'Нажми кнопку — стоимость попытки будет списана с баланса.':'Недостаточно средств. Пополни баланс на '+formatRuble(price-balance)+'.');
+ renderWheelPurchaseButton();
 }
-function updateWalletUI(snapshot,isAdmin=false,prizes=null){
+function updateWalletUI(snapshot,isAdmin=false,prizes=null,config=null){
  if(prizes)applyWheelPrizes(prizes);
+ if(config)applyWheelConfig(config);
  if(!snapshot)return;walletSnapshot=snapshot;walletIsAdmin=isAdmin===true;const adminEntry=document.getElementById("adminEntryButton");if(adminEntry)adminEntry.style.display=walletIsAdmin?"":"none";
  const spinButton=document.getElementById('wheelSpinButton');
  if(spinButton)spinButton.style.display='';
@@ -1341,7 +1403,7 @@ function updateWalletUI(snapshot,isAdmin=false,prizes=null){
  renderBalanceHistory();
 }
 async function loadWallet(){
- try{const data=await walletApi('balance');updateWalletUI(data.wallet,data.is_admin===true,data.wheel_prizes);}
+ try{const data=await walletApi('balance');updateWalletUI(data.wallet,data.is_admin===true,data.wheel_prizes,data.wheel_config);}
  catch(error){
   const info=document.getElementById('wheelSpinInfo');
   if(info)info.textContent=error.message||'Не удалось загрузить баланс.';
