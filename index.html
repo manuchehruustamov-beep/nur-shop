@@ -289,8 +289,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #54aa
 #categoryPage .tile-image,#categoryPage .vpn-card,#categoryPage .panel,#categoryPage .info-card,#categoryPage .product-card{background:rgba(12,22,36,var(--nur-shop-card-opacity,.82));backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 #wheelPage .wheel-card,#wheelPage .wheel-strip-stage,#wheelPage .wheel-strip-item,#wheelPage .wheel-prize-card{background:rgba(12,18,34,var(--nur-roulette-card-opacity,.82));backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 
-/* NUR SHOP — premium static prize ring */
-#wheelPage .wheel-strip-stage{display:none!important}
+/* NUR SHOP — premium prize roulette */
 #wheelPage .wheel-card{border:1px solid #59366e;background:radial-gradient(circle at 50% 38%,#25143c 0%,#100b1d 58%,#080711 100%);box-shadow:0 0 32px #8b3cff30,inset 0 0 40px #a64cff18;padding:18px 12px}
 #wheelPage .wheel-kicker{color:#e5a6ff;text-shadow:0 0 16px #b34dff}
 #wheelPage .wheel-subtitle{color:#d8c6e8}
@@ -568,6 +567,7 @@ function applyWheelPrizes(items){
   p.image_url=item.image_url||null;p.image_path=item.image_path||null;
  });
  renderWheelPrizes();
+ renderFreeWheelStrip();
 }
 function renderAdminPrizes(){
  const host=document.getElementById('adminPrizeEditor');if(!host)return;
@@ -794,10 +794,11 @@ let freeWheelBusy=false;
 function renderFreeWheelStrip(winnerIndex){
  const track=document.getElementById('freeWheelStripTrack');
  const viewport=document.getElementById('freeWheelStripViewport');
- if(!track||!viewport)throw new Error('Не удалось открыть бесплатную ленту рулетки.');
- const winningPosition=30,total=winningPosition+8,items=[];
+ if(!track||!viewport)return null;
+ const spinning=Number.isInteger(winnerIndex)&&winnerIndex>=0&&winnerIndex<wheelPrizes.length;
+ const winningPosition=spinning?30:-1,total=spinning?winningPosition+8:wheelPrizes.length,items=[];
  for(let i=0;i<total;i++){
-  const prizeIndex=i===winningPosition?winnerIndex:Math.floor(Math.random()*wheelPrizes.length);
+  const prizeIndex=spinning?(i===winningPosition?winnerIndex:Math.floor(Math.random()*wheelPrizes.length)):(i%wheelPrizes.length);
   items.push(wheelPrizes[prizeIndex]);
  }
  track.style.direction='ltr';viewport.style.direction='ltr';track.style.flexDirection='row';track.style.transition='none';track.style.transform='translateX(0px)';
@@ -1616,6 +1617,6 @@ async function redeemPromoCode(){
 }
 function copyRef(){if(!referral){alert('Открой Mini App через Telegram');return;}navigator.clipboard.writeText(referral).then(()=>alert('Ссылка скопирована')).catch(()=>alert(referral));}
 function shareRef(){if(!referral){alert('Открой Mini App через Telegram');return;}const url='https://t.me/share/url?url='+encodeURIComponent(referral)+'&text='+encodeURIComponent('Приглашаю тебя в NUR SHOP!');if(tg?.openTelegramLink)tg.openTelegramLink(url);else window.open(url,'_blank');}
-renderCart();loadWallet();
+renderCart();renderFreeWheelStrip();loadWallet();
 </script>
 </body></html>
