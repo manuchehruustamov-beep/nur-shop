@@ -1538,20 +1538,22 @@ function selectManualPayment(id){
  if(!method)return;
  selectedManualPayment=method;
  const details=method.details||{};
+ const isTajik=/bank_transfer|тадж|tajik|сомон|somoni|тчк|тж/i.test(String(method.method_type||'')+' '+String(method.title||''));
  const rows=[['Банк',details.bank],['Номер карты',details.card_number],['Номер телефона',details.wallet_number],['Получатель',details.recipient]].filter(row=>row[1]);
  const host=document.getElementById('selectedPaymentDetails');
- let detailsHtml='';
- rows.forEach(row=>{const label=row[0],value=row[1];detailsHtml+='<div class="payment-detail-row"><div class="payment-detail-main"><div class="payment-detail-label">'+escapeWalletText(label)+'</div><div class="payment-detail-value">'+escapeWalletText(value)+'</div></div><button type="button" class="payment-copy-btn" data-copy="'+encodeURIComponent(String(value))+'" onclick="copyPaymentDetail(this)">Копировать</button></div>';});
- if(method.instructions){detailsHtml+='<div class="payment-detail-row"><div class="payment-detail-main"><div class="payment-detail-label">Инструкция</div><div class="payment-detail-value" style="font-size:14px;font-weight:600">'+escapeWalletText(method.instructions)+'</div></div><button type="button" class="payment-copy-btn" data-copy="'+encodeURIComponent(String(method.instructions))+'" onclick="copyPaymentDetail(this)">Копировать</button></div>';}
- host.innerHTML=detailsHtml||'<div class="muted">Реквизиты пока не заполнены. Обратись к администратору.</div>';
+ const instruction=isTajik?'1. Переведи нужную сумму в сомони по реквизитам ниже.\n2. Укажи сумму пополнения и, если есть, номер операции.\n3. После перевода нажми «Я перевёл деньги — отправить заявку». Баланс будет зачислен после проверки.':'1. Переведи нужную сумму в рублях по реквизитам ниже.\n2. Укажи сумму пополнения и, если есть, номер операции.\n3. После перевода нажми «Я перевёл деньги — отправить заявку». Баланс будет зачислен после проверки.';
+ const instructionTj='1. Маблағи лозимиро бо сомонӣ ба реквизитҳои зер интиқол диҳед.\n2. Маблағи пуркунӣ ва, агар бошад, рақами амалиётро ворид кунед.\n3. Пас аз интиқол тугмаи «Ман пулро интиқол додам — фиристодани дархост»-ро пахш кунед. Баъди санҷиш маблағ ба тавозун гузаронида мешавад.';
+ let detailsHtml='<div class="info-card" style="margin-bottom:12px;border-color:#1679c8"><b>'+(isTajik?'📋 Дастур':'📋 Инструкция')+'</b><div style="white-space:pre-line;margin-top:8px;line-height:1.6">'+(isTajik?instructionTj:instruction)+'</div></div>';
+ rows.forEach(row=>{const label=row[0],value=row[1];detailsHtml+='<div class="payment-detail-row"><div class="payment-detail-main"><div class="payment-detail-label">'+escapeWalletText(label)+'</div><div class="payment-detail-value">'+escapeWalletText(value)+'</div></div><button type="button" class="payment-copy-btn" data-copy="'+encodeURIComponent(String(value))+'" onclick="copyPaymentDetail(this)">'+(isTajik?'Нусхабардорӣ':'Копировать')+'</button></div>';});
+ if(method.instructions){detailsHtml+='<div class="payment-detail-row"><div class="payment-detail-main"><div class="payment-detail-label">'+(isTajik?'Маълумоти иловагӣ':'Дополнительная информация')+'</div><div class="payment-detail-value" style="font-size:14px;font-weight:600">'+escapeWalletText(method.instructions)+'</div></div><button type="button" class="payment-copy-btn" data-copy="'+encodeURIComponent(String(method.instructions))+'" onclick="copyPaymentDetail(this)">'+(isTajik?'Нусхабардорӣ':'Копировать')+'</button></div>';}
+ host.innerHTML=detailsHtml+(rows.length?'':'<div class="muted">'+(isTajik?'Реквизитҳо ҳоло пур карда нашудаанд.':'Реквизиты пока не заполнены.')+'</div>');
  document.getElementById('selectedPaymentTitle').textContent=method.title;
- const isTajik=/bank_transfer|тадж|tajik|сомон|somoni|тчк|тж/i.test(String(method.method_type||'')+' '+String(method.title||''));
  window.manualTopupCurrency=isTajik?'TJS':'RUB';window.manualTopupTjsRate=null;
  const amountInput=document.getElementById('manualTopupAmount'),label=document.getElementById('manualTopupAmountLabel'),preview=document.getElementById('manualTopupPreview');
- if(isTajik){amountInput.min='1';amountInput.step='0.01';amountInput.placeholder='Например, 10';label.textContent='Сумма пополнения (сомони)';preview.style.display='block';updateManualTopupPreview();}
+ if(isTajik){amountInput.min='1';amountInput.step='0.01';amountInput.placeholder='Мисол: 10';label.textContent='Маблағи пуркунӣ (сомонӣ)';preview.style.display='block';updateManualTopupPreview();}
  else{amountInput.min='10';amountInput.step='0.01';amountInput.placeholder='Например, 500';label.textContent='Сумма пополнения (₽)';preview.style.display='none';}
  document.getElementById('manualPaymentMethods').style.display='none';document.getElementById('manualPaymentForm').style.display='block';
- document.getElementById('manualTopupNotice').textContent='Переведи деньги по указанным реквизитам. После перевода отправь заявку.';
+ document.getElementById('manualTopupNotice').textContent=isTajik?'Пулро ба реквизитҳо интиқол диҳед. Пас аз интиқол дархост фиристед.':'Переведи деньги по указанным реквизитам. После перевода отправь заявку.';
 }
 async function copyPaymentDetail(button){
  const value=decodeURIComponent(button.dataset.copy||'');if(!value)return;
