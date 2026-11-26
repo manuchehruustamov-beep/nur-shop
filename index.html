@@ -1867,7 +1867,25 @@ function setShopLanguage(lang){shopLanguage=lang;closeLanguagePicker();document.
 function translateShopText(){const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let node;while(node=walker.nextNode()){if(!nurOriginalText.has(node))nurOriginalText.set(node,node.nodeValue);const original=nurOriginalText.get(node),trim=original.trim();if(!trim||node.parentElement?.closest('#languagePicker,#languageBanner,script,style'))continue;if(shopLanguage==='tg'){const translated=nurLangDict[trim];if(translated)node.nodeValue=original.replace(trim,translated);}else node.nodeValue=original;}}
 (function(){try{shopLanguage=localStorage.getItem('nurshop_language')||'ru';}catch(e){}if(shopLanguage==='tg'){document.documentElement.lang='tg';setTimeout(translateShopText,0);}const observer=new MutationObserver(()=>{if(shopLanguage==='tg')translateShopText();});observer.observe(document.body,{childList:true,subtree:true});})();
 </script>
-/* Navigation recovery: keep the bottom menu above decorative layers and recover taps through delegation. */
-<style>.nav{position:fixed!important;left:0!important;right:0!important;bottom:0!important;z-index:1000!important;pointer-events:auto!important}.nav button{position:relative;z-index:1001;pointer-events:auto!important;touch-action:manipulation}.page{padding-bottom:calc(100px + env(safe-area-inset-bottom))!important}</style>
-<script>document.addEventListener('click',function(e){const b=e.target&&e.target.closest&&e.target.closest('.nav button[data-page]');if(b){e.preventDefault();e.stopPropagation();try{showPage(b.dataset.page);}catch(err){console.error('NUR SHOP tap recovery',err);}}},true);document.addEventListener('touchend',function(e){const b=e.target&&e.target.closest&&e.target.closest('.nav button[data-page]');if(b){try{showPage(b.dataset.page);}catch(err){console.error(err);}}},{passive:true});</script>
+/* Navigation fallback v2: direct pointer and click activation, no touchend duplicate. */
+<style>
+.nav{position:fixed!important;left:0!important;right:0!important;bottom:0!important;z-index:2147483000!important;pointer-events:auto!important;isolation:isolate!important}
+.nav button{position:relative!important;z-index:2147483001!important;pointer-events:auto!important;touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important}
+.page{padding-bottom:calc(110px + env(safe-area-inset-bottom))!important}
+.admin-overlay[style*="display:none"]{pointer-events:none!important}
+</style>
+<script>
+(function(){
+ const activate=function(e){
+  const b=e.target&&e.target.closest&&e.target.closest('nav.nav button[data-page]');
+  if(!b)return;
+  const page=b.dataset.page;
+  if(!page)return;
+  e.preventDefault();
+  try{showPage(page);}catch(err){console.error('NUR SHOP navigation v2',err);}
+ };
+ document.addEventListener('pointerup',activate,true);
+ document.addEventListener('click',activate,true);
+})();
+</script>
 </body></html>
