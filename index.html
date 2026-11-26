@@ -1728,6 +1728,15 @@ function renderFreeWheelCooldown(){
 }
 // Совместимость со старыми вызовами обновления обеих рулеток.
 function renderWheelCooldown(){return renderFreeWheelCooldown();}
+async function loadFazerSupplierHeaderBalance(){
+ const el=document.getElementById('headerBalance');if(!el)return;
+ try{
+  const result=await fazerOrdersApi('supplier_balance'),data=result.data??result;
+  const findValue=(obj,keys)=>{if(!obj||typeof obj!=='object')return null;for(const k of keys)if(obj[k]!==undefined&&obj[k]!==null&&typeof obj[k]!=='object')return obj[k];for(const k of ['data','balance','account','result'])if(obj[k]&&typeof obj[k]==='object'){const v=findValue(obj[k],keys);if(v!==null)return v;}return null;};
+  const amount=findValue(data,['balance','available_balance','amount','funds','остаток']),currency=findValue(data,['currency','currency_code','code'])||'USD';
+  if(amount!==null)el.textContent=String(amount)+' '+String(currency);else el.textContent='—';
+ }catch(e){el.textContent='—';}
+}
 function updateWalletUI(snapshot,isAdmin=false,prizes=null,config=null){
  if(prizes)applyWheelPrizes(prizes);
  if(config)applyWheelConfig(config);
@@ -1735,7 +1744,9 @@ function updateWalletUI(snapshot,isAdmin=false,prizes=null,config=null){
  const spinButton=document.getElementById('wheelSpinButton');
  if(spinButton)spinButton.style.display='';
  const value=formatRuble(snapshot.balance||0);
- ['balanceAmount','headerBalance','profileBalanceAmount'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=value;});
+ ['balanceAmount','profileBalanceAmount'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=value;});
+ const headerBalance=document.getElementById('headerBalance');
+ if(headerBalance){headerBalance.textContent=isAdmin?'…':value;if(isAdmin)loadFazerSupplierHeaderBalance();}
  renderFreeWheelCooldown();
  if(freeWheelCooldownInterval)clearInterval(freeWheelCooldownInterval);
  freeWheelCooldownInterval=setInterval(renderFreeWheelCooldown,1000);
