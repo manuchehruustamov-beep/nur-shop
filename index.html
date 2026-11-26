@@ -1867,25 +1867,35 @@ function setShopLanguage(lang){shopLanguage=lang;closeLanguagePicker();document.
 function translateShopText(){const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let node;while(node=walker.nextNode()){if(!nurOriginalText.has(node))nurOriginalText.set(node,node.nodeValue);const original=nurOriginalText.get(node),trim=original.trim();if(!trim||node.parentElement?.closest('#languagePicker,#languageBanner,script,style'))continue;if(shopLanguage==='tg'){const translated=nurLangDict[trim];if(translated)node.nodeValue=original.replace(trim,translated);}else node.nodeValue=original;}}
 (function(){try{shopLanguage=localStorage.getItem('nurshop_language')||'ru';}catch(e){}if(shopLanguage==='tg'){document.documentElement.lang='tg';setTimeout(translateShopText,0);}const observer=new MutationObserver(()=>{if(shopLanguage==='tg')translateShopText();});observer.observe(document.body,{childList:true,subtree:true});})();
 </script>
-/* Navigation fallback v2: direct pointer and click activation, no touchend duplicate. */
+/* Independent navigation fallback: works even if the main app script fails. */
 <style>
-.nav{position:fixed!important;left:0!important;right:0!important;bottom:0!important;z-index:2147483000!important;pointer-events:auto!important;isolation:isolate!important}
-.nav button{position:relative!important;z-index:2147483001!important;pointer-events:auto!important;touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important}
+nav.nav{position:fixed!important;inset:auto 0 0 0!important;z-index:2147483646!important;pointer-events:auto!important}
+nav.nav button{pointer-events:auto!important;touch-action:manipulation!important;position:relative!important;z-index:2147483647!important}
 .page{padding-bottom:calc(110px + env(safe-area-inset-bottom))!important}
-.admin-overlay[style*="display:none"]{pointer-events:none!important}
 </style>
 <script>
 (function(){
- const activate=function(e){
-  const b=e.target&&e.target.closest&&e.target.closest('nav.nav button[data-page]');
+ function directSwitch(p){
+  if(!p)return false;
+  var target=document.getElementById(p+'Page');
+  if(!target)return false;
+  document.querySelectorAll('.page').forEach(function(el){el.classList.remove('active');});
+  target.classList.add('active');
+  document.querySelectorAll('nav.nav button[data-page]').forEach(function(el){el.classList.toggle('active',el.dataset.page===p);});
+  try{window.scrollTo(0,0);}catch(_){}
+  try{if(typeof showPage==='function')showPage(p);}catch(_){}
+  return true;
+ }
+ function handler(e){
+  var b=e.target&&e.target.closest&&e.target.closest('nav.nav button[data-page]');
   if(!b)return;
-  const page=b.dataset.page;
-  if(!page)return;
-  e.preventDefault();
-  try{showPage(page);}catch(err){console.error('NUR SHOP navigation v2',err);}
- };
- document.addEventListener('pointerup',activate,true);
- document.addEventListener('click',activate,true);
+  e.preventDefault();e.stopImmediatePropagation();
+  if(!directSwitch(b.dataset.page)){console.error('NUR SHOP: missing page '+b.dataset.page);}
+ }
+ document.addEventListener('click',handler,true);
+ document.addEventListener('pointerup',handler,true);
+ // Display a small diagnostic banner if the independent handler itself can't find a screen.
+ window.addEventListener('error',function(e){console.error('NUR SHOP runtime error',e.message,e.filename,e.lineno);});
 })();
 </script>
 </body></html>
