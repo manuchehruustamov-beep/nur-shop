@@ -577,7 +577,7 @@ button:disabled{opacity:.55!important}input,textarea,select,.admin-form{backgrou
 <input class="admin-form" id="storeBannerImageUrl" placeholder="Ссылка на изображение баннера">
 <label class="photo-input">📷 Загрузить баннер с устройства · JPG/PNG/WebP до 5 МБ <input id="storeBannerFile" type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadStorefrontImage(this,'banner')"></label>
 <div id="storeBannerPreview" class="storefront-preview"></div>
-<button class="action" onclick="saveStorefrontSettings()">Сохранить баннер и главный экран</button>
+<button class="action" id="storefrontSaveButton" type="button" onclick="saveStorefrontSettings()">Сохранить баннер и главный экран</button>
 </div>
 <div class="info-card">
 <b>🏠 Иконки главного экрана</b>
@@ -1163,15 +1163,37 @@ async function uploadStorefrontImage(input,kind,index,subindex){
 }
 async function saveStorefrontSettings(){
  const notice=document.getElementById('storefrontNotice');
- const cardStyle={shop_opacity:Number(document.getElementById('storeShopCardOpacity').value)/100,roulette_opacity:Number(document.getElementById('storeRouletteCardOpacity').value)/100};
- const backgrounds={home:{enabled:document.getElementById('storeBgHomeEnabled').checked,image_url:document.getElementById('storeBgHomeImageUrl').value.trim(),overlay:Number(document.getElementById('storeBgHomeOverlay').value)/100},shop:{enabled:document.getElementById('storeBgShopEnabled').checked,image_url:document.getElementById('storeBgShopImageUrl').value.trim(),overlay:Number(document.getElementById('storeBgShopOverlay').value)/100},roulette:{enabled:document.getElementById('storeBgRouletteEnabled').checked,image_url:document.getElementById('storeBgRouletteImageUrl').value.trim(),overlay:Number(document.getElementById('storeBgRouletteOverlay').value)/100}};
- const banner={enabled:document.getElementById('storeBannerEnabled').checked,title:document.getElementById('storeBannerTitle').value.trim(),subtitle:document.getElementById('storeBannerSubtitle').value.trim(),image_url:document.getElementById('storeBannerImageUrl').value.trim()};
- const tiles=storefrontDefaults.tiles.map(x=>({...x,enabled:true}));
- const diamond_tile={title:document.getElementById('storeDiamondTitle').value.trim()||'Алмазы',image_url:document.getElementById('storeDiamondImageUrl').value.trim()};
- const groups={};
-
- try{notice.textContent='Сохраняем оформление…';const data=await paymentApi('admin_storefront_save',{settings:{background:backgrounds.home,backgrounds,cardStyle,banner,tiles,diamond_tile,groups}});storefrontSettings=mergeStorefrontSettings(data.settings);renderStorefrontAdmin();renderHomeStorefront();const active=document.querySelector('.page.active');if(active)applyPageBackground(active.id.replace(/Page$/,''));notice.textContent='Готово! Фоны страниц сохранены.';}
- catch(e){notice.textContent=e.message||'Не удалось сохранить оформление.';}
+ const button=document.getElementById('storefrontSaveButton');
+ if(!notice){console.error('NUR SHOP: storefrontNotice не найден.');return;}
+ if(!adminUnlocked){notice.textContent='Сначала войди в админ-панель.';return;}
+ if(button?.disabled)return;
+ const field=id=>document.getElementById(id);
+ const required=['storeShopCardOpacity','storeRouletteCardOpacity','storeBgHomeEnabled','storeBgHomeImageUrl','storeBgHomeOverlay','storeBgShopEnabled','storeBgShopImageUrl','storeBgShopOverlay','storeBgRouletteEnabled','storeBgRouletteImageUrl','storeBgRouletteOverlay','storeBannerEnabled','storeBannerTitle','storeBannerSubtitle','storeBannerImageUrl','storeDiamondTitle','storeDiamondImageUrl'];
+ const missing=required.filter(id=>!field(id));
+ if(missing.length){notice.textContent='Не найдены поля настроек: '+missing.join(', ');console.error('NUR SHOP missing storefront fields:',missing);return;}
+ const cardStyle={shop_opacity:Number(field('storeShopCardOpacity').value)/100,roulette_opacity:Number(field('storeRouletteCardOpacity').value)/100};
+ const backgrounds={home:{enabled:field('storeBgHomeEnabled').checked,image_url:field('storeBgHomeImageUrl').value.trim(),overlay:Number(field('storeBgHomeOverlay').value)/100},shop:{enabled:field('storeBgShopEnabled').checked,image_url:field('storeBgShopImageUrl').value.trim(),overlay:Number(field('storeBgShopOverlay').value)/100},roulette:{enabled:field('storeBgRouletteEnabled').checked,image_url:field('storeBgRouletteImageUrl').value.trim(),overlay:Number(field('storeBgRouletteOverlay').value)/100}};
+ const banner={enabled:field('storeBannerEnabled').checked,title:field('storeBannerTitle').value.trim(),subtitle:field('storeBannerSubtitle').value.trim(),image_url:field('storeBannerImageUrl').value.trim()};
+ const tiles=Array.isArray(storefrontSettings.tiles)?storefrontSettings.tiles.map(x=>({...x})):storefrontDefaults.tiles.map(x=>({...x,enabled:true}));
+ const diamond_tile={title:field('storeDiamondTitle').value.trim()||'Алмазы',image_url:field('storeDiamondImageUrl').value.trim()};
+ const groups=storefrontSettings.groups||{};
+ try{
+  if(button){button.disabled=true;button.textContent='Сохраняем…';}
+  notice.textContent='Сохраняем баннер и оформление…';
+  const data=await paymentApi('admin_storefront_save',{settings:{background:backgrounds.home,backgrounds,cardStyle,banner,tiles,diamond_tile,groups}});
+  if(!data||!data.settings||typeof data.settings!=='object')throw new Error('Сервер не подтвердил сохранение настроек. Проверь подключение и попробуй ещё раз.');
+  storefrontSettings=mergeStorefrontSettings(data.settings);
+  renderStorefrontAdmin();
+  renderHomeStorefront();
+  const active=document.querySelector('.page.active');
+  if(active)applyPageBackground(active.id.replace(/Page$/,''));
+  notice.textContent='Готово! Баннер и оформление главного экрана сохранены.';
+ }catch(e){
+  console.error('NUR SHOP storefront save failed:',e);
+  notice.textContent=e.message||'Не удалось сохранить баннер. Проверь подключение к серверу.';
+ }finally{
+  if(button){button.disabled=false;button.textContent='Сохранить баннер и главный экран';}
+ }
 }
 function resetCatalogCategoryEditor(){
  catalogEditingCategoryId=null;
