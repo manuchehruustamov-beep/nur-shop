@@ -1838,10 +1838,10 @@ const nurLangDict={
 'Выберите язык':'Забонро интихоб кунед','Закрыть':'Пӯшидан','Назад':'Бозгашт','Пользователь':'Истифодабаранда','Купить':'Харидан','Загрузка…':'Боргирӣ…',
 'Найти пользователя':'Истифодабарандаро ёфтан','Пополнения':'Пуркунӣ','Доступные товары':'Молҳои дастрас'
 };
-let shopLanguage='ru';
+let shopLanguage='ru';const nurOriginalText=new WeakMap();
 function openLanguagePicker(){document.getElementById('languagePicker').style.display='flex';}
 function closeLanguagePicker(){document.getElementById('languagePicker').style.display='none';}
 function setShopLanguage(lang){shopLanguage=lang;closeLanguagePicker();document.documentElement.lang=lang==='tg'?'tg':'ru';translateShopText();try{localStorage.setItem('nurshop_language',lang);}catch(e){}}
-function translateShopText(){const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let node;while(node=walker.nextNode()){const raw=node.nodeValue,trim=raw.trim();if(!trim)continue;if(node.parentElement?.closest('#languagePicker,#languageBanner,script,style'))continue;if(shopLanguage==='tg'){const translated=nurLangDict[trim];if(translated)node.nodeValue=raw.replace(trim,translated);}else{if(node.__nurOriginal)node.nodeValue=node.__nurOriginal;}}}
+function translateShopText(){const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let node;while(node=walker.nextNode()){if(!nurOriginalText.has(node))nurOriginalText.set(node,node.nodeValue);const original=nurOriginalText.get(node),trim=original.trim();if(!trim||node.parentElement?.closest('#languagePicker,#languageBanner,script,style'))continue;if(shopLanguage==='tg'){const translated=nurLangDict[trim];if(translated)node.nodeValue=original.replace(trim,translated);}else node.nodeValue=original;}}
 (function(){try{shopLanguage=localStorage.getItem('nurshop_language')||'ru';}catch(e){}if(shopLanguage==='tg'){document.documentElement.lang='tg';setTimeout(translateShopText,0);}const observer=new MutationObserver(()=>{if(shopLanguage==='tg')translateShopText();});observer.observe(document.body,{childList:true,subtree:true});})();
 </script></body></html>
