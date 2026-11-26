@@ -644,8 +644,80 @@ button,.action,.nur-home-hero-btn,.wheel-spin,.ref-actions button,.nav button{co
 #homePage .nur-home-hero{background:linear-gradient(145deg,rgba(4,1,8,.88),rgba(15,2,17,.78))!important;border:2px solid #ff35c5!important;box-shadow:0 0 25px #ff19b955!important}
 #languageBanner{background:rgba(3,1,7,.92)!important;border-color:#ff35c5!important}
 </style>
+
+<style id="nur-shop-full-redesign-v2">
+:root{--nur-pink:#ff28b8;--nur-pink2:#ff70d5;--nur-panel:rgba(14,4,16,.94);--nur-line:rgba(255,63,197,.82);--nur-glow:0 0 9px #ff22b9,0 0 24px #ff22b966}
+html,body{background:#08030b!important;color:#fff!important}
+body{max-width:100%;overflow-x:hidden;background-image:radial-gradient(ellipse at 50% 0%,#4a073b 0,transparent 34%),radial-gradient(ellipse at 0% 55%,#35052f 0,transparent 28%),radial-gradient(ellipse at 100% 78%,#36052e 0,transparent 25%),linear-gradient(180deg,#09030c,#050207 72%,#0d0310)!important;background-attachment:fixed!important}
+body:before{content:"";position:fixed!important;inset:0!important;z-index:0!important;pointer-events:none!important;opacity:.18!important;background-image:radial-gradient(circle at 7% 14%,#ff69d4 0 1px,transparent 2px),radial-gradient(circle at 89% 22%,#ff69d4 0 1px,transparent 2px),radial-gradient(circle at 15% 78%,#ff69d4 0 2px,transparent 3px),radial-gradient(circle at 94% 83%,#ff69d4 0 2px,transparent 3px)!important;background-size:170px 210px!important}
+body>*{position:relative;z-index:1}
+.nur-brand-header{max-width:560px;margin:0 auto;padding:13px 16px 9px;display:grid;grid-template-columns:42px 1fr 42px;align-items:center;text-align:center}
+.nur-brand-header>button{width:40px;height:40px;border:1px solid #ff50c8;border-radius:50%;background:#170719;color:#fff;font-size:22px;box-shadow:var(--nur-glow)}
+.nur-brand-mark b{font-size:22px;letter-spacing:1.6px;text-shadow:0 0 12px #ff22b9}.nur-brand-mark b span{color:#ffd45e}.nur-brand-mark small{display:block;margin-top:3px;color:#f2c8e7;font-size:11px}
+.profile-bar{max-width:520px;margin:8px auto 15px!important;padding:12px 14px!important;border:1.5px solid var(--nur-line)!important;border-radius:22px!important;background:linear-gradient(110deg,rgba(20,5,24,.96),rgba(8,3,12,.94))!important;box-shadow:var(--nur-glow)!important;backdrop-filter:blur(12px)!important}
+.avatar{border:2px solid #ff57cc!important;box-shadow:0 0 14px #ff16b9!important;background:radial-gradient(circle,#8b1c77,#1a071b)!important}
+.user-info .user-name{color:#fff!important;font-weight:900!important}.user-tag{color:#e8a5d7!important}
+.balance-pill{background:linear-gradient(110deg,#240b25,#100711)!important;border:1px solid #ff4ac6!important;border-radius:18px!important;color:#fff!important;box-shadow:0 0 14px #ff00b755!important}.balance-pill svg{stroke:#ff63d0!important}
+main{max-width:560px!important;margin:0 auto!important;padding:0 12px 120px!important;background:transparent!important}
+.page{display:none!important;background:transparent!important;padding:10px 3px 25px!important;min-height:70vh}
+.page.active{display:block!important;animation:nurPageIn .24s ease-out}
+@keyframes nurPageIn{from{opacity:.55;transform:translateY(5px)}to{opacity:1;transform:none}}
+.nur-welcome-row{display:flex;align-items:end;justify-content:space-between;margin:8px 5px 12px;padding-bottom:10px;border-bottom:1px solid #ff45c7}
+.nur-welcome-row h2{font-size:23px;margin:4px 0 0;color:#fff;text-shadow:0 0 12px #ff20b7}.nur-eyebrow{font-size:9px;letter-spacing:3px;color:#ff7ad8;font-weight:900}.nur-section-code{font-size:9px;color:#d98cc9;letter-spacing:1px}
+#languageBanner{width:100%;display:flex;align-items:center;gap:12px;padding:12px 15px;margin:0 0 14px;border:1px solid #e83db5;border-radius:18px;background:linear-gradient(110deg,#1d0b21,#0b0710)!important;color:#fff!important;box-shadow:0 0 12px #ff00bb55!important;text-align:left}
+.lang-globe{font-size:27px}.lang-copy{display:flex;flex-direction:column;gap:3px}.lang-copy b{font-size:14px}.lang-copy small{font-size:10px;color:#db9acb}.lang-arrow{margin-left:auto;font-size:25px;color:#ff61cf}
+.nur-home-hero{min-height:230px!important;position:relative!important;overflow:hidden!important;margin:0 0 14px!important;padding:24px 18px!important;border:1.5px solid #ff47c5!important;border-radius:24px!important;background:radial-gradient(ellipse at 84% 50%,#72105e 0,transparent 38%),linear-gradient(120deg,rgba(8,2,12,.98) 10%,rgba(39,4,35,.94) 62%,rgba(9,3,13,.96))!important;box-shadow:var(--nur-glow)!important}
+.nur-home-hero:before{content:"";position:absolute;right:-28px;top:10px;width:185px;height:185px;border-radius:50%;background:radial-gradient(circle,#ffb1ed 0,#ff3fcb 20%,#6e0c75 52%,transparent 70%);opacity:.35;filter:blur(5px)}
+.nur-home-hero-copy{position:relative;z-index:2;max-width:78%}.nur-hero-kicker{font-size:9px;letter-spacing:2px;color:#ff8cde;font-weight:900}.nur-home-hero h1{font-size:26px!important;line-height:1.12!important;margin:9px 0!important;color:#fff!important;text-shadow:0 0 14px #ff2ab9!important}.nur-home-hero p{font-size:12px!important;line-height:1.45;color:#f0d8ec!important;max-width:225px;margin:0 0 14px}
+.nur-home-hero-btn{display:inline-flex;align-items:center;gap:8px;border:1px solid #ffb1e8!important;border-radius:30px!important;padding:11px 16px!important;background:linear-gradient(90deg,#ff1cae,#a00079)!important;color:#fff!important;font-weight:900!important;box-shadow:0 0 16px #ff00bb!important}.nur-home-hero-btn span{font-size:18px}
+.nur-home-gem{position:absolute!important;right:10px!important;top:65px!important;font-size:75px!important;z-index:1;filter:drop-shadow(0 0 17px #7c00ff)!important;transform:rotate(-10deg)}
+.nur-home-orbit{position:absolute!important;right:-38px!important;top:44px!important;width:205px!important;height:120px!important;border:2px solid #ff53d0!important;border-radius:50%!important;transform:rotate(-25deg)!important;opacity:.48!important}
+.nur-hero-crown{position:absolute;right:25px;top:12px;font-size:35px;color:#ffcf69;text-shadow:0 0 14px #ff32c1;opacity:.85}
+.nur-daily-banner{width:100%;display:flex;align-items:center;gap:12px;text-align:left;margin:0 0 20px;padding:13px 12px;border:1.5px solid #ff48c6;border-radius:20px;background:linear-gradient(100deg,#1b0719,#09040d 58%,#36052c);box-shadow:var(--nur-glow);color:#fff}
+.nur-daily-gift{font-size:43px;filter:drop-shadow(0 0 8px #ff35bf)}.nur-daily-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:4px}.nur-daily-copy b{font-size:18px;color:#ffc94f;text-shadow:0 0 10px #ff7b00}.nur-daily-copy small{font-size:10px;color:#f2d8ec;line-height:1.35}.nur-daily-action{display:flex;align-items:center;gap:6px;padding:9px 11px;border-radius:22px;background:linear-gradient(90deg,#ff27b8,#a00083);font-size:11px;font-weight:900;box-shadow:0 0 12px #ff00bb}.nur-daily-action b{font-size:19px}
+.nur-section-heading{display:flex;align-items:center;gap:8px;margin:0 3px 12px}.nur-heading-gem{font-size:27px;color:#ff51c9;text-shadow:0 0 12px #ff00bb}.nur-section-heading>b{font-size:17px}.nur-section-heading button{margin-left:auto;border:0;background:transparent;color:#f28bd9;font-size:11px;font-weight:800}.nur-section-heading button span{font-size:19px}
+#homeTiles{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:10px!important;margin:0 0 17px!important}
+#homeTiles .tile{display:flex!important;min-width:0!important;flex-direction:column!important;gap:7px!important;padding:0!important;border:0!important;background:transparent!important;text-decoration:none!important}
+#homeTiles .tile-image{width:100%!important;aspect-ratio:1/1!important;overflow:hidden!important;border:1.5px solid #ff53cc!important;border-radius:19px!important;background:linear-gradient(145deg,#210b27,#08040d)!important;box-shadow:0 0 9px #ff00bb,0 0 18px #ff00bb55!important}
+#homeTiles .tile-image img{width:100%!important;height:100%!important;object-fit:cover!important;display:block!important}
+#homeTiles .tile-label{display:block!important;text-align:center!important;font-size:10px!important;line-height:1.2!important;font-weight:950!important;letter-spacing:.3px;color:#fff!important;text-shadow:0 0 9px #ff21b9!important}
+.nur-shortcut-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.nur-shortcut{position:relative;display:flex;align-items:center;gap:10px;min-height:66px;padding:10px 12px;border:1px solid #b72d91;border-radius:17px;background:linear-gradient(110deg,rgba(25,7,26,.96),rgba(7,3,10,.96));color:#fff;text-align:left;box-shadow:0 0 10px #ff00bb33}
+.nur-shortcut>span{font-size:25px;color:#ff55c8;text-shadow:0 0 10px #ff00bb;min-width:28px;text-align:center}.nur-shortcut>b{font-size:11px;line-height:1.25}.nur-shortcut>i{font-style:normal;margin-left:auto;color:#ff61cf;font-size:23px}
+.section-title,.catalog-heading h2{color:#fff!important;text-shadow:0 0 13px #ff2ab9!important;font-size:23px!important}
+.muted,.history-caption,.wheel-subtitle{color:#e1bdd8!important}
+.panel,.info-card,.profile-card,.wheel-card,.wheel-prize-panel,.promo-card{background:linear-gradient(145deg,rgba(25,7,27,.97),rgba(8,3,12,.97))!important;border:1px solid #b82c91!important;border-radius:20px!important;box-shadow:0 0 12px #ff00bb33,inset 0 0 18px #ff00bb0d!important;color:#fff!important}
+.panel h2,.info-card b,.profile-card b{color:#fff!important}
+.action,.payment-copy-btn,.ref-actions button,.promo-input-row button{background:linear-gradient(90deg,#ff20b4,#a0007d)!important;border:1px solid #ff9be2!important;border-radius:28px!important;color:#fff!important;font-weight:900!important;box-shadow:0 0 13px #ff00bb66!important}
+button:disabled{opacity:.55}
+input,textarea,select,.admin-form{background:#0b0610!important;border:1px solid #a52b82!important;border-radius:12px!important;color:#fff!important}
+input::placeholder,textarea::placeholder{color:#b98eaf!important}
+#categoryPage .tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+#categoryPage .tile,#categoryPage .tile-image{border-radius:18px!important}
+#categoryPage .panel{margin-top:13px!important;padding:15px!important}
+#manualPaymentMethods .balance-method-grid{gap:11px!important}
+#manualPaymentMethods .balance-method-card{min-height:145px!important;border-radius:19px!important}
+#balancePage .panel{padding:16px!important;margin-top:14px!important}
+#historyPage .panel{padding:15px!important;margin:12px 0!important}
+#profilePage .profile-card{padding:16px!important;display:flex;align-items:center;gap:13px}
+#profilePage .profile-card .avatar{width:64px;height:64px}
+.nur-profile-history{width:100%;display:flex;align-items:center;gap:10px;margin:12px 0;padding:14px;border:1px solid #b82d91;border-radius:15px;background:linear-gradient(100deg,#210b23,#0a050d);color:#fff;text-align:left;font-weight:800;box-shadow:0 0 10px #ff00bb33}.nur-profile-history span{font-size:22px;color:#ff5bca}.nur-profile-history b{margin-left:auto;color:#ff6bd0;font-size:20px}
+.wheel-card{padding:16px!important;margin:12px 0!important}.wheel-kicker{color:#ff75d6!important}.roulette-price{color:#ffd2f1!important}.wheel-result{border-color:#e53bb8!important;background:#17091b!important;color:#fff!important}
+.roulette-board{filter:drop-shadow(0 0 12px #ff00bb88)}
+.nav.nur-bottom-nav{position:fixed!important;left:50%!important;bottom:calc(10px + env(safe-area-inset-bottom))!important;transform:translateX(-50%)!important;width:min(540px,calc(100% - 18px))!important;max-width:540px!important;display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:0!important;padding:8px 3px!important;margin:0!important;border:1.5px solid #ff4bc8!important;border-radius:23px!important;background:rgba(10,3,13,.96)!important;box-shadow:0 0 16px #ff00bb88,0 0 32px #ff00bb33!important;backdrop-filter:blur(16px)!important;z-index:50!important}
+.nav.nur-bottom-nav button{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;min-width:0!important;padding:4px 1px!important;border:0!important;border-radius:14px!important;background:transparent!important;color:#d9b4d0!important;font-size:9px!important;font-weight:800!important;white-space:nowrap}
+.nav.nur-bottom-nav button svg{width:22px!important;height:22px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+.nav.nur-bottom-nav button.active{color:#ff4bc8!important;background:radial-gradient(ellipse at center,#8c126b66,transparent 75%)!important;text-shadow:0 0 11px #ff00bb!important}
+.nav.nur-bottom-nav button.active svg{filter:drop-shadow(0 0 6px #ff00bb)}
+#adminPage.admin-fullscreen{background:linear-gradient(180deg,#100511,#050207)!important}
+#adminPage .panel,#adminPage .admin-menu-card{background:linear-gradient(145deg,#200a22,#09040d)!important;border:1px solid #a82c88!important;border-radius:17px!important;color:#fff!important}
+#adminPage button{border-radius:13px}
+@media(min-width:520px){.nur-home-hero{min-height:250px!important}.nur-home-hero h1{font-size:30px!important}#homeTiles .tile-label{font-size:12px!important}}
+@media(max-width:360px){.nur-home-hero{padding:19px 13px!important}.nur-home-hero h1{font-size:22px!important}.nur-home-gem{font-size:58px!important;right:2px!important}.nur-daily-banner{gap:7px;padding:10px 8px}.nur-daily-gift{font-size:34px}.nur-daily-action{padding:8px}.nur-shortcut{padding:9px 8px}.nur-shortcut>b{font-size:10px}}
+</style>
 </head>
 <body>
+<header class="nur-brand-header"><button type="button" aria-label="Профиль" onclick="showPage('profile')">☰</button><div class="nur-brand-mark"><b>NUR SHOP <span>♛</span></b><small>Твой мир — твои возможности</small></div><button type="button" aria-label="Баланс" onclick="showPage('balance')">⋮</button></header>
 <header class="profile-bar">
 <div class="avatar" id="avatar"><span id="avatarLetter">N</span></div>
 <div class="user-info"><div class="user-name" id="userName">Пользователь</div><div class="user-tag" id="userTag">@nurshop</div></div>
@@ -653,9 +725,13 @@ button,.action,.nur-home-hero-btn,.wheel-spin,.ref-actions button,.nav button{co
 </header>
 <main>
 <section class="page active" id="homePage">
-<button id="languageBanner" type="button" onclick="openLanguagePicker()"><span class="lang-globe">🌐</span><span class="lang-copy"><b>Изменить язык</b><small>Забонро иваз кунед</small></span><span class="lang-arrow">›</span></button>
-<div class="catalog-heading"><div><span>ВЫБИРАЙ СВОЁ</span><h2 id="catalog">Каталог магазина</h2></div><small>NUR SHOP / 01</small></div>
-<div class="nur-home-hero"><div class="nur-home-hero-copy"><h1>Добро пожаловать<br>в NUR SHOP</h1><p>Твои любимые цифровые товары в одном месте</p><button class="nur-home-hero-btn" onclick="showPage('category')">Купить алмазы ↗</button></div><div class="nur-home-gem">💎</div><div class="nur-home-orbit"></div></div><div class="tiles" id="homeTiles"></div>
+<div class="nur-welcome-row"><div><span class="nur-eyebrow">ВЫБИРАЙ СВОЁ</span><h2 id="catalog">Каталог товаров</h2></div><span class="nur-section-code">NUR SHOP / 01</span></div>
+<button id="languageBanner" type="button" onclick="openLanguagePicker()"><span class="lang-globe">🌐</span><span class="lang-copy"><b>Изменить язык</b><small>Выбери удобный язык</small></span><span class="lang-arrow">›</span></button>
+<div class="nur-home-hero"><div class="nur-home-hero-copy"><span class="nur-hero-kicker">ИГРАЙ • ПОКУПАЙ • ПОБЕЖДАЙ</span><h1>Добро пожаловать<br>в NUR SHOP</h1><p>Твой мир Free Fire, игр и цифровых возможностей</p><button class="nur-home-hero-btn" onclick="showPage('category')">Перейти к покупкам <span>→</span></button></div><div class="nur-home-gem" aria-hidden="true">💎</div><div class="nur-home-orbit"></div><div class="nur-hero-crown" aria-hidden="true">♛</div></div>
+<button type="button" class="nur-daily-banner" onclick="showPage('wheel')"><span class="nur-daily-gift">🎁</span><span class="nur-daily-copy"><b>Бонус дня</b><small>Забирай свой бонус и испытай удачу!</small></span><span class="nur-daily-action">Получить <b>›</b></span></button>
+<div class="nur-section-heading"><span class="nur-heading-gem">◇</span><b>Каталог товаров</b><button type="button" onclick="showPage('category')">Все товары <span>›</span></button></div>
+<div class="tiles" id="homeTiles"></div>
+<div class="nur-shortcut-grid"><button type="button" class="nur-shortcut" onclick="showPage('profile')"><span>♛</span><b>Профиль<br>и настройки</b><i>›</i></button><button type="button" class="nur-shortcut" onclick="showPage('wheel')"><span>🎁</span><b>Ежедневные<br>бонусы</b><i>›</i></button><button type="button" class="nur-shortcut" onclick="showPage('profile')"><span>☏</span><b>Поддержка</b><i>›</i></button><button type="button" class="nur-shortcut" onclick="showPage('profile')"><span>?</span><b>FAQ</b><i>›</i></button></div>
 </section>
 <section class="page" id="categoryPage">
 <button class="action" style="margin:0 0 16px;background:#14243a;color:#dcecff;border:1px solid #315579" onclick="showPage('home')">← Назад в каталог</button>
@@ -701,7 +777,7 @@ button,.action,.nur-home-hero-btn,.wheel-spin,.ref-actions button,.nav button{co
 </section>
 <section class="page" id="balancePage"><h2 class="section-title">Мой баланс</h2><p class="muted balance-intro">Выбери способ пополнения баланса</p><div id="manualPaymentMethods"><div class="empty">Загружаем способы оплаты…</div></div><div id="manualPaymentForm" style="display:none;margin-top:14px"><button type="button" class="payment-copy-btn" onclick="backToPaymentMethods()" style="margin-bottom:12px">← Назад к способам оплаты</button><div class="info-card"><b id="selectedPaymentTitle">Способ оплаты</b><div id="selectedPaymentDetails" class="payment-details" style="margin-top:10px"></div></div><label class="muted" for="manualTopupAmount" id="manualTopupAmountLabel">Сумма пополнения (₽)</label><input class="admin-form" id="manualTopupAmount" type="number" min="10" max="100000" step="0.01" inputmode="decimal" placeholder="Например, 500" oninput="updateManualTopupPreview()"><div class="info-card" id="manualTopupPreview" style="display:none;margin-top:10px"><span>Зачислится на баланс NUR SHOP</span><strong id="manualTopupPreviewValue">— ₽</strong><small id="manualTopupRate" class="muted"></small></div><button type="button" class="payment-copy-btn" style="margin-top:8px;width:100%" id="copyTopupAmountBtn" onclick="copyTopupAmount()">Копировать сумму</button><button class="action" id="manualTopupSubmit" onclick="submitManualTopup()">Я перевёл деньги — отправить заявку</button><p class="muted" id="manualTopupNotice" aria-live="polite"></p></div><div class="panel"><h2>⭐ Оплата Telegram Stars</h2><p class="muted">1 ⭐ = 2 ₽. Введи количество звёзд (от 10 до 10 000).</p><div class="promo-input-row"><input id="topupStarsAmount" type="number" min="10" max="10000" step="1" value="50" inputmode="numeric" oninput="updateTopupPreview()" placeholder="Количество ⭐"></div><div class="info-card" style="margin-top:12px"><span>Будет зачислено на баланс</span><strong id="topupRublePreview">100 ₽</strong></div><button class="action" id="topupPayButton" onclick="startTopup()">Оплатить ⭐ в Telegram</button><p class="muted" id="topupNotice">Счёт откроется в Telegram. Рубли будут зачислены только после подтверждения платежа сервером.</p></div></section>
 <section class="page" id="historyPage"><h2 class="section-title">История операций</h2><div class="panel"><h2>Пополнения и списания</h2><p class="history-caption">Все суммы указаны в российских рублях (₽).</p><div id="balanceHistory"><div class="empty">Операций пока нет</div></div></div><div class="panel"><h2>Выигрыши рулетки</h2><div id="wheelHistory" class="empty">Выигрышей пока нет</div></div><div class="panel"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><h2 style="margin:0">История заказов</h2><button class="admin-secondary" onclick="loadFazerTestOrderHistory()">↻ Обновить</button></div><div id="fazerTestOrderHistory" style="margin-top:12px"><div class="empty">Загрузка заказов…</div></div></div></section>
-<section class="page" id="profilePage"><h2 class="section-title">Мой профиль</h2><div class="profile-card"><div class="avatar" id="profileAvatar">N</div><div><b id="profileName">Пользователь</b><small id="profileTag">@nurshop</small></div></div><div class="info-card"><span>Мой баланс</span><strong id="profileBalanceAmount">0 ₽</strong></div><div class="info-card promo-card">
+<section class="page" id="profilePage"><h2 class="section-title">Мой профиль</h2><div class="profile-card"><div class="avatar" id="profileAvatar">N</div><div><b id="profileName">Пользователь</b><small id="profileTag">@nurshop</small></div></div><div class="info-card"><span>Мой баланс</span><strong id="profileBalanceAmount">0 ₽</strong></div><button type="button" class="nur-profile-history" onclick="showPage(&quot;history&quot;)"><span>▤</span> История покупок и операций <b>›</b></button><div class="info-card promo-card">
 <b>🎟️ Активировать промокод</b>
 <p class="muted">Введи промокод, чтобы получить подарок от NUR SHOP.</p>
 <div class="promo-input-row"><input id="promoCodeInput" type="text" maxlength="8" autocomplete="off" autocapitalize="characters" placeholder="ВВЕДИ ПРОМОКОД"><button onclick="activatePromoCode()">Проверить</button></div>
@@ -832,11 +908,11 @@ button,.action,.nur-home-hero-btn,.wheel-spin,.ref-actions button,.nav button{co
 </section>
 <div class="admin-overlay" id="adminAuth" role="dialog" aria-modal="true" aria-labelledby="adminAuthTitle"><div class="admin-auth-card"><h2 id="adminAuthTitle">🔐 Проверка администратора</h2><p id="adminAuthDescription">Проверяем Telegram ID через защищённый сервер NUR SHOP.</p><div class="admin-auth-actions"><button onclick="openAdminAuth()">Проверить снова</button><button class="secondary" onclick="closeAdminAuth()">Закрыть</button></div><p id="adminAuthNotice" aria-live="polite"></p></div></div>
 </main>
-<nav class="nav"><button data-page="wheel" onclick="showPage('wheel')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/><path d="M12 3v7m0 4v7M3 12h7m4 0h7M5.6 5.6l4.9 4.9m3 3 4.9 4.9m0-12.8-4.9 4.9m-3 3-4.9 4.9"/></svg>Рулетка</button>
-
-<button class="active" data-page="home" onclick="showPage('home')"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg>Главная</button>
+<nav class="nav nur-bottom-nav">
+<button data-page="home" class="active" onclick="showPage('home')"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg>Главная</button>
+<button data-page="category" onclick="showPage('category')"><svg viewBox="0 0 24 24"><path d="M3 3h2l2.4 12.2a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 1.9-1.4L22 8H6"/><circle cx="10" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg>Магазин</button>
+<button data-page="wheel" onclick="showPage('wheel')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/><path d="M12 3v7m0 4v7M3 12h7m4 0h7"/></svg>Бонусы</button>
 <button data-page="balance" onclick="showPage('balance')"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="15" rx="2"/><path d="M3 9h18M16 14h2"/></svg>Баланс</button>
-<button data-page="history" onclick="showPage('history')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>История</button>
 <button data-page="profile" onclick="showPage('profile')"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg>Профиль</button>
 </nav>
 <script>
