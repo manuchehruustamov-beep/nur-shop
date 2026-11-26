@@ -645,16 +645,17 @@ function initAdminDashboard(){
  freefire:['Оформление магазина','Каталог Free Fire'],
  promos:['Промокоды на 110 алмазов'],
  giftcodes:['Подарочные промокоды'],
- topups:['Способы оплаты и реквизиты','Заявки на пополнение'],
+ topups:['Способы оплаты и реквизиты','Пополнения и пользователи'],
+ topupRequests:['Заявки на пополнение'],
  wins:['Выигрыши в реальном времени'],
  supplier:['Баланс FazerCards']};
  const direct=[...page.children].filter(el=>el.classList.contains('panel')||el.id==='adminCatalogPanel'||el.id==='adminPromoPanel'||el.id==='adminStorefrontPanel');
  const items=[];
  direct.forEach(el=>{const txt=(el.innerText||'').replace(/\s+/g,' ');let group=null;
- if(/Баланс FazerCards/.test(txt))group='supplier';else if(/Оформление магазина|Баннер главного экрана|Иконки главного экрана/.test(txt))group='freefire';else if(/Каталог Free Fire/.test(txt))group='freefire';else if(/Промокоды на 110 алмазов/.test(txt))group='promos';else if(el.id==='adminPromoPanel'||/Подарочные промокоды/.test(txt))group='giftcodes';else if(/Выигрыши в реальном времени/.test(txt))group='wins';else if(/Настройки призов рулетки|Персональный приз|Основные настройки рулетки/.test(txt))group='roulette';else if(/Способы оплаты и реквизиты|Заявки на пополнение|Пополнения и пользователи/.test(txt))group='topups';
+ if(/Баланс FazerCards/.test(txt))group='supplier';else if(/Оформление магазина|Баннер главного экрана|Иконки главного экрана/.test(txt))group='freefire';else if(/Каталог Free Fire/.test(txt))group='freefire';else if(/Промокоды на 110 алмазов/.test(txt))group='promos';else if(el.id==='adminPromoPanel'||/Подарочные промокоды/.test(txt))group='giftcodes';else if(/Выигрыши в реальном времени/.test(txt))group='wins';else if(/Настройки призов рулетки|Персональный приз|Основные настройки рулетки/.test(txt))group='roulette';else if(/Заявки на пополнение/.test(txt))group='topupRequests';else if(/Способы оплаты и реквизиты|Пополнения и пользователи/.test(txt))group='topups';
  if(group){el.dataset.adminGroup=group;items.push(el);}
  });
- const cards=[['roulette','🎡','Настройки рулетки','Цена, призы, шансы и персональные призы'],['freefire','🎮','Free Fire','Каталог и оформление'],['promos','🎟️','Промокоды','Промокоды на 110 алмазов'],['giftcodes','🎁','Подарочные промокоды','Создание подарков, просмотр и копирование готовых кодов'],['topups','💳','Пополнения и пользователи','Оплаты и заявки покупателей'],['wins','🏆','Выигрыши рулетки','История побед и призов'],['supplier','💰','Поставщик','Баланс FazerCards']];
+ const cards=[['roulette','🎡','Настройки рулетки','Цена, призы, шансы и персональные призы'],['freefire','🎮','Free Fire','Каталог и оформление'],['promos','🎟️','Промокоды','Промокоды на 110 алмазов'],['giftcodes','🎁','Подарочные промокоды','Создание подарков, просмотр и копирование готовых кодов'],['topups','💳','Пополнения и пользователи','Реквизиты и поиск покупателей'],['topupRequests','🧾','Заявки на пополнение','Проверка банковских платежей и подтверждение зачислений'],['wins','🏆','Выигрыши рулетки','История побед и призов'],['supplier','💰','Поставщик','Баланс FazerCards']];
  cards.forEach(([key,icon,name,desc])=>{const b=document.createElement('button');b.className='admin-menu-card';b.innerHTML='<span class="menu-icon">'+icon+'</span><b>'+name+'</b><small>'+desc+'</small>';b.onclick=()=>adminDashboardOpen(key,name);menu.appendChild(b);});
  items.forEach(el=>el.style.display='none');
  function home(){menu.style.display='grid';back.style.display='none';title.style.display='none';items.forEach(el=>el.style.display='none');page.scrollTop=0;}
