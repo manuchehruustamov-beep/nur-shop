@@ -1564,7 +1564,7 @@ let catalogEditingProductId=null;
 let adminCatalogSnapshot={categories:[],products:[],orders:[]};
 let adminPromoCodes=[];
 function promoAdminStatus(status){return ({available:'Свободен',processing:'Обрабатывается',redeemed:'Использован',disabled:'Отключён'})[status]||status;}
-async function loadAdminPromoCodes(){
+async function loadAdminPromoCodes(){\n if(!window.promoGiftEditorLoaded){window.promoGiftEditorLoaded=true;initPromoGiftEditor();}
  const host=document.getElementById('adminPromoCodes');
  const historyHost=document.getElementById('adminPromoRedemptions');
  if(!host)return;
