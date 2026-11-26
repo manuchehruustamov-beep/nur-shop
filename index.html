@@ -2170,4 +2170,20 @@ function closeLanguagePicker(){document.getElementById('languagePicker').style.d
 function setShopLanguage(lang){shopLanguage=lang;closeLanguagePicker();document.documentElement.lang=lang==='tg'?'tg':'ru';translateShopText();try{localStorage.setItem('nurshop_language',lang);}catch(e){}}
 function translateShopText(){const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let node;while(node=walker.nextNode()){if(!nurOriginalText.has(node))nurOriginalText.set(node,node.nodeValue);const original=nurOriginalText.get(node),trim=original.trim();if(!trim||node.parentElement?.closest('#languagePicker,#languageBanner,script,style'))continue;if(shopLanguage==='tg'){const translated=nurLangDict[trim];if(translated)node.nodeValue=original.replace(trim,translated);}else node.nodeValue=original;}}
 (function(){try{shopLanguage=localStorage.getItem('nurshop_language')||'ru';}catch(e){}if(shopLanguage==='tg'){document.documentElement.lang='tg';setTimeout(translateShopText,0);}const observer=new MutationObserver(()=>{if(shopLanguage==='tg')translateShopText();});observer.observe(document.body,{childList:true,subtree:true});})();
-</script></body></html>
+</script>
+<style id="nur-home-reference-final">
+/* Reference screenshot polish: home only, keep existing functionality */
+#homePage .benefit-strip{display:none!important}
+.profile-bar{border-radius:0 0 22px 22px!important;backdrop-filter:blur(12px)!important}
+#homePage #languageBanner{min-height:82px!important;margin-bottom:25px!important;border-radius:28px!important}
+#homePage .catalog-heading{display:flex!important;align-items:flex-end!important;justify-content:space-between!important;margin:0 3px 17px!important;padding-bottom:9px!important;border-bottom:1px solid #ff40bf!important}
+#homePage .catalog-heading h2{font-size:clamp(25px,7vw,32px)!important;line-height:1.08!important}
+#homePage .nur-home-hero{min-height:270px!important;border-radius:28px!important;margin:18px 0 24px!important;padding:23px 19px!important;background:linear-gradient(120deg,#080208f5,#21051be8 58%,#090208e8)!important;box-shadow:0 0 10px #ff00ba,0 0 28px #ff00ba77,inset 0 0 24px #ff38c833!important}
+#homePage .nur-home-hero-btn{border-radius:28px!important;padding:13px 17px!important}
+#homePage #homeTiles .tile-image{border:2px solid #ff40bf!important;border-radius:24px!important;box-shadow:0 0 8px #ff00ba,0 0 19px #ff00ba88,inset 0 0 18px #ff00ba44!important}
+#homePage #homeTiles .tile-image:after{border-radius:21px!important}
+nav{background:rgba(7,2,7,.96)!important;border:2px solid #ff40c5!important;border-radius:30px!important;box-shadow:0 0 22px #ff00ba88!important;backdrop-filter:blur(14px)!important}
+nav button.active{color:#ff50c8!important;text-shadow:0 0 13px #ff00bb!important}
+@media(max-width:390px){#homePage{padding:18px 14px 24px!important}#homePage .nur-home-hero{min-height:245px!important;padding:20px 16px!important}#homePage #homeTiles{gap:11px!important}}
+</style>
+</body></html>
