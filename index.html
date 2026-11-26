@@ -1136,7 +1136,17 @@ async function loadStorefrontAdmin(){
  try{const data=await paymentApi('storefront_get');storefrontSettings=mergeStorefrontSettings(data.settings);renderStorefrontAdmin();renderHomeStorefront();if(notice)notice.textContent='Настройки загружены.';}
  catch(e){if(notice)notice.textContent=e.message||'Не удалось загрузить оформление.';}
 }
-function previewStorefrontImage(id,url){const host=document.getElementById(id);if(host)host.innerHTML=url?'<img src="'+escapeWalletText(url)+'" alt="Предпросмотр">':'';}
+function previewStorefrontImage(id,url){
+ const host=document.getElementById(id);if(!host)return;
+ host.innerHTML='';
+ if(!url)return;
+ const img=document.createElement('img');
+ img.alt='Предпросмотр изображения';
+ img.onload=()=>{img.dataset.loaded='true';};
+ img.onerror=()=>{host.textContent='Не удалось отобразить изображение. Проверь ссылку или доступ к файлу.';};
+ img.src=url;
+ host.appendChild(img);
+}
 async function uploadStorefrontImage(input,kind,index,subindex){
  const file=input.files?.[0];if(!file)return;
  const notice=document.getElementById(['banner','tile','group','diamond','background','bg_home','bg_shop','bg_roulette'].includes(kind)?'storefrontNotice':kind==='category'?'catalogCategoryNotice':'catalogProductNotice');
@@ -1146,8 +1156,9 @@ async function uploadStorefrontImage(input,kind,index,subindex){
   if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw new Error('Подойдут только JPG, PNG или WebP.');
   if(notice)notice.textContent='Загружаем изображение…';
   const signed=await paymentApi('admin_asset_upload_sign',{fileName:file.name,fileType:file.type,fileSize:file.size});
+  if(!signed||typeof signed.signedUrl!=='string'||!signed.signedUrl||typeof signed.publicUrl!=='string'||!signed.publicUrl)throw new Error('Сервер не выдал ссылку для загрузки изображения.');
   const uploaded=await fetch(signed.signedUrl,{method:'PUT',headers:{'apikey':'sb_publishable_YbSIIwYKnMGqUBbhB62v2A_-756p1MO','Content-Type':file.type},body:file});
-  if(!uploaded.ok)throw new Error('Не удалось загрузить изображение. Попробуй ещё раз.');
+  if(!uploaded.ok){const detail=await uploaded.text().catch(()=> '');throw new Error('Supabase не принял изображение ('+uploaded.status+'). '+(detail||'Проверь Storage и права загрузки.'));}
   const url=signed.publicUrl;
   if(kind==='bg_home'||kind==='bg_shop'||kind==='bg_roulette'){const prefix={bg_home:'Home',bg_shop:'Shop',bg_roulette:'Roulette'}[kind];document.getElementById('storeBg'+prefix+'ImageUrl').value=url;previewStorefrontImage('storeBg'+prefix+'Preview',url);}
   if(kind==='banner'){document.getElementById('storeBannerImageUrl').value=url;previewStorefrontImage('storeBannerPreview',url);}
