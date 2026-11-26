@@ -714,6 +714,13 @@ input::placeholder,textarea::placeholder{color:#b98eaf!important}
 #adminPage button{border-radius:13px}
 @media(min-width:520px){.nur-home-hero{min-height:250px!important}.nur-home-hero h1{font-size:30px!important}#homeTiles .tile-label{font-size:12px!important}}
 @media(max-width:360px){.nur-home-hero{padding:19px 13px!important}.nur-home-hero h1{font-size:22px!important}.nur-home-gem{font-size:58px!important;right:2px!important}.nur-daily-banner{gap:7px;padding:10px 8px}.nur-daily-gift{font-size:34px}.nur-daily-action{padding:8px}.nur-shortcut{padding:9px 8px}.nur-shortcut>b{font-size:10px}}
+
+/* NUR SHOP supplied-art integration and mobile layout refinement */
+#homePage .nur-home-hero{background-repeat:no-repeat!important;background-size:cover!important;background-position:center!important;min-height:270px!important;}
+#homePage .nur-home-hero:before{background:linear-gradient(90deg,rgba(8,2,12,.65),rgba(8,2,12,.2),transparent)!important}
+#homePage .nur-daily-banner{background-repeat:no-repeat!important;background-size:cover!important;background-position:center!important;}
+#homeTiles .tile-image img{object-position:center!important;}
+@media(max-width:390px){#homePage .nur-home-hero{min-height:250px!important}#homeTiles{gap:9px!important}}
 </style>
 </head>
 <body>
@@ -1376,9 +1383,14 @@ function renderHomeStorefront(){
  applyPageBackground('home');
  const banner=storefrontSettings.banner||{},host=document.getElementById('homeBanner');
  if(host){host.style.display='none';document.getElementById('homeBannerTitle').textContent=banner.title||'АЛМАЗЫ FREE FIRE';document.getElementById('homeBannerSubtitle').textContent=banner.subtitle||'Пополняй быстро • удобно • безопасно';const bannerImage=document.getElementById('homeBannerImage');bannerImage.src=banner.enabled&&banner.image_url?banner.image_url:'';bannerImage.style.display=banner.enabled&&banner.image_url?'block':'none';}
+ const hero=document.querySelector('#homePage .nur-home-hero');
+ if(hero){const heroUrl=storefrontSettings.home_hero_image_url||storefrontSettings.backgrounds?.home?.image_url||'';hero.style.backgroundImage=heroUrl?'linear-gradient(90deg,rgba(7,2,12,.35),rgba(7,2,12,.1)),url("'+heroUrl.replace(/"/g,'')+'")':'';hero.style.backgroundSize='cover';hero.style.backgroundPosition='center';}
+ const daily=document.querySelector('#homePage .nur-daily-banner');
+ if(daily&&banner.daily_image_url){daily.style.backgroundImage='linear-gradient(90deg,rgba(12,2,12,.35),rgba(12,2,12,.15)),url("'+String(banner.daily_image_url).replace(/"/g,'')+'")';daily.style.backgroundSize='cover';daily.style.backgroundPosition='center';}
  const tiles=document.getElementById('homeTiles');if(!tiles)return;
- const visibleTiles=(Array.isArray(storefrontSettings.tiles)&&storefrontSettings.tiles.length?storefrontSettings.tiles:storefrontDefaults.tiles);tiles.innerHTML=visibleTiles.filter(x=>['ff','happ','tiktok_banner'].includes(x.key)).map(x=>{
-  const img=x.image_url?'<img src="'+escapeWalletText(x.image_url)+'" alt="" loading="lazy">':'<span style="font-size:42px">'+(x.key==='happ'?'🛡️':x.key==='tiktok_banner'?'🖼️':x.key==='community'?'💬':x.key==='stars'?'⭐':x.key==='telegram'?'✈️':x.key==='pubg'?'🎯':'🔥')+'</span>';
+ const visibleTiles=(Array.isArray(storefrontSettings.tiles)&&storefrontSettings.tiles.length?storefrontSettings.tiles:storefrontDefaults.tiles);
+ tiles.innerHTML=visibleTiles.filter(x=>['ff','happ','tiktok_banner'].includes(x.key)).map(x=>{
+  const img=x.image_url?'<img src="'+escapeWalletText(x.image_url)+'" alt="" loading="lazy">':'<span style="font-size:42px">'+(x.key==='happ'?'🛡️':x.key==='tiktok_banner'?'🖼️':'🔥')+'</span>';
   const inner='<div class="tile-image">'+img+'</div><span class="tile-label">'+escapeWalletText(x.title)+'</span>';
   return /^https:\/\//i.test(x.target||'')?'<a class="tile" href="'+escapeWalletText(x.target)+'" target="_blank" rel="noopener">'+inner+'</a>':'<button class="tile" type="button" style="border:0;background:transparent;padding:0;cursor:pointer" onclick="openCategory('+escapeWalletText(JSON.stringify(x.target||x.title))+')">'+inner+'</button>';
  }).join('');
