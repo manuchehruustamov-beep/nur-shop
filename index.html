@@ -435,7 +435,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #54aa
 </header>
 <main>
 <section class="page active" id="homePage">
-<div class="benefit-strip"><div><b>✦</b><span>Цифровые товары</span></div><div><b>⌁</b><span>Удобный заказ</span></div><div><b>◈</b><span>Поддержка в Telegram</span></div></div>
+<button id="languageBanner" type="button" onclick="openLanguagePicker()" style="width:100%;display:flex;flex-direction:column;align-items:flex-start;gap:5px;margin:0 0 28px;padding:17px 20px;border-radius:18px;border:1px solid #1476c9;background:linear-gradient(110deg,#071b35,#0c2b4d);color:#e5f3ff;box-shadow:0 0 18px #0878d522;text-align:left"><b style="font-size:16px">🌐 Изменить язык</b><span style="font-size:13px;color:#69baff">Забонро иваз кунед</span></button>
 <div class="catalog-heading"><div><span>ВЫБИРАЙ СВОЁ</span><h2 id="catalog">Каталог магазина</h2></div><small>NUR SHOP / 01</small></div>
 <div id="homeBanner" class="home-banner nur-neon"><img id="homeBannerImage" alt="" style="display:none"><div class="home-banner-art" aria-hidden="true"><span class="home-banner-gem">💎</span></div><div class="home-banner-copy"><b id="homeBannerTitle">АЛМАЗЫ FREE FIRE</b><span id="homeBannerSubtitle">Пополняй быстро • удобно • безопасно</span><button class="home-banner-cta" type="button" onclick="openCategory('Free Fire')">Купить алмазы <span>↗</span></button></div></div>
 <div class="tiles" id="homeTiles"></div>
@@ -1827,4 +1827,21 @@ function copyRef(){if(!referral){alert('Открой Mini App через Telegra
 function shareRef(){if(!referral){alert('Открой Mini App через Telegram');return;}const url='https://t.me/share/url?url='+encodeURIComponent(referral)+'&text='+encodeURIComponent('Приглашаю тебя в NUR SHOP!');if(tg?.openTelegramLink)tg.openTelegramLink(url);else window.open(url,'_blank');}
 renderCart();renderFreeWheelStrip();loadWallet();
 </script>
-</body></html>
+<div id="languagePicker" style="display:none;position:fixed;z-index:9999;inset:0;background:#000b;align-items:center;justify-content:center;padding:22px" onclick="if(event.target===this)closeLanguagePicker()"><div style="width:100%;max-width:420px;border:1px solid #1681d6;border-radius:22px;padding:22px;background:#071326;color:#eff7ff;box-shadow:0 0 35px #007aff33"><h2 style="margin:0 0 16px">🌐 Выберите язык</h2><button onclick="setShopLanguage('ru')" style="width:100%;padding:16px;margin:7px 0;border-radius:14px;border:1px solid #2486d5;background:#0b2542;color:white;font-weight:800">🇷🇺 Русский</button><button onclick="setShopLanguage('tg')" style="width:100%;padding:16px;margin:7px 0;border-radius:14px;border:1px solid #2486d5;background:#0b2542;color:white;font-weight:800">🇹🇯 Тоҷикӣ</button><div style="margin-top:16px;color:#93a8c1;font-size:13px"><div style="padding:10px">🇰🇿 Қазақша · Скоро</div><div style="padding:10px">🇰🇬 Кыргызча · Скоро</div><div style="padding:10px">🇺🇿 O‘zbekcha · Скоро</div></div><button onclick="closeLanguagePicker()" style="width:100%;padding:12px;border:0;border-radius:12px;background:#26364c;color:white;margin-top:12px">Закрыть</button></div></div>
+<script>
+const nurLangDict={
+'Главная':'Асосӣ','Рулетка':'Рулетка','Баланс':'Тавозун','История':'Таърих','Профиль':'Профил',
+'Каталог магазина':'Каталоги мағоза','ВЫБИРАЙ СВОЁ':'Интихоб кунед','Купить алмазы':'Харидани алмос','Купить алмазы ↗':'Харидани алмос',
+'← Назад в каталог':'← Бозгашт ба каталог','Каталог':'Каталог','Выбери нужный раздел':'Бахши лозимиро интихоб кунед','Товары':'Молҳо','Корзина':'Сабад','Корзина пока пуста':'Сабад ҳоло холӣ аст','Итого':'Ҳамагӣ','Сформировать заказ':'Фармоиш додан','Оформление заказа':'Тартиб додани фармоиш','Отправить заказ':'Фармоишро фиристодан','Твой игровой ID Free Fire':'ID-и бозии Free Fire','Введи игровой ID':'ID-ро ворид кунед',
+'Пополнить баланс':'Пур кардани тавозун','Способы оплаты':'Усулҳои пардохт','История операций':'Таърихи амалиёт','Мои заказы':'Фармоишҳои ман','Настройки':'Танзимот','Поддержка в Telegram':'Дастгирӣ дар Telegram',
+'Рулетка удачи':'Рулеткаи бахт','БЕСПЛАТНАЯ РУЛЕТКА':'РУЛЕТКАИ РОЙГОН','КРУТИТЬ БЕСПЛАТНО':'РОЙГОН ГАРДОНЕД','Промокод':'Промокод','Активировать':'Фаъол кардан',
+'Выберите язык':'Забонро интихоб кунед','Закрыть':'Пӯшидан','Назад':'Бозгашт','Пользователь':'Истифодабаранда','Купить':'Харидан','Загрузка…':'Боргирӣ…',
+'Найти пользователя':'Истифодабарандаро ёфтан','Пополнения':'Пуркунӣ','Доступные товары':'Молҳои дастрас'
+};
+let shopLanguage='ru';
+function openLanguagePicker(){document.getElementById('languagePicker').style.display='flex';}
+function closeLanguagePicker(){document.getElementById('languagePicker').style.display='none';}
+function setShopLanguage(lang){shopLanguage=lang;closeLanguagePicker();document.documentElement.lang=lang==='tg'?'tg':'ru';translateShopText();try{localStorage.setItem('nurshop_language',lang);}catch(e){}}
+function translateShopText(){const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let node;while(node=walker.nextNode()){const raw=node.nodeValue,trim=raw.trim();if(!trim)continue;if(node.parentElement?.closest('#languagePicker,#languageBanner,script,style'))continue;if(shopLanguage==='tg'){const translated=nurLangDict[trim];if(translated)node.nodeValue=raw.replace(trim,translated);}else{if(node.__nurOriginal)node.nodeValue=node.__nurOriginal;}}}
+(function(){try{shopLanguage=localStorage.getItem('nurshop_language')||'ru';}catch(e){}if(shopLanguage==='tg'){document.documentElement.lang='tg';setTimeout(translateShopText,0);}const observer=new MutationObserver(()=>{if(shopLanguage==='tg')translateShopText();});observer.observe(document.body,{childList:true,subtree:true});})();
+</script></body></html>
