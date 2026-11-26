@@ -1105,7 +1105,7 @@ function applyPageBackground(page){
 function renderHomeStorefront(){
  applyPageBackground('home');
  const banner=storefrontSettings.banner||{},host=document.getElementById('homeBanner');
- if(host){host.style.display='block';document.getElementById('homeBannerTitle').textContent=banner.title||'АЛМАЗЫ FREE FIRE';document.getElementById('homeBannerSubtitle').textContent=banner.subtitle||'Пополняй быстро • удобно • безопасно';const bannerImage=document.getElementById('homeBannerImage');bannerImage.src=banner.enabled&&banner.image_url?banner.image_url:'';bannerImage.style.display=banner.enabled&&banner.image_url?'block':'none';}
+ if(host){host.style.display='none';document.getElementById('homeBannerTitle').textContent=banner.title||'АЛМАЗЫ FREE FIRE';document.getElementById('homeBannerSubtitle').textContent=banner.subtitle||'Пополняй быстро • удобно • безопасно';const bannerImage=document.getElementById('homeBannerImage');bannerImage.src=banner.enabled&&banner.image_url?banner.image_url:'';bannerImage.style.display=banner.enabled&&banner.image_url?'block':'none';}
  const tiles=document.getElementById('homeTiles');if(!tiles)return;
  const visibleTiles=(Array.isArray(storefrontSettings.tiles)&&storefrontSettings.tiles.length?storefrontSettings.tiles:storefrontDefaults.tiles);tiles.innerHTML=visibleTiles.filter(x=>['ff','happ','tiktok_banner'].includes(x.key)).map(x=>{
   const img=x.image_url?'<img src="'+escapeWalletText(x.image_url)+'" alt="" loading="lazy">':'<span style="font-size:42px">'+(x.key==='happ'?'🛡️':x.key==='tiktok_banner'?'🖼️':x.key==='community'?'💬':x.key==='stars'?'⭐':x.key==='telegram'?'✈️':x.key==='pubg'?'🎯':'🔥')+'</span>';
