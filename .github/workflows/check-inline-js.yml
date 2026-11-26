@@ -1,0 +1,42 @@
+name: NUR SHOP JavaScript syntax check
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Extract inline JavaScript and syntax-check
+        run: |
+          python3 - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+          class Parser(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.inline=[]
+                  self.current=None
+                  self.external=False
+              def handle_starttag(self,tag,attrs):
+                  if tag.lower()=='script':
+                      self.external=any(k=='src' for k,v in attrs)
+                      if not self.external:self.current=[]
+              def handle_data(self,data):
+                  if self.current is not None:self.current.append(data)
+              def handle_endtag(self,tag):
+                  if tag.lower()=='script' and self.current is not None:
+                      code=''.join(self.current)
+                      if code.strip():self.inline.append(code)
+                      self.current=None
+          p=Parser()
+          p.feed(Path('index.html').read_text())
+          for i,code in enumerate(p.inline):
+              Path(f'/tmp/nurshop-{i}.js').write_text(code)
+          print(f'Extracted {len(p.inline)} inline script(s)')
+          PY
+          for f in /tmp/nurshop-*.js; do node --check "$f"; done
