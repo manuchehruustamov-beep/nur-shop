@@ -1307,7 +1307,7 @@ function fazerRussianName(value){
   .replace(/Egypt/ig,'Египет')
   .replace(/CIS/ig,'СНГ');
 }
-async async function fazerApi(action,extra={}){
+async function fazerApi(action,extra={}){
  if(!tg?.initData)throw new Error('Открой NUR SHOP через Telegram, чтобы загрузить каталог.');
  const response=await fetch(FAZER_CATALOG_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,initData:tg.initData,...extra})});
  const data=await response.json().catch(()=>({}));
