@@ -1731,12 +1731,20 @@ function renderWheelCooldown(){return renderFreeWheelCooldown();}
 async function loadFazerSupplierHeaderBalance(){
  const el=document.getElementById('headerBalance');if(!el)return;
  try{
-  const result=await fazerOrdersApi('supplier_balance'),data=result.data??result;
+  const supplier=await fazerOrdersApi('supplier_balance'),data=supplier.data??supplier;
   const findValue=(obj,keys)=>{if(!obj||typeof obj!=='object')return null;for(const k of keys)if(obj[k]!==undefined&&obj[k]!==null&&typeof obj[k]!=='object')return obj[k];for(const k of ['data','balance','account','result'])if(obj[k]&&typeof obj[k]==='object'){const v=findValue(obj[k],keys);if(v!==null)return v;}return null;};
-  const amount=findValue(data,['balance','available_balance','amount','funds','остаток']),currency=findValue(data,['currency','currency_code','code'])||'USD';
-  if(amount!==null)el.textContent=String(amount)+' '+String(currency);else el.textContent='—';
- }catch(e){el.textContent='—';}
+  const amount=Number(findValue(data,['balance','available_balance','amount','funds','остаток']));
+  if(!Number.isFinite(amount)){el.textContent='—';return;}
+  const fx=await fetch('https://www.cbr-xml-daily.ru/daily_json.js',{cache:'no-store'});
+  if(!fx.ok)throw new Error('Курс валют недоступен');
+  const rates=await fx.json(),usd=rates?.Valute?.USD;
+  const rate=usd&&Number(usd.Value)/Number(usd.Nominal);
+  if(!Number.isFinite(rate)||rate<=0)throw new Error('Некорректный курс USD');
+  el.textContent=(amount*rate).toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2});
+  el.title='FazerCards: $'+amount.toLocaleString('en-US',{maximumFractionDigits:4})+' · курс ЦБ РФ '+rate.toLocaleString('ru-RU',{maximumFractionDigits:4})+' ₽ за $1 · '+(rates.Date||'');
+ }catch(e){el.textContent='—';el.title='Не удалось обновить баланс FazerCards в рублях';}
 }
+
 function updateWalletUI(snapshot,isAdmin=false,prizes=null,config=null){
  if(prizes)applyWheelPrizes(prizes);
  if(config)applyWheelConfig(config);
