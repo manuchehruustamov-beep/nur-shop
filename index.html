@@ -2,7 +2,8 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><meta name="theme-color" content="#050914">
-<title>NUR SHOP</title><script src="https://telegram.org/js/telegram-web-app.js">
+<title>NUR SHOP</title><script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
 async function initPromoGiftEditor(){try{const d=await fazerApi('categories');const cats=(d.items||d.categories||[]).filter(x=>/free\s*fire/i.test(String(x.name||'')));const s=document.getElementById('promoGiftCategory');if(s)s.innerHTML=cats.map(x=>'<option value="'+escapeWalletText(x.category_id)+'">'+escapeWalletText(x.name)+'</option>').join('')||'<option value="">Категории не найдены</option>';await loadPromoGiftOffers();}catch(e){const n=document.getElementById('promoGiftNotice');if(n)n.textContent=e.message;}}
 async function loadPromoGiftOffers(){const cat=document.getElementById('promoGiftCategory')?.value;const host=document.getElementById('promoGiftOffer');if(!host||!cat)return;host.innerHTML='<option>Загрузка наборов…</option>';try{const d=await fazerApi('offers',{category_id:cat});const offers=d.offers||[];host.innerHTML=offers.map(o=>{const id=o.offer_id??o.id;return '<option value="'+escapeWalletText(id)+'">'+escapeWalletText(o.name||o.title||id)+' · '+escapeWalletText(String(o.amount??o.diamonds??''))+'</option>';}).join('')||'<option value="">Нет наборов</option>';window.promoGiftOffers=offers;}catch(e){host.innerHTML='<option value="">Ошибка загрузки</option>';}}
 function promoGiftTypeChanged(){const type=document.getElementById('promoGiftType')?.value;document.getElementById('promoGiftDiamondFields').style.display=type==='diamonds'?'block':'none';document.getElementById('promoGiftVpnFields').style.display=type==='vpn'?'block':'none';}
