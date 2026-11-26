@@ -356,7 +356,20 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #54aa
 .admin-account-copy input,.admin-account-copy textarea{width:100%;box-sizing:border-box;border:1px solid #65417a;border-radius:9px;background:#0c0912;color:#fff;padding:9px;font:inherit}
 .admin-account-copy textarea{min-height:70px;resize:vertical}
 
-\n.balance-intro{text-align:center;margin:-12px 0 18px;color:#93a8c7}.balance-method-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.balance-method-card{position:relative;isolation:isolate;overflow:hidden;min-height:145px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:17px 12px;border:1px solid #1674c7;border-radius:22px;background:linear-gradient(145deg,#102642,#071426);color:#eaf4ff;text-align:center;box-shadow:0 0 18px #087fff18,inset 0 0 20px #087fff0c}.balance-method-card:active{transform:scale(.97);border-color:#46a7ff}.balance-method-card:before{content:attr(data-art);position:absolute;z-index:-1;right:-8px;bottom:-22px;font-size:100px;line-height:1;opacity:.15;filter:saturate(1.3);pointer-events:none}.balance-method-icon{width:46px;height:46px;display:grid;place-items:center;border:1px solid #2b8be6;border-radius:15px;background:#0d2037;color:#48a9ff;font-size:25px;box-shadow:0 0 14px #087fff22}.balance-method-card b{font-size:14px;line-height:1.3;text-shadow:0 1px 8px #071426}.balance-method-card.disabled{border-color:#24354b;color:#a6b5c9;opacity:.75}.balance-method-card.disabled small{font-size:11px;color:#a6b5c9}.balance-method-card.tj:before{content:'🇹🇯'}.balance-method-card.rf:before{content:'🇷🇺'}.balance-method-card.wallet:before{content:'💸';font-size:94px;opacity:.18}\n</style>
+\n.balance-intro{text-align:center;margin:-12px 0 18px;color:#93a8c7}.balance-method-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.balance-method-card{position:relative;isolation:isolate;overflow:hidden;min-height:145px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:17px 12px;border:1px solid #1674c7;border-radius:22px;background:linear-gradient(145deg,#102642,#071426);color:#eaf4ff;text-align:center;box-shadow:0 0 18px #087fff18,inset 0 0 20px #087fff0c}.balance-method-card:active{transform:scale(.97);border-color:#46a7ff}.balance-method-card:before{content:attr(data-art);position:absolute;z-index:-1;right:-8px;bottom:-22px;font-size:100px;line-height:1;opacity:.15;filter:saturate(1.3);pointer-events:none}.balance-method-icon{width:46px;height:46px;display:grid;place-items:center;border:1px solid #2b8be6;border-radius:15px;background:#0d2037;color:#48a9ff;font-size:25px;box-shadow:0 0 14px #087fff22}.balance-method-card b{font-size:14px;line-height:1.3;text-shadow:0 1px 8px #071426}.balance-method-card.disabled{border-color:#24354b;color:#a6b5c9;opacity:.75}.balance-method-card.disabled small{font-size:11px;color:#a6b5c9}.balance-method-card.tj:before{content:'🇹🇯'}.balance-method-card.rf:before{content:'🇷🇺'}.balance-method-card.wallet:before{content:'💸';font-size:94px;opacity:.18}\n
+/* Полноэкранная навигация админки NUR SHOP */
+#adminPage.admin-fullscreen{position:fixed;inset:0;z-index:60;width:100%;max-width:none;height:100dvh;overflow-y:auto;background:radial-gradient(ellipse at 50% -10%,#172b55,#050914 55%,#03050b);padding:calc(18px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom));}
+#adminPage.admin-fullscreen .admin-head{position:sticky;top:0;z-index:5;background:#070b18ee;padding:10px 0;backdrop-filter:blur(12px)}
+#adminPage.admin-fullscreen .admin-section-menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:18px 0 25px}
+#adminPage.admin-fullscreen .admin-menu-card{min-height:132px;border:1px solid #274c91;border-radius:20px;padding:18px 14px;background:linear-gradient(145deg,#111e3a,#080d1d);color:#eaf2ff;text-align:left;box-shadow:0 8px 22px #0006;}
+#adminPage.admin-fullscreen .admin-menu-card:active{transform:scale(.98);border-color:#49a5ff}
+#adminPage.admin-fullscreen .admin-menu-card .menu-icon{font-size:32px;display:block;margin-bottom:12px}
+#adminPage.admin-fullscreen .admin-menu-card b{display:block;font-size:14px}
+#adminPage.admin-fullscreen .admin-menu-card small{display:block;color:#9bb6db;font-size:11px;line-height:1.4;margin-top:6px}
+#adminPage.admin-fullscreen .admin-back-menu{display:block;width:100%;margin:0 0 14px;padding:12px;border:1px solid #3067a8;border-radius:12px;background:#0e1b31;color:#dcecff;font-weight:800}
+#adminPage.admin-fullscreen .admin-menu-title{font-size:23px;color:#eef5ff;font-weight:950;margin:12px 0}
+@media(min-width:700px){#adminPage.admin-fullscreen .admin-section-menu{grid-template-columns:repeat(3,minmax(0,1fr));}#adminPage.admin-fullscreen{padding-left:max(24px,calc((100vw - 1100px)/2));padding-right:max(24px,calc((100vw - 1100px)/2));}}
+</style>
 <style id="ff-art-polish">.tile.ff-wide{grid-column:1/-1;justify-self:center;width:112px;max-width:112px}.tile.ff-wide .ff-art-wrap{width:112px;height:112px;min-height:112px;aspect-ratio:1/1}.tile.ff-wide .tile-label{display:block;width:100%;text-align:center}.ff-art-wrap{position:relative;display:grid!important;place-items:center;overflow:hidden;height:58px;min-height:58px;border:1px solid rgba(105,190,255,.3);border-radius:15px;background:radial-gradient(ellipse at 50% 42%,rgba(24,125,255,.25),rgba(8,14,34,.95) 72%);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 8px 24px rgba(0,0,0,.3)}.ff-art-wrap:before{content:"";position:absolute;inset:4px;border:1px solid rgba(170,225,255,.14);border-radius:11px;transform:skewY(-5deg)}.ff-art-wrap:after{content:"";position:absolute;width:48px;height:48px;border-radius:50%;filter:blur(18px);opacity:.6}.ff-art-wrap svg{position:relative;z-index:1;width:min(100%,220px);height:75px;overflow:visible;filter:drop-shadow(0 3px 7px rgba(0,0,0,.45));transition:transform .25s ease}.ff-art-wrap svg>g:nth-of-type(2){display:none}.ff-art-wrap img.ff-real-hero{position:absolute;z-index:2;left:53%;bottom:-5px;width:34%;height:86px;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 2px 5px #000b)}.ff-art-wrap img.ff-real-pet{position:absolute;z-index:3;left:82%;bottom:0;width:16%;height:53px;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 2px 4px #000b)}.tile:active .ff-art-wrap svg{transform:scale(1.06) rotate(-2deg)}.ff-art-diamond:after{background:#19bfff}.ff-art-voucher{border-color:rgba(255,173,80,.35);background:radial-gradient(ellipse at 50% 42%,rgba(255,111,48,.23),rgba(20,13,31,.96) 72%)}.ff-art-voucher:after{background:#ff783d}.ff-art-voucher:before{border-color:rgba(255,205,120,.18)}
 /* Round prize artwork inside the existing gold circular badges */
 #wheelPage .roulette-orb{border-radius:50%;overflow:visible}
@@ -609,6 +622,35 @@ let adminFoundUser=null;
 let adminAssignments=[];
 let adminHistoryTimer=null;
 let adminHistoryBusy=false;
+
+// Плиточное меню админки: группировка содержимого по разделам
+function initAdminDashboard(){
+ const page=document.getElementById('adminPage');if(!page||page.dataset.dashboardReady)return;page.dataset.dashboardReady='1';page.classList.add('admin-fullscreen');
+ const menu=document.createElement('div');menu.id='adminSectionMenu';menu.className='admin-section-menu';
+ const back=document.createElement('button');back.className='admin-back-menu';back.textContent='← Назад к разделам';back.style.display='none';back.onclick=()=>adminDashboardHome();
+ const title=document.createElement('div');title.id='adminDashboardSectionTitle';title.className='admin-menu-title';title.style.display='none';
+ page.insertBefore(title,page.children[1]);page.insertBefore(back,page.children[2]);page.insertBefore(menu,page.children[3]);
+ const groups={
+ roulette:['Основные настройки рулетки','Настройки призов рулетки','Персональный приз'],
+ freefire:['Оформление магазина','Каталог Free Fire','Промокоды на 110 алмазов'],
+ topups:['Способы оплаты и реквизиты','Заявки на пополнение'],
+ wins:['Выигрыши в реальном времени'],
+ supplier:['Баланс FazerCards']};
+ const direct=[...page.children].filter(el=>el.classList.contains('panel')||el.id==='adminCatalogPanel'||el.id==='adminPromoPanel'||el.id==='adminStorefrontPanel');
+ const items=[];
+ direct.forEach(el=>{const txt=(el.innerText||'').replace(/\s+/g,' ');let group=null;
+ if(/Баланс FazerCards/.test(txt))group='supplier';else if(/Оформление магазина|Баннер главного экрана|Иконки главного экрана/.test(txt))group='freefire';else if(/Каталог Free Fire/.test(txt))group='freefire';else if(/Промокоды на 110 алмазов/.test(txt))group='freefire';else if(/Выигрыши в реальном времени/.test(txt))group='wins';else if(/Настройки призов рулетки|Персональный приз|Основные настройки рулетки/.test(txt))group='roulette';else if(/Способы оплаты и реквизиты|Заявки на пополнение/.test(txt))group='topups';
+ if(group){el.dataset.adminGroup=group;items.push(el);}
+ });
+ const cards=[['roulette','🎡','Настройки рулетки','Цена, призы, шансы и персональные призы'],['freefire','🎮','Free Fire','Каталог, оформление и промокоды'],['topups','💳','Пополнения и пользователи','Оплаты и заявки покупателей'],['wins','🏆','Выигрыши рулетки','История побед и призов'],['supplier','💰','Поставщик','Баланс FazerCards']];
+ cards.forEach(([key,icon,name,desc])=>{const b=document.createElement('button');b.className='admin-menu-card';b.innerHTML='<span class="menu-icon">'+icon+'</span><b>'+name+'</b><small>'+desc+'</small>';b.onclick=()=>adminDashboardOpen(key,name);menu.appendChild(b);});
+ items.forEach(el=>el.style.display='none');
+ function home(){menu.style.display='grid';back.style.display='none';title.style.display='none';items.forEach(el=>el.style.display='none');page.scrollTop=0;}
+ window.adminDashboardHome=home;
+ window.adminDashboardOpen=(key,name)=>{menu.style.display='none';back.style.display='block';title.style.display='block';title.textContent=name;items.forEach(el=>el.style.display=el.dataset.adminGroup===key?'':'none');page.scrollTop=0;};
+ home();
+}
+
 function closeAdminAuth(){document.getElementById('adminAuth').classList.remove('open');}
 async function openAdminAuth(){
  const overlay=document.getElementById('adminAuth'),notice=document.getElementById('adminAuthNotice');
@@ -620,7 +662,7 @@ async function openAdminAuth(){
   applyWheelPrizes(data.wheel_prizes||[]);
   applyWheelConfig(data.wheel_config||{});
   renderAdminPrizes();renderAdminAssignments();loadFazerSupplierBalance();loadAdminPaymentMethods();loadAdminTopups();loadAdminPromoCodes();loadAdminCatalog();loadStorefrontAdmin();
-  closeAdminAuth();showPage('admin');
+  closeAdminAuth();initAdminDashboard();showPage('admin');
   await loadWheelWinHistory();
   if(adminHistoryTimer)clearInterval(adminHistoryTimer);
   adminHistoryTimer=setInterval(()=>{if(adminUnlocked&&!document.hidden)loadWheelWinHistory();},5000);
