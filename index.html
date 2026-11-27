@@ -1929,4 +1929,8 @@ nav.nav button{pointer-events:auto!important;touch-action:manipulation!important
  window.addEventListener('error',function(e){console.error('NUR SHOP runtime error',e.message,e.filename,e.lineno);});
 })();
 </script>
+
+<script>
+(async function(){try{const response=await fetch('./nur-shop-i18n.json',{cache:'no-store'});if(!response.ok)throw new Error('translation resource unavailable');const extra=await response.json();for(const lang of Object.keys(extra)){nurTranslations[lang]=Object.assign(nurTranslations[lang]||{},extra[lang]||{});}if(shopLanguage!=='ru')translateShopText();}catch(e){console.warn('NUR SHOP translations resource:',e.message);}})();
+</script>
 </body></html>
