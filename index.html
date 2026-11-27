@@ -1293,7 +1293,7 @@ async function loadFreeFireCategoryTiles(){
   tiles.innerHTML=diamond+extra;
  }catch(e){tiles.innerHTML='<div class="empty">'+fazerEscape(e.message||'Не удалось загрузить разделы')+'</div>';}
 }
-async function openManualCatalogCategory(categoryId){
+async async function openManualCatalogCategory(categoryId){
  const panel=document.getElementById('categoryProducts');
  const host=document.getElementById('categoryProductList');
  panel.style.display='block';host.innerHTML='<div class="empty">Обновляем товары…</div>';
