@@ -1953,7 +1953,7 @@ nav.nav button{pointer-events:auto!important;touch-action:manipulation!important
   if(!directSwitch(b.dataset.page)){console.error('NUR SHOP: missing page '+b.dataset.page);}
  }
  document.addEventListener('click',handler,true);
- document.addEventListener('pointerup',handler,true);
+ // Do not switch pages on pointerup: touch pointerup followed by click caused duplicate navigation and disrupted taps.
  // Display a small diagnostic banner if the independent handler itself can't find a screen.
  window.addEventListener('error',function(e){console.error('NUR SHOP runtime error',e.message,e.filename,e.lineno);});
 })();
