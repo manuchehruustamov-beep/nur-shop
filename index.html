@@ -675,10 +675,21 @@ function initAdminDashboard(){
  supplier:['FazerCards — каталог','Баланс FazerCards']};
  const direct=[...page.children].filter(el=>el.classList.contains('panel')||el.id==='adminCatalogPanel'||el.id==='adminPromoPanel'||el.id==='adminStorefrontPanel');
  const items=[];
- direct.forEach(el=>{const txt=(el.innerText||'').replace(/\s+/g,' ');let group=null;
- if(/FazerCards — каталог|Баланс FazerCards/.test(txt))group='supplier';else if(/Оформление магазина|Баннер главного экрана|Иконки главного экрана|Отдельные фоны страниц|Прозрачность карточек/.test(txt))group='storefront';else if(/Каталог Free Fire/.test(txt))group='freefire';else if(/Промокоды на 110 алмазов/.test(txt))group='promos';else if(el.id==='adminPromoPanel'||/Подарочные промокоды/.test(txt))group='giftcodes';else if(/Выигрыши в реальном времени/.test(txt))group='wins';else if(/Настройки призов рулетки|Персональный приз|Основные настройки рулетки/.test(txt))group='roulette';else if(/Заявки на пополнение/.test(txt))group='topupRequests';else if(/Способы оплаты и реквизиты|Пополнения и пользователи/.test(txt))group='topups';
- if(group){el.dataset.adminGroup=group;items.push(el);}
- });
+ const classify=(el)=>{
+  const txt=(el.innerText||el.textContent||'').replace(/\\s+/g,' ');
+  if(el.id==='fazerCatalogAdminPanel'||el.id==='fazerSupplierBalancePanel'||/FazerCards — каталог|Баланс FazerCards/.test(txt))return 'supplier';
+  if(/Оформление магазина|Баннер главного экрана|Иконки главного экрана|Отдельные фоны страниц|Прозрачность карточек/.test(txt))return 'storefront';
+  if(/Каталог Free Fire/.test(txt))return 'freefire';
+  if(/Промокоды на 110 алмазов/.test(txt))return 'promos';
+  if(el.id==='adminPromoPanel'||/Подарочные промокоды/.test(txt))return 'giftcodes';
+  if(/Выигрыши в реальном времени/.test(txt))return 'wins';
+  if(/Настройки призов рулетки|Персональный приз|Основные настройки рулетки/.test(txt))return 'roulette';
+  if(/Заявки на пополнение/.test(txt))return 'topupRequests';
+  if(/Способы оплаты и реквизиты|Пополнения и пользователи/.test(txt))return 'topups';
+  return null;
+ };
+ direct.forEach(el=>{const group=classify(el);if(group){el.dataset.adminGroup=group;if(!items.includes(el))items.push(el);}});
+ ['fazerCatalogAdminPanel','fazerSupplierBalancePanel'].forEach(id=>{const el=document.getElementById(id);if(el&&page.contains(el)){el.dataset.adminGroup='supplier';if(!items.includes(el))items.push(el);}});
  const cards=[['roulette','🎡','Настройки рулетки','Цена, призы, шансы и персональные призы'],['storefront','🎨','Оформление магазина','Баннеры, фоны, иконки и прозрачность карточек'],['freefire','🎮','Каталог Free Fire','Товары, категории и цены Free Fire'],['promos','🎟️','Промокоды','Промокоды на 110 алмазов'],['giftcodes','🎁','Подарочные промокоды','Создание подарков, просмотр и копирование готовых кодов'],['topups','💳','Пополнения и пользователи','Реквизиты и поиск покупателей'],['topupRequests','🧾','Заявки на пополнение','Проверка банковских платежей и подтверждение зачислений'],['wins','🏆','Выигрыши рулетки','История побед и призов'],['supplier','🧩','FazerCards','Категории, предложения и синхронизация каталога']];
  cards.forEach(([key,icon,name,desc])=>{const b=document.createElement('button');b.className='admin-menu-card';b.innerHTML='<span class="menu-icon">'+icon+'</span><b>'+name+'</b><small>'+desc+'</small>';b.onclick=()=>adminDashboardOpen(key,name);menu.appendChild(b);});
  items.forEach(el=>el.style.display='none');
