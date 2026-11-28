@@ -11,21 +11,39 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Check inline JavaScript in index.html
+      - name: Extract inline scripts safely
         run: |
-          node <<'NODE'
-          const fs = require('fs');
-          const html = fs.readFileSync('index.html', 'utf8');
-          const scripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)];
-          let checked = 0;
-          for (let i = 0; i < scripts.length; i++) {
-            if (/\bsrc\s*=/.test(scripts[i][1])) continue;
-            const code = scripts[i][2].trim();
-            if (!code) continue;
-            const file = `/tmp/nur-shop-inline-${i}.js`;
-            fs.writeFileSync(file, code);
-            require('child_process').execFileSync(process.execPath, ['--check', file], {stdio:'inherit'});
-            checked++;
-          }
-          console.log(`Syntax OK: ${checked} inline script blocks checked.`);
-          NODE
+          python3 - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+          class Parser(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.inline=[]
+                  self.current=None
+              def handle_starttag(self,tag,attrs):
+                  if tag.lower()=='script':
+                      if any(k=='src' for k,v in attrs): self.current=None
+                      else: self.current=[]
+              def handle_data(self,data):
+                  if self.current is not None:self.current.append(data)
+              def handle_endtag(self,tag):
+                  if tag.lower()=='script' and self.current is not None:
+                      code=''.join(self.current)
+                      if code.strip():self.inline.append(code)
+                      self.current=None
+          p=Parser()
+          p.feed(Path('index.html').read_text(encoding='utf-8'))
+          for i,code in enumerate(p.inline):
+              Path(f'/tmp/nurshop-{i}.js').write_text(code,encoding='utf-8')
+          print(f'Extracted {len(p.inline)} inline script(s)')
+          PY
+      - name: Check all extracted scripts
+        run: |
+          count=0
+          for f in /tmp/nurshop-*.js; do
+            [ -f "$f" ] || continue
+            node --check "$f"
+            count=$((count+1))
+          done
+          echo "Syntax OK: $count inline scripts checked."
