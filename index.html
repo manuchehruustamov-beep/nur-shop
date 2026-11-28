@@ -1139,7 +1139,6 @@ function renderHomeStorefront(){
   else{tile=document.createElement('button');tile.type='button';tile.style.cssText='border:0;background:transparent;padding:0;cursor:pointer';tile.addEventListener('click',()=>openCategory(target));}
   tile.className='tile';tile.append(wrap,label);tiles.appendChild(tile);
  });
- const gift=document.createElement('button');gift.className='tile';gift.type='button';gift.style.cssText='border:0;background:transparent;padding:0;cursor:pointer';gift.addEventListener('click',()=>openCategory('FazerCards'));gift.innerHTML='<div class="tile-image"><span style="font-size:42px">🎁</span></div><span class="tile-label">FazerCards</span>';tiles.appendChild(gift);
 }
 async function fetchStorefrontSettings(){
  renderHomeStorefront();
