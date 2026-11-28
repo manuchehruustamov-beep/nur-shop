@@ -1,0 +1,31 @@
+name: NUR SHOP JavaScript syntax check
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Check inline JavaScript in index.html
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const html = fs.readFileSync('index.html', 'utf8');
+          const scripts = [...html.matchAll(/<script\\b([^>]*)>([\\s\\S]*?)<\\/script>/gi)];
+          let checked = 0;
+          for (let i = 0; i < scripts.length; i++) {
+            if (/\\bsrc\\s*=/.test(scripts[i][1])) continue;
+            const code = scripts[i][2].trim();
+            if (!code) continue;
+            const file = `/tmp/nur-shop-inline-${i}.js`;
+            fs.writeFileSync(file, code);
+            require('child_process').execFileSync(process.execPath, ['--check', file], {stdio:'inherit'});
+            checked++;
+          }
+          console.log(`Syntax OK: ${checked} inline script blocks checked.`);
+          NODE
