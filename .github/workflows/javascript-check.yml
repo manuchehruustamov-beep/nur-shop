@@ -16,10 +16,10 @@ jobs:
           node <<'NODE'
           const fs = require('fs');
           const html = fs.readFileSync('index.html', 'utf8');
-          const scripts = [...html.matchAll(/<script\\b([^>]*)>([\\s\\S]*?)<\\/script>/gi)];
+          const scripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)];
           let checked = 0;
           for (let i = 0; i < scripts.length; i++) {
-            if (/\\bsrc\\s*=/.test(scripts[i][1])) continue;
+            if (/\bsrc\s*=/.test(scripts[i][1])) continue;
             const code = scripts[i][2].trim();
             if (!code) continue;
             const file = `/tmp/nur-shop-inline-${i}.js`;
