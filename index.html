@@ -1976,7 +1976,27 @@ nav.nav button{pointer-events:auto!important;touch-action:manipulation!important
 </script>
 
 <script>
-/* Independent emergency storefront renderer: keeps the home catalog visible even if the main app script fails. */
-(function(){function restore(){try{var host=document.getElementById('homeTiles');if(!host||host.children.length>=3)return;host.innerHTML='';var items=[{title:'FREE FIRE',icon:'⚡',target:'Free Fire'},{title:'BANER TT',icon:'🎵',target:'https://t.me/+no2Tl-ysru84YzRi'},{title:'WebVPN',icon:'🛡️',target:'Happ VPN'}];items.forEach(function(x){var tile=x.target.indexOf('https://')===0?document.createElement('a'):document.createElement('button');if(tile.tagName==='A'){tile.href=x.target;tile.target='_blank';tile.rel='noopener';}else{tile.type='button';tile.addEventListener('click',function(){if(typeof window.openCategory==='function')window.openCategory(x.target);else alert('Раздел временно недоступен.');});}tile.className='tile';tile.style.cssText='border:0;background:transparent;padding:0;cursor:pointer';tile.innerHTML='<div class="tile-image"><div style="height:100%;display:flex;align-items:center;justify-content:center;font-size:44px">'+x.icon+'</div></div><span class="tile-label">'+x.title+'</span>';host.appendChild(tile);});}catch(e){console.error('NUR SHOP emergency storefront:',e);}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',restore);else restore();setTimeout(restore,800);})();
+/* Independent recovery renderer and startup diagnostics for the home catalog. */
+(function(){
+ function restore(){
+  try{
+   var host=document.getElementById('homeTiles');if(!host||host.children.length>=4)return;
+   host.innerHTML='';
+   var items=[{title:'FREE FIRE',icon:'⚡',target:'Free Fire'},{title:'BANER TT',icon:'🎵',target:'https://t.me/+no2Tl-ysru84YzRi'},{title:'WebVPN',icon:'🛡️',target:'Happ VPN'},{title:'FazerCards',icon:'🎁',target:'FazerCards'}];
+   items.forEach(function(x){
+    var tile=x.target.indexOf('https://')===0?document.createElement('a'):document.createElement('button');
+    if(tile.tagName==='A'){tile.href=x.target;tile.target='_blank';tile.rel='noopener';}
+    else{tile.type='button';tile.addEventListener('click',function(){if(typeof window.openCategory==='function')window.openCategory(x.target);else alert('Раздел временно недоступен.');});}
+    tile.className='tile';tile.style.cssText='border:0;background:transparent;padding:0;cursor:pointer';
+    tile.innerHTML='<div class="tile-image"><div style="height:100%;display:flex;align-items:center;justify-content:center;font-size:44px">'+x.icon+'</div></div><span class="tile-label">'+x.title+'</span>';
+    host.appendChild(tile);
+   });
+  }catch(e){console.error('NUR SHOP emergency storefront:',e);}
+ }
+ window.addEventListener('error',function(e){console.error('NUR SHOP startup JS error:',e.message,e.filename,e.lineno);restore();});
+ window.addEventListener('unhandledrejection',function(e){console.error('NUR SHOP rejected startup promise:',e.reason);restore();});
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',restore);else restore();
+ setTimeout(restore,800);
+})();
 </script>
 </body></html>
