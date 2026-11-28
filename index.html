@@ -1122,19 +1122,24 @@ function applyPageBackground(page){
  target.style.backgroundSize='cover';target.style.backgroundPosition='center';target.style.backgroundAttachment='fixed';target.style.backgroundRepeat='no-repeat';
 }
 function renderHomeStorefront(){
- applyPageBackground('home');
+ try{applyPageBackground('home');}catch(e){console.warn('Home background:',e);}
  const banner=storefrontSettings.banner||{},host=document.getElementById('homeBanner');
  if(host){host.style.display='block';const title=document.getElementById('homeBannerTitle'),subtitle=document.getElementById('homeBannerSubtitle'),bannerImage=document.getElementById('homeBannerImage');if(title)title.textContent=banner.title||'АЛМАЗЫ FREE FIRE';if(subtitle)subtitle.textContent=banner.subtitle||'Пополняй быстро • удобно • безопасно';if(bannerImage){bannerImage.src=banner.enabled&&banner.image_url?banner.image_url:'';bannerImage.style.display=banner.enabled&&banner.image_url?'block':'none';}}
  const tiles=document.getElementById('homeTiles');if(!tiles)return;
- const keys=['ff','tiktok_banner','happ'];
- const raw=Array.isArray(storefrontSettings.tiles)?storefrontSettings.tiles:[];
- const visibleTiles=keys.map(key=>raw.find(x=>x&&x.key===key&&x.enabled!==false)||storefrontDefaults.tiles.find(x=>x.key===key)).filter(Boolean);
- tiles.innerHTML=visibleTiles.map(x=>{
+ const keys=['ff','tiktok_banner','happ'];const raw=Array.isArray(storefrontSettings.tiles)?storefrontSettings.tiles:[];
+ const list=keys.map(key=>{const saved=raw.find(x=>x&&x.key===key);const base=storefrontDefaults.tiles.find(x=>x.key===key);return saved&&saved.enabled!==false?{...base,...saved}:base;}).filter(Boolean);
+ tiles.replaceChildren();
+ list.forEach(x=>{
   const fallback=x.key==='ff'?'<span class="ff-reference-icon"><span>⚡</span><small>FREE FIRE</small></span>':x.key==='happ'?'<span style="font-size:42px">🛡️</span>':'<span style="font-size:42px">🎵</span>';
-  const img=x.image_url?'<img src="'+escapeWalletText(x.image_url)+'" alt="'+escapeWalletText(x.title||'')+'" loading="lazy" onerror="this.onerror=null;this.outerHTML='+JSON.stringify(fallback)+'">':fallback;
-  const inner='<div class="tile-image">'+img+'</div><span class="tile-label">'+escapeWalletText(x.title||(x.key==='happ'?'WebVPN':x.key==='ff'?'FREE FIRE':'BANER TT'))+'</span>';
-  return /^https:\/\/i.test(x.target||'')?'<a class="tile" href="'+escapeWalletText(x.target)+'" target="_blank" rel="noopener">'+inner+'</a>':'<button class="tile" type="button" style="border:0;background:transparent;padding:0;cursor:pointer" onclick="openCategory('+escapeWalletText(JSON.stringify(x.target||x.title))+')">'+inner+'</button>';
- }).join('')+'<button class="tile" type="button" style="border:0;background:transparent;padding:0;cursor:pointer" onclick="openCategory(\'FazerCards\')"><div class="tile-image"><span style="font-size:42px">🎁</span></div><span class="tile-label">FazerCards</span></button>';
+  const wrap=document.createElement('div');wrap.className='tile-image';
+  if(x.image_url){const img=document.createElement('img');img.src=x.image_url;img.alt=x.title||'';img.loading='lazy';img.onerror=()=>{wrap.innerHTML=fallback;};wrap.appendChild(img);}else wrap.innerHTML=fallback;
+  const label=document.createElement('span');label.className='tile-label';label.textContent=x.title||(x.key==='happ'?'WebVPN':x.key==='ff'?'FREE FIRE':'BANER TT');
+  const target=x.target||x.title;let tile;
+  if(x.key==='tiktok_banner'&&/^https:\/\/t\.me\//.test(target||'')){tile=document.createElement('a');tile.href=target;tile.target='_blank';tile.rel='noopener';}
+  else{tile=document.createElement('button');tile.type='button';tile.style.cssText='border:0;background:transparent;padding:0;cursor:pointer';tile.addEventListener('click',()=>openCategory(target));}
+  tile.className='tile';tile.append(wrap,label);tiles.appendChild(tile);
+ });
+ const gift=document.createElement('button');gift.className='tile';gift.type='button';gift.style.cssText='border:0;background:transparent;padding:0;cursor:pointer';gift.addEventListener('click',()=>openCategory('FazerCards'));gift.innerHTML='<div class="tile-image"><span style="font-size:42px">🎁</span></div><span class="tile-label">FazerCards</span>';tiles.appendChild(gift);
 }
 async function fetchStorefrontSettings(){
  renderHomeStorefront();
